@@ -8,10 +8,14 @@
         pagination-path=""
         sortField="email"
         @vuetable:pagination-data="onPaginationData"
+        :css="css.table"
       ></vuetable>
-      <vuetable-pagination ref="pagination"
-        @vuetable-pagination:change-page="onChangePage"
-      ></vuetable-pagination>
+      <nav class="pagination" role="navigation" aria-label="pagination">
+        <vuetable-pagination ref="pagination"
+          @vuetable-pagination:change-page="onChangePage"
+          :css="css.pagination"
+        ></vuetable-pagination>
+      </nav>
     </div>
 	</div>
 </template>
@@ -19,10 +23,12 @@
 <script>
 import Vuetable from 'vuetable-2'
 import VuetablePagination from '../node_modules/vuetable-2/src/components/VuetablePagination.vue'
+import css from './vue-table-style'
 
 export default {
   data () {
     return {
+      css: css,
       fields:
         [
           {name: 'name', sortField: 'name'},
