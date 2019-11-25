@@ -1,6 +1,6 @@
 <template>
 	<div id="app">
-    <div class="ui container">
+    <div class="container">
       <vuetable ref="vuetable"
         api-url="https://vuetable.ratiw.net/api/users"
         :fields="fields"
@@ -10,12 +10,18 @@
         @vuetable:pagination-data="onPaginationData"
         :css="css.table"
       ></vuetable>
-      <nav class="pagination" role="navigation" aria-label="pagination">
-        <vuetable-pagination ref="pagination"
-          @vuetable-pagination:change-page="onChangePage"
-          :css="css.pagination"
-        ></vuetable-pagination>
-      </nav>
+      <div class="columns">
+        <div class="column">
+          <vuetable-pagination-info ref="paginationInfo"
+          ></vuetable-pagination-info>
+        </div>
+        <div class="column">
+          <vuetable-pagination ref="pagination"
+            @vuetable-pagination:change-page="onChangePage"
+            :css="css.pagination"
+          ></vuetable-pagination>
+        </div>
+      </div>
     </div>
 	</div>
 </template>
@@ -23,6 +29,7 @@
 <script>
 import Vuetable from 'vuetable-2'
 import VuetablePagination from '../node_modules/vuetable-2/src/components/VuetablePagination.vue'
+import VuetablePaginationInfo from '../node_modules/vuetable-2/src/components/VuetablePaginationInfo.vue'
 import css from './vue-table-style'
 
 export default {
@@ -41,6 +48,7 @@ export default {
   methods: {
     onPaginationData (paginationData) {
       this.$refs.pagination.setPaginationData(paginationData)
+      this.$refs.paginationInfo.setPaginationData(paginationData)
     },
     onChangePage (page) {
       this.$refs.vuetable.changePage(page)
@@ -48,7 +56,8 @@ export default {
   },
   components: {
     Vuetable,
-    VuetablePagination
+    VuetablePagination,
+    VuetablePaginationInfo
   }
 }
 </script>
