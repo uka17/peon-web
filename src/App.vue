@@ -2,11 +2,10 @@
 	<div id="app">
     <div class="container">
       <vuetable ref="vuetable"
-        api-url="https://vuetable.ratiw.net/api/users"
+        api-url="http://localhost:8080/v1.0/jobs"
         :fields="fields"
         data-path="data"
-        pagination-path=""
-        sortField="email"
+        pagination-path="pagination"
         @vuetable:pagination-data="onPaginationData"
         :css="css.table"
       ></vuetable>
@@ -30,18 +29,19 @@
 import Vuetable from 'vuetable-2'
 import VuetablePagination from '../node_modules/vuetable-2/src/components/VuetablePagination.vue'
 import VuetablePaginationInfo from '../node_modules/vuetable-2/src/components/VuetablePaginationInfo.vue'
-import css from './vue-table-style'
+import vue_css from './vue-table-style.js'
 
 export default {
   data () {
     return {
-      css: css,
+      css: vue_css,
       fields:
         [
           {name: 'name', sortField: 'name'},
-          {name: 'nickname', sortField: 'nickname'},
-          {name: 'email', sortField: 'email'}, 
-          {name: 'gender', title: 'Sex', sortField: 'gender', callback: (v) => {return v.toUpperCase() === 'M' ? 'Male' : 'Femail' }} 
+          {name: 'description', sortField: 'description'},
+          {name: 'enabled', sortField: 'enabled'},
+          {name: 'step_count', sortField: 'step_count'},
+          {name: 'steps', callback: v => v.length }
         ]
     }
   },

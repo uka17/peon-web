@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack -w"
+    "build": "webpack -w",
+    "start": "webpack-dev-server"
   },
   "keywords": [],
   "author": "",
@@ -24,7 +25,8 @@
     "vue-template-compiler": "^2.6.10",
     "vuetable-2": "^1.7.5",
     "webpack": "^4.41.2",
-    "webpack-cli": "^3.3.10"
+    "webpack-cli": "^3.3.10",
+    "webpack-dev-server": "^3.9.0"
   },
   "dependencies": {}
 }

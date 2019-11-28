@@ -1,10 +1,13 @@
 // webpack.config.js
-const VueLoaderPlugin = require('vue-loader/lib/plugin')
+const VueLoaderPlugin = require('vue-loader/lib/plugin');
+var path = require('path');
 
 module.exports = {
   mode: 'development',
   watch: true,
-  entry: './src/index.js',
+  entry: { 
+    index: './src/index.js'
+  },
   module: {
     rules: [
       {
@@ -16,8 +19,7 @@ module.exports = {
         loader: 'babel-loader'
       },
       {
-        test: /\.css$/,
-        test: /\.s[ac]ss$/i,
+        test: /\.s[ac]ss|.css$/i,
         use: [
           'vue-style-loader',
           'css-loader',
@@ -33,5 +35,10 @@ module.exports = {
     alias: {
       'vue$': 'vue/dist/vue.esm.js'
     }
-  }
-}
+  },
+  devServer: {
+    contentBase: path.join(__dirname, 'dist'),
+    compress: true,
+    port: 9000
+  }  
+};
