@@ -7,7 +7,11 @@
       pagination-path="pagination"
       @vuetable:pagination-data="onPaginationData"
       :css="css.table"
-    ></vuetable>
+    >
+      <template slot="job-name" slot-scope="props">
+        {{ props.rowData.name }}<span class="icon has-text-info" :data-tooltip="props.rowData.description"><i class="mdi mdi-information"></i></span>
+      </template>
+    </vuetable>
     <div class="columns">
       <div class="column is-paddingless">
         <vuetable-pagination-info ref="paginationInfo"
@@ -37,8 +41,7 @@ export default {
       css: vue_css,
       fields:
         [
-          {name: 'description', title: '', callback: this.jobDescription},
-          {name: 'name', sortField: 'name', title: 'Name'},
+          {name: '__slot:job-name', title: 'Name', sortField: 'name'},                    
           {name: 'enabled', sortField: 'enabled', title: 'Enabled'},
           {name: 'status', sortField: 'status', title: 'Status'},
           {name: 'last_run_result', sortField: 'last_run_result', title: 'Last run', callback: this.runResult},
@@ -62,7 +65,6 @@ export default {
       this.$refs.vuetable.changePage(page)
     },
     formatDateTime: (v) => utils.formatDateTime(v, config.tableDateTimeFormat, 'en'),
-    jobDescription: (v) => `<span class="icon has-text-info" data-tooltip="${v}"><i class="mdi mdi-information"></i></span>`,
     runResult (v) {
       let tooltip = v ? 'Success' : 'Failure';
       let icon = v ? 'mdi mdi-checkbox-marked-circle' : 'mdi mdi-close-circle';
