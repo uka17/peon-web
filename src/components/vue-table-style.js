@@ -3,7 +3,7 @@ export default {
       tableWrapper: '',
       tableHeaderClass: 'fixed',
       tableBodyClass: 'vuetable-semantic-no-top fixed',
-      tableClass: 'table is-bordered',
+      tableClass: 'table is-bordered is-striped is-narrow is-hoverable is-fullwidth',
       loadingClass: 'loading',
       ascendingIcon: 'mdi mdi-sort-ascending',
       descendingIcon: 'mdi mdi-sort-descending',
@@ -14,7 +14,7 @@ export default {
     },
   
     pagination: {
-      wrapperClass: 'container',
+      wrapperClass: 'container is-pulled-right',
       activeClass: 'is-link',
       disabledClass: 'disabled',
       pageClass: 'button',
