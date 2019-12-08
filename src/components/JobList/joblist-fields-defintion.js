@@ -1,5 +1,5 @@
-let utils = require('./utils.js');
-let config = require('./config.js');
+let utils = require('../utils.js');
+let config = require('../config.js');
 
 module.exports = 
 [           
