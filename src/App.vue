@@ -13,19 +13,21 @@
       </div>
       <div class="column">
         <div v-show="menuItemClass('job-list')" id="job-list-container">        
-          <job-list></job-list>
+          <h1 class="title">{{ this.findMenuItemById('job-list').title }}</h1>
+          <job-list v-on:job-modal-show="jobModalShow($event)"></job-list>
+          <job v-bind:jobRecord="activeJobRecord" v-on:job-modal-close="jobModalClose"></job>
         </div>
         <div v-show="menuItemClass('schedule')" id="schedule-container">        
-          schedule-list-container
+          <h1 class="title">{{ this.findMenuItemById('schedule').title }}</h1>
         </div>
         <div v-show="menuItemClass('activity-monitor')" id="activity-monitor-container">        
-          activity-monitor-list-container
+          <h1 class="title">{{ this.findMenuItemById('activity-monitor').title }}</h1>
         </div>
         <div v-show="menuItemClass('log-viewer')" id="log-viewer-container">        
-          log-viewer-list-container
+          <h1 class="title">{{ this.findMenuItemById('log-viewer').title }}</h1>
         </div>
         <div v-show="menuItemClass('settings')" id="settings-container">        
-          settings
+          <h1 class="title">{{ this.findMenuItemById('settings').title }}</h1>
         </div>                                      
       </div>
     </div>    
@@ -34,60 +36,48 @@
 
 <script>
 import JobList from './components/JobList/JobList.vue'
+import Job from './components/Job/Job.vue'
+import menuDefinition from './components/menu-definition.js'
+import axios from 'axios';
+import config from './components/config';
 
 export default {
   data () {
     return {
-      menu: [
-        {
-          id: '---1', 
-          title: 'General',
-          active: true
-        },        
-        {
-          id: 'job-list', 
-          title: 'Job list',
-          active: true
-        },
-        {
-          id: 'schedule', 
-          title: 'Schedule',
-          active: false
-        },
-        {
-          id: 'activity-monitor', 
-          title: 'Activity monitor',
-          active: false
-        },
-        {
-          id: 'log-viewer', 
-          title: 'Log viewer',
-          active: false
-        },
-        {
-          id: '---2', 
-          title: 'Configuration',
-          active: true
-        },          
-        {
-          id: 'settings', 
-          title: 'Settings',
-          active: false
-        }
-      ]
+      menu: menuDefinition,
+      activeJobRecord: {}
     }
   },
   methods: {
     menuItemClick: function() {
       this.menu.map((elem) => elem.active = false);
-      this.menu.find((elem) => { if(elem.id == event.target.id) return elem }).active = true; 
+      this.findMenuItemById(event.target.id).active = true; 
     },
     menuItemClass: function (id) {
-      return this.menu.find((elem) => { if(elem.id == id && elem.id != '---') return elem }).active;
-    }
+      return this.findMenuItemById(id).active;
+    },
+    findMenuItemById(id) {
+      return this.menu.find((elem) => { if(elem.id == id && !(elem.id.includes('---'))) return elem; })
+    },
+    jobModalShow: async function(jobId) {
+      try {
+        const response = await axios.get(`${config.apiUrl}/jobs/${jobId}`);
+        this.activeJobRecord = response.data;
+
+      } catch (error) {
+        this.activeJobRecord = {};
+      }
+    },
+    jobModalClose: function() {
+      this.activeJobRecord = {};
+    }    
+  },
+  computed: {
+    
   },
   components: {
-    'job-list': JobList
+    'job-list': JobList,
+    'job': Job
   }
 }
 </script>

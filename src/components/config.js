@@ -8,5 +8,5 @@ module.exports = {
     minute: '2-digit',
     second: '2-digit'    
   },
-  jobListApi: 'http://localhost:8080/v1.0/jobs'
+  apiUrl: 'http://localhost:8080/v1.0'
 };

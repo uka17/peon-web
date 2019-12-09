@@ -4,7 +4,7 @@ let config = require('../config.js');
 module.exports = 
 [           
   {name: 'description', title: '', dataClass: '_description', callback: jobDescription},
-  {name: 'name', sortField: 'name', dataClass: '_name', title: 'Name'},
+  {name: 'name', sortField: 'name', dataClass: '_name', title: 'Name', callback: jobName},
   {name: 'enabled', sortField: 'enabled', dataClass: 'has-text-centered', title: 'Enabled', callback: checkbox},
   {name: 'status', sortField: 'status', title: 'Status'},
   {name: 'last_run_result', sortField: 'last_run_result', dataClass: 'has-text-centered', title: 'Last run', callback: runResult},
@@ -20,6 +20,10 @@ module.exports =
 
 function jobDescription (v) {
   return `<span class="icon has-text-info" data-tooltip="${v}"><i class="mdi mdi-information"></i></span>`;
+}
+
+function jobName (v) {
+  return `<a>${v}</a>`;
 }
 
 function formatDateTime (v) {
