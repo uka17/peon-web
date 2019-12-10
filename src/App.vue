@@ -69,6 +69,7 @@ export default {
       }
     },
     jobModalClose: function() {
+      console.log(this.activeJobRecord);
       this.activeJobRecord = {};
     }    
   },

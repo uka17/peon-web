@@ -3,16 +3,34 @@
     <div class="modal-background"></div>
     <div class="modal-card">
       <header class="modal-card-head">
-        <p class="modal-card-title">{{job.name}}</p>
+        <p class="modal-card-title">Job properties: {{job.name}}</p>
         <button class="delete" aria-label="close" @click="jobModalClose"></button>
       </header>
       <section class="modal-card-body">
-        <div class="field">
-          <label class="label">Name</label>
-          <div class="control">
-            <input v-model="job.name" class="input" type="text" placeholder="Job name">
-          </div>
+        <div class="tabs is-boxed">
+          <ul>
+            <li v-bind:class="{ 'is-active': this.activeTab == 'general' }">
+              <a @click="jobTabClick('general')"><span>General</span></a>
+            </li>
+            <li v-bind:class="{ 'is-active': this.activeTab == 'steps' }">
+              <a @click="jobTabClick('steps')"><span>Steps</span></a>
+            </li>
+            <li v-bind:class="{ 'is-active': this.activeTab == 'schedules' }">
+              <a @click="jobTabClick('schedules')"><span>Schedules</span></a>
+            </li>
+            <li v-bind:class="{ 'is-active': this.activeTab == 'notifications' }">
+              <a @click="jobTabClick('notifications')"> <span>Notifications</span></a>
+            </li>
+          </ul>
         </div>
+        <div>
+          <section class="tab-content" v-bind:class="{ 'is-hidden': this.activeTab != 'general' }">
+            <job-general-tab v-bind:jobRecord="jobRecord"></job-general-tab>
+          </section>
+          <section class="tab-content" v-bind:class="{ 'is-hidden': this.activeTab != 'steps' }">Stepst</section>
+          <section class="tab-content" v-bind:class="{ 'is-hidden': this.activeTab != 'schedules' }">Schedules</section>
+          <section class="tab-content" v-bind:class="{ 'is-hidden': this.activeTab != 'notifications' }">Notifications</section>
+        </div>        
       </section>
       <footer class="modal-card-foot">
           <button class="button is-success" @click="jobModalClose">Save changes</button>
@@ -23,10 +41,12 @@
 </template>
 
 <script>
-module.exports = {
+import JobGeneralTab from './JobGeneralTab.vue'
+
+export default {
   data() {
     return {
-      
+      activeTab: 'general'
     }
   },
   props: {
@@ -37,8 +57,10 @@ module.exports = {
   },
   methods: {
     jobModalClose: function() {
-      console.log(this.jobRecord);
       this.$emit('job-modal-close');
+    },
+    jobTabClick: function(tabName) {
+      this.activeTab = tabName;
     }
   },
   computed: {
@@ -50,7 +72,7 @@ module.exports = {
     }
   },
   components: {
-
+    'job-general-tab': JobGeneralTab
   }
 }
 </script>
