@@ -60,7 +60,7 @@ export default {
       return this.menu.find((elem) => { if(elem.id == id && !(elem.id.includes('---'))) return elem; })
     },
     jobModalShow: async function(jobId) {
-      try {
+      try {        
         const response = await axios.get(`${config.apiUrl}/jobs/${jobId}`);
         this.activeJobRecord = response.data;
 

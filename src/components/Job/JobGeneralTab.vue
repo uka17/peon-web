@@ -18,19 +18,49 @@
       <div class="control">
         <textarea class="textarea" placeholder="Job description"  v-model="job.description"></textarea>
       </div>
-    </div>  
-    <div class="field">
-      <label class="label">Created</label>
-      <div class="control">
-        <span class="is-small">{{ formatDateTime(jobRecord.createdOn) }} </span><span class="tag">{{jobRecord.createdBy}}</span>
+    </div>
+    <div class="columns">
+      <div class="column">
+        <div class="field">
+          <label class="label">Last run</label>
+          <div class="control">
+            <div v-if="jobRecord.lastRunResult != null">
+              <span v-if="jobRecord.lastRunResult" class="tag is-success"> 
+                {{ formatDateTime(jobRecord.lastRunOn) }}&nbsp;<i class="mdi mdi-checkbox-marked-circle"></i>
+              </span>
+              <span v-else class="tag is-danger">
+                {{ formatDateTime(jobRecord.lastRunOn) }}&nbsp;<i class="mdi mdi-close-circle"></i>
+              </span>            
+            </div>
+            <div v-else>
+              <span class="tag is-warning"> 
+                Not yet executed&nbsp;<i class="mdi mdi-help-circle-outline"></i>
+              </span>
+            </div>
+          </div>
+        </div>      
+        <div class="field">
+          <label class="label">Next run</label>
+          <div class="control">
+              {{ formatDateTime(jobRecord.nextRun) }}
+          </div>
+        </div>   
       </div>
-    </div>      
-    <div class="field">
-      <label class="label">Modified</label>
-      <div class="control">
-        <span>{{ formatDateTime(jobRecord.modifiedOn) }} </span><span class="tag">{{jobRecord.modifiedBy}}</span>
+      <div class="column">
+        <div class="field">
+          <label class="label">Created by <span class="tag">{{jobRecord.createdBy}}</span></label>
+          <div class="control">
+            <span class="is-small">{{ formatDateTime(jobRecord.createdOn) }} </span>
+          </div>
+        </div>      
+        <div class="field">
+          <label class="label">Modified by <span class="tag">{{jobRecord.modifiedBy}}</span></label>
+          <div class="control">
+            <span>{{ formatDateTime(jobRecord.modifiedOn) }} </span>
+          </div>
+        </div> 
       </div>
-    </div>          
+    </div>         
   </div>
 </template>
 
@@ -52,7 +82,7 @@ export default {
   },
   methods: {
     formatDateTime: function(dateTime) {
-      return utils.formatDateTime(dateTime, config.tableDateTimeFormat, 'en');
+      return utils.helpers.formatDateTime(dateTime);
     }
   },
   computed: {

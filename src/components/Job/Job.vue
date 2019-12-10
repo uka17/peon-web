@@ -1,5 +1,5 @@
 <template>
-  <div class="modal" v-bind:class="{ 'is-active': jobModalIsActive }">
+  <div class="modal" v-bind:class="{ 'is-active': jobModalIsActive }" v-on:keyup.esc="jobModalClose()">
     <div class="modal-background"></div>
     <div class="modal-card">
       <header class="modal-card-head">
@@ -27,13 +27,15 @@
           <section class="tab-content" v-bind:class="{ 'is-hidden': this.activeTab != 'general' }">
             <job-general-tab v-bind:jobRecord="jobRecord"></job-general-tab>
           </section>
-          <section class="tab-content" v-bind:class="{ 'is-hidden': this.activeTab != 'steps' }">Stepst</section>
+          <section class="tab-content" v-bind:class="{ 'is-hidden': this.activeTab != 'steps' }">
+            <job-atep-list-tab v-bind:stepList="stepList"></job-atep-list-tab>
+          </section>
           <section class="tab-content" v-bind:class="{ 'is-hidden': this.activeTab != 'schedules' }">Schedules</section>
           <section class="tab-content" v-bind:class="{ 'is-hidden': this.activeTab != 'notifications' }">Notifications</section>
         </div>        
       </section>
-      <footer class="modal-card-foot">
-          <button class="button is-success" @click="jobModalClose">Save changes</button>
+      <footer class="modal-card-foot buttons is-right">
+          <button class="button is-link" @click="jobModalClose">Save changes</button>
           <button @click="jobModalClose" class="button">Cancel</button>
       </footer>
     </div>
@@ -42,6 +44,7 @@
 
 <script>
 import JobGeneralTab from './JobGeneralTab.vue'
+import JobStepList from './JobStepList.vue'
 
 export default {
   data() {
@@ -69,10 +72,15 @@ export default {
     },
     job: function() {
       return this.jobRecord.job !== undefined ? this.jobRecord.job : {};
-    }
+    },
+    stepList: function() {
+      console.log(this.job.steps);
+      return this.job.steps !== undefined ? this.job.steps : {};
+    }    
   },
   components: {
-    'job-general-tab': JobGeneralTab
+    'job-general-tab': JobGeneralTab,
+    'job-atep-list-tab': JobStepList
   }
 }
 </script>

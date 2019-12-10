@@ -1,9 +1,9 @@
 <template>
   <div class="container">
     <vuetable ref="vuetable"
-      :api-url="apiUrl"
+      :api-mode="false"
+      :data="stepList"
       :fields="fields"
-      data-path="data"
       pagination-path="pagination"
       @vuetable:pagination-data="onPaginationData"
       @vuetable:cell-clicked="onCellClicked"
@@ -30,17 +30,17 @@ import Vuetable from 'vuetable-2'
 import VuetablePagination from '../../../node_modules/vuetable-2/src/components/VuetablePagination.vue'
 import VuetablePaginationInfo from '../../../node_modules/vuetable-2/src/components/VuetablePaginationInfo.vue'
 import vue_css from '../table-style.js'
-import fields_definition from './joblist-fields-defintion.js'
+import fields_definition from './jobsteplist-fields-defintion'
 import config from '../config.js';
 
 export default {
   data () {
     return {
       css: vue_css,
-      fields: fields_definition,
-      apiUrl: `${config.apiUrl}/jobs`
+      fields: fields_definition     
     }
   },
+  props: ['stepList'],
   methods: {
     onPaginationData (paginationData) {
       this.$refs.pagination.setPaginationData(paginationData)
@@ -51,7 +51,8 @@ export default {
     },
     onCellClicked (data, field, event) {
       if(field.name == 'name')
-        this.$emit('job-modal-show', data.id);
+//        this.$emit('job-modal-show', data.id);
+        alert(data.name)
     }
   },
   components: {
