@@ -39,7 +39,10 @@ module.exports.helpers = {
     return formatDateTime(v, config.tableDateTimeFormat, 'en');
   },
   retryAttempts: function (v) {
-    return `${v.number} per each ${v.interval} minute(s)`;
+    if(v.interval) {
+      return `${v.number} per each ${v.interval} minute(s)`;
+    } else 
+      return 'No retry';
   },
   onStepResult: function (v) {
     if(typeof v == 'object') {

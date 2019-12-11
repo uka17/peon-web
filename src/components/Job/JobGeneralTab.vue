@@ -39,13 +39,15 @@
             </div>
           </div>
         </div>      
+      </div>
+      <div class="column">      
         <div class="field">
           <label class="label">Next run</label>
           <div class="control">
               {{ formatDateTime(jobRecord.nextRun) }}
           </div>
-        </div>   
-      </div>
+        </div>         
+      </div>        
       <div class="column">
         <div class="field">
           <label class="label">Created by <span class="tag">{{jobRecord.createdBy}}</span></label>
@@ -53,13 +55,15 @@
             <span class="is-small">{{ formatDateTime(jobRecord.createdOn) }} </span>
           </div>
         </div>      
+      </div>
+      <div class="column">      
         <div class="field">
           <label class="label">Modified by <span class="tag">{{jobRecord.modifiedBy}}</span></label>
           <div class="control">
             <span>{{ formatDateTime(jobRecord.modifiedOn) }} </span>
           </div>
-        </div> 
-      </div>
+        </div>       
+      </div>        
     </div>         
   </div>
 </template>

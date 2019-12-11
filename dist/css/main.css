@@ -1,0 +1,17 @@
+#main {
+  padding: 20px;
+}
+
+th#_last_run_on, 
+th#_next_run, 
+th#_created_on,
+th#_modified_on
+  { min-width: 165px; }
+
+th#_last_run_result,
+th#_name 
+  { min-width: 75px; }
+
+th#_modified_by,
+th#_created_by  
+  { min-width: 110px; }

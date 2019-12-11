@@ -63,13 +63,11 @@ export default {
       try {        
         const response = await axios.get(`${config.apiUrl}/jobs/${jobId}`);
         this.activeJobRecord = response.data;
-
       } catch (error) {
         this.activeJobRecord = {};
       }
     },
     jobModalClose: function() {
-      console.log(this.activeJobRecord);
       this.activeJobRecord = {};
     }    
   },

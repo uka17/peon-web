@@ -1,0 +1,116 @@
+{
+  "_args": [
+    [
+      "@mdi/font",
+      "/home/major/_code/peon-web"
+    ]
+  ],
+  "_from": "@mdi/font@latest",
+  "_hasShrinkwrap": false,
+  "_id": "@mdi/font@4.5.95",
+  "_inCache": true,
+  "_installable": true,
+  "_location": "/@mdi/font",
+  "_nodeVersion": "10.16.3",
+  "_npmOperationalInternal": {
+    "host": "s3://npm-registry-packages",
+    "tmp": "tmp/font_4.5.95_1570596171978_0.7936207487208984"
+  },
+  "_npmUser": {
+    "email": "admin@templarian.com",
+    "name": "templarian"
+  },
+  "_npmVersion": "6.9.0",
+  "_phantomChildren": {},
+  "_requested": {
+    "name": "@mdi/font",
+    "raw": "@mdi/font",
+    "rawSpec": "",
+    "scope": "@mdi",
+    "spec": "latest",
+    "type": "tag"
+  },
+  "_requiredBy": [
+    "#DEV:/"
+  ],
+  "_resolved": "https://registry.npmjs.org/@mdi/font/-/font-4.5.95.tgz",
+  "_shasum": "43c0d2e7b08d4221a778f58d899455d0c45916ed",
+  "_shrinkwrap": null,
+  "_spec": "@mdi/font",
+  "_where": "/home/major/_code/peon-web",
+  "author": {
+    "name": "Austin Andrews",
+    "url": "http://twitter.com/templarian"
+  },
+  "bugs": {
+    "url": "https://github.com/Templarian/MaterialDesign/issues"
+  },
+  "dependencies": {},
+  "description": "Dist for Material Design Webfont. This includes the Stock and Community icons in a single webfont collection.",
+  "devDependencies": {},
+  "directories": {},
+  "dist": {
+    "fileCount": 21,
+    "integrity": "sha512-AjR2Zgu1feBXWlTfEjD6JQqLAMCqYn2Gzia5PWqFnysvz5F6JmPHtQFldIHXqyv2s/FwME7ZDBc5N86NEHbyvQ==",
+    "npm-signature": "-----BEGIN PGP SIGNATURE-----\r\nVersion: OpenPGP.js v3.0.4\r\nComment: https://openpgpjs.org\r\n\r\nwsFcBAEBCAAQBQJdnWVMCRA9TVsSAnZWagAAa4kP/A0WJVjX7jipa+KXPlaV\nNCFEAewtXw/y7V62WazEIMZBsEk882RU28SLp9PCLWmHq1AaZLNyI2dfmCiu\nofSClyql3JvdX+Fmxx2xK8Ox/lCNmfRURLwmvQy4o2A3l4Mgt/USuQivCvZS\n0Rle/7gM/TzMoTwjBB4lanRw08L/2Z91fKuQU+Uz7cssa8/Bk6ZzsPhrVgJO\ndBVfcXhXbYYrcur/qQJBVAAFU4Gp2HbKkgL/i8M3HLwM8OahH+NK8pTMI6sG\nE/oX9r8leM0kVfMM/PNbNz4zZbZQpqIdTFuDz/QE44UIW1JXJnPAnrlMB3h2\nEQzbPY2ZfhkC1LbOkAvJYs14z/KOABRUq77z6iV0Z8mVX7pLy723chA6VOJU\nlKM955cj5pQ8bL+ZGKD6NNUpMx26Fh4iJS3FuO/us7mD9PaWAk7rS0RwvRB4\nv+UvXLbXzdlvZblYTxlOdPIM2uHwWFewUO7I1+GwmF+ntRcFO/yI5Mo9HSAK\nmk+1d762DEG/m74N2gL4/hu4ySFMNgK2uM9X7k5ehiqiWZUT6XgMxZT9mAiW\nORshyw8cuwFX6oAYp1N3s6jMRyBQWy6HTszB0ph98mZTkLSNZ9rbb2hThuMq\n7XNwfql2M9KFkpAjLk0zoXKLvlkqivWaT+P1JIH7TbOkHNyKKmlZdO5PtsZT\n9o5F\r\n=+vjl\r\n-----END PGP SIGNATURE-----\r\n",
+    "shasum": "43c0d2e7b08d4221a778f58d899455d0c45916ed",
+    "tarball": "https://registry.npmjs.org/@mdi/font/-/font-4.5.95.tgz",
+    "unpackedSize": 3584558
+  },
+  "gitHead": "438994db42d4298484f3b150619ba50c834a2c30",
+  "homepage": "https://materialdesignicons.com",
+  "keywords": [
+    "design",
+    "icons",
+    "material",
+    "webfont"
+  ],
+  "licenses": [
+    {
+      "type": "OFL-1.1",
+      "url": "http://scripts.sil.org/OFL"
+    },
+    {
+      "type": "MIT",
+      "url": "http://opensource.org/licenses/mit-license.html"
+    }
+  ],
+  "maintainers": [
+    {
+      "name": "goyney",
+      "email": "goyney@gmail.com"
+    },
+    {
+      "name": "greenturtwig",
+      "email": "rowan@greenturtwig.co.uk"
+    },
+    {
+      "name": "mdi-owner",
+      "email": "templarian.com@gmail.com"
+    },
+    {
+      "name": "mrgrigri",
+      "email": "mr.grigri@outlook.com"
+    },
+    {
+      "name": "peternoble",
+      "email": "petershaggynoble@gmail.com"
+    },
+    {
+      "name": "templarian",
+      "email": "admin@templarian.com"
+    }
+  ],
+  "name": "@mdi/font",
+  "optionalDependencies": {},
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Templarian/MaterialDesign-Webfont.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "style": "css/materialdesignicons.css",
+  "version": "4.5.95"
+}

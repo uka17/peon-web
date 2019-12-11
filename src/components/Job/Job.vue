@@ -28,7 +28,7 @@
             <job-general-tab v-bind:jobRecord="jobRecord"></job-general-tab>
           </section>
           <section class="tab-content" v-bind:class="{ 'is-hidden': this.activeTab != 'steps' }">
-            <job-atep-list-tab v-bind:stepList="stepList"></job-atep-list-tab>
+            <step-list-tab v-bind:stepList="stepList"></step-list-tab>
           </section>
           <section class="tab-content" v-bind:class="{ 'is-hidden': this.activeTab != 'schedules' }">Schedules</section>
           <section class="tab-content" v-bind:class="{ 'is-hidden': this.activeTab != 'notifications' }">Notifications</section>
@@ -44,7 +44,7 @@
 
 <script>
 import JobGeneralTab from './JobGeneralTab.vue'
-import JobStepList from './JobStepList.vue'
+import StepList from '../StepList/StepList.vue'
 
 export default {
   data() {
@@ -60,6 +60,7 @@ export default {
   },
   methods: {
     jobModalClose: function() {
+      this.activeTab = 'general';
       this.$emit('job-modal-close');
     },
     jobTabClick: function(tabName) {
@@ -74,13 +75,12 @@ export default {
       return this.jobRecord.job !== undefined ? this.jobRecord.job : {};
     },
     stepList: function() {
-      console.log(this.job.steps);
       return this.job.steps !== undefined ? this.job.steps : {};
-    }    
+    }
   },
   components: {
     'job-general-tab': JobGeneralTab,
-    'job-atep-list-tab': JobStepList
+    'step-list-tab': StepList
   }
 }
 </script>
