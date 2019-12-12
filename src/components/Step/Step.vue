@@ -42,7 +42,7 @@
           <div class="column is-two-fifths">
             <div class="field has-addons">
               <p class="control">
-                <input class="input _short" type="text">
+                <input class="input" v-model="retryAttempts.number" type="text">
               </p>
               <p class="control">
                 <a class="button is-static">
@@ -50,7 +50,7 @@
                 </a>
               </p>
               <p class="control">
-                <input class="input _short" type="text"> 
+                <input class="input" v-model="retryAttempts.interval" type="text"> 
               </p>
               <p class="control">
                 <a class="button is-static">
@@ -65,11 +65,7 @@
           <label class="label">On succeed</label>
           <div class="control">
             <div class="select">
-              <select>
-                <option>Go to next step</option>
-                <option>Quit with success</option>
-                <option>Quit with failure</option>
-              </select>
+              <on-step-result v-bind:onStepResult="onSucceed"></on-step-result>
             </div>
           </div>
         </div>     
@@ -95,6 +91,7 @@
 </template>
 
 <script>
+import OnStepResult from './OnStepResult.vue'
 
 export default {
   data() {
@@ -116,10 +113,16 @@ export default {
   computed: {
     stepModalIsActive: function() {
       return this.step.name !== undefined;
-    }
+    },
+    retryAttempts: function() {
+      return this.step.retryAttempts !== undefined ? this.step.retryAttempts : {};
+    },
+    onSucceed: function() {
+      return this.step.onSucceed !== undefined ? this.step.onSucceed : {};
+    }    
   },
   components: {
-
+    'on-step-result': OnStepResult
   }
 }
 </script>
