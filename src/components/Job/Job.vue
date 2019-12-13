@@ -62,6 +62,7 @@ export default {
     jobModalClose: function() {
       this.activeTab = 'general';
       this.$emit('job-modal-close');
+      console.log(this.jobRecord);
     },
     jobTabClick: function(tabName) {
       this.activeTab = tabName;

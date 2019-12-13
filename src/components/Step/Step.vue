@@ -64,21 +64,13 @@
         <div class="field">
           <label class="label">On succeed</label>
           <div class="control">
-            <div class="select">
-              <on-step-result v-bind:onStepResult="onSucceed"></on-step-result>
-            </div>
+            <step-result-action v-on:step-result-action-update="stepOnSucceedActionUpdate($event)" v-bind:onStepResult="step.onSucceed"></step-result-action>
           </div>
         </div>     
         <div class="field">
           <label class="label">On failure</label>
           <div class="control">
-            <div class="select">
-              <select>
-                <option>Go to next step</option>
-                <option>Quit with success</option>
-                <option>Quit with failure</option>
-              </select>
-            </div>
+            <step-result-action v-on:step-result-action-update="stepOnFailureActionUpdate($event)" v-bind:onStepResult="step.onFailure"></step-result-action>
           </div>
         </div>              
       </section>
@@ -91,7 +83,7 @@
 </template>
 
 <script>
-import OnStepResult from './OnStepResult.vue'
+import StepResultAction from './StepResultAction.vue'
 
 export default {
   data() {
@@ -108,6 +100,12 @@ export default {
   methods: {
     stepModalClose: function() {
       this.$emit('step-modal-close');
+    },
+    stepOnSucceedActionUpdate: function(v) {
+      this.step.onSucceed = v;
+    },
+    stepOnFailureActionUpdate: function(v) {
+      this.step.onFailure = v;
     }
   },
   computed: {
@@ -116,13 +114,10 @@ export default {
     },
     retryAttempts: function() {
       return this.step.retryAttempts !== undefined ? this.step.retryAttempts : {};
-    },
-    onSucceed: function() {
-      return this.step.onSucceed !== undefined ? this.step.onSucceed : {};
-    }    
+    } 
   },
   components: {
-    'on-step-result': OnStepResult
+    'step-result-action': StepResultAction
   }
 }
 </script>

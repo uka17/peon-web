@@ -50,6 +50,7 @@ export default {
       this.$refs.vuetable.changePage(page)
     },
     onCellClicked (data, field, event) {
+      console.log(data.id);
       if(field.name == 'name')
         this.$emit('job-modal-show', data.id);
     }
