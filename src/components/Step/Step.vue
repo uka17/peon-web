@@ -34,7 +34,7 @@
         <div class="field">
           <label class="label">Command</label>
           <div class="control">
-            <textarea class="textarea" placeholder="Job description"  v-model="step.command"></textarea>
+            <textarea class="textarea" placeholder="Job description" v-model="step.command" id="command-code"></textarea>
           </div>
         </div>
         <label class="label">Retry</label>
@@ -84,6 +84,9 @@
 
 <script>
 import StepResultAction from './StepResultAction.vue'
+import CodeMirror from '../../../node_modules/codemirror/lib/codemirror'
+import CodeMirrorMode from '../../../node_modules/codemirror/mode/sql/sql'
+
 
 export default {
   data() {
@@ -96,6 +99,12 @@ export default {
       type: Object,
       required: true
     }
+  },
+  updated: function() {
+    var editor = CodeMirror.fromTextArea(document.getElementById('command-code'), {
+      lineNumbers: true,
+      theme: "elegant"
+    });
   },
   methods: {
     stepModalClose: function() {
@@ -121,3 +130,11 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" >
+  @import '../../../node_modules/codemirror/lib/codemirror.css';
+  @import '../../../node_modules/codemirror/theme/elegant.css';
+  .CodeMirror {
+     height: 100px;
+  }
+</style>

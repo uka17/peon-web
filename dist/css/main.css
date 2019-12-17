@@ -6,7 +6,7 @@ th#_last_run_on,
 th#_next_run, 
 th#_created_on,
 th#_modified_on
-  { min-width: 165px; }
+  { min-width: 170px; }
 
 th#_last_run_result,
 th#_name 

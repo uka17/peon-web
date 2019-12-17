@@ -2,43 +2,9 @@
 <html>
 <head>
   <link href="./mdi-font/css/materialdesignicons.min.css" rel="stylesheet">
-  <link href="./css/main.css" rel="stylesheet">
-
-  <!-- Create a simple CodeMirror instance -->
-  <link rel="stylesheet" href="./codemirror-5.49.2/lib/codemirror.css">
-  <script src="./codemirror-5.49.2/lib/codemirror.js"></script>
-  <script src="./codemirror-5.49.2/mode/sql/sql.js"></script>
+  <link href="./css/main.css" rel="stylesheet">  
 </head>
-<body> 
-
-  <textarea rows="10" cols="45" name="text" id="code">
-    CREATE OR REPLACE FUNCTION public."fnConnection_Count"(_filtertext text)
-    RETURNS bigint
-    LANGUAGE sql
-   AS $function$       
-       select
-       count(1) as count
-     from
-       "tblConnection" j
-     where
-       nullif("isDeleted", false) is null
-       and (
-         j.connection::json->>'name' like '%' || regexp_replace(_filtertext, '[^\w]+','') || '%'
-         or j.connection::json->>'host' like '%' || regexp_replace(_filtertext, '[^\w]+','') || '%'
-         or j.connection::json->>'port' like '%' || regexp_replace(_filtertext, '[^\w]+','') || '%'
-         or j.connection::json->>'login' like '%' || regexp_replace(_filtertext, '[^\w]+','') || '%'
-         or j.connection::json->>'type' like '%' || regexp_replace(_filtertext, '[^\w]+','') || '%'
-       ) 
-   $function$
-   ;
-  </textarea>
-
-  
+<body>  
   <div id="app"></div>  
   <script src="./index.js"></script>
-  <script>
-    var editor = CodeMirror.fromTextArea(document.getElementById('code'), {
-      lineNumbers: true
-    });
-  </script>  
 </body>
