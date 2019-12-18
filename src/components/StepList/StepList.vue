@@ -1,5 +1,48 @@
 <template>
   <div class="container">
+    <div class="columns">   
+      <div class="column">
+        <div class="field is-grouped">
+          <div class="field has-addons">
+            <p class="control">
+              <button class="button" title="Move step up">
+                <span class="icon is-small">
+                  <i class="mdi mdi-arrow-up-bold"></i>
+                </span>
+              </button>
+            </p>
+            <p class="control">
+              <button class="button" title="Move step down">
+                <span class="icon is-small">
+                  <i class="mdi mdi-arrow-down-bold"></i>
+                </span>
+              </button>
+            </p> 
+          </div>
+          <span>&nbsp;</span>
+          <div class="field has-addons">      
+            <p class="control">
+              <button class="button" title="Create new step">
+                <span class="icon is-small">
+                  <i class="mdi mdi-shape-square-plus"></i>
+                </span>
+                <span>New</span>
+              </button>
+            </p>                      
+          </div>    
+        </div>
+      </div>
+      <div class="column">
+        <p class="control">
+          <button class="button is-danger is-pulled-right" title="Delete selected step(s)">
+            <span class="icon is-small">
+              <i class="mdi mdi-trash-can-outline"></i>
+            </span>
+          </button>
+        </p>          
+      </div>
+    </div>
+    
     <vuetable ref="vuetable"
       :api-mode="false"
       :data="stepList"

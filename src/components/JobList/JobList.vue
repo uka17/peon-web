@@ -1,5 +1,22 @@
 <template>
   <div class="container">
+    <div class="columns">   
+      <div class="column">
+        <div class="field is-grouped">          
+          <div class="field has-addons">      
+            <p class="control">
+              <button class="button" title="Create new job">
+                <span class="icon is-small">
+                  <i class="mdi mdi-shape-square-plus"></i>
+                </span>
+                <span>New</span>
+              </button>
+            </p>                      
+          </div>    
+        </div>
+      </div>      
+    </div>
+
     <vuetable ref="vuetable"
       :api-url="apiUrl"
       :fields="fields"

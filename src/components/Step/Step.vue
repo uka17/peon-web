@@ -135,6 +135,12 @@ export default {
   @import '../../../node_modules/codemirror/lib/codemirror.css';
   @import '../../../node_modules/codemirror/theme/elegant.css';
   .CodeMirror {
-     height: 100px;
+    height: 100px;
+    border: 1px solid #dbdbdb;
+    border-radius: 4px;
+    font-size: 10pt;
+  }
+  .CodeMirror:hover {
+    border: 1px solid #b5b5b5;    
   }
 </style>

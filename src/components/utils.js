@@ -16,7 +16,7 @@ module.exports.helpers = {
     let tooltip = v ? 'Enabled' : 'Disabled';
     let icon = v ? 'mdi mdi-check-box-outline' : 'mdi mdi-checkbox-blank-outline';
     let color = v ? 'icon has-text-success' : 'icon has-text-grey';
-    return `<span class="${color}" data-tooltip="${tooltip}"><i class="${icon}"></i></span>`;
+    return `<span class="${color}" title="${tooltip}"><i class="${icon}"></i></span>`;
   },
   runResult: function (v) {
     let icon, color, tooltip;
@@ -24,7 +24,7 @@ module.exports.helpers = {
       icon = v ? 'mdi mdi-checkbox-marked-circle' : 'mdi mdi-close-circle';
       color = v ? 'icon has-text-success' : 'icon has-text-danger';
       tooltip = v ? 'Success' : 'Failure';
-      return `<span class="${color}" data-tooltip="${tooltip}"><i class="${icon}"></i></span>`;
+      return `<span class="${color}" title="${tooltip}"><i class="${icon}"></i></span>`;
     }
     else
       return '';   
