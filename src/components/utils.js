@@ -1,4 +1,5 @@
 let config = require('./config.js');
+let Vue = require('vue/dist/vue.js');
 
 /**
  * Converts `date-time` into appropriate format
@@ -18,18 +19,27 @@ function formatDateTime(value, options, locale) {
  * @param {boolean} direction Direction of move `true` - up, `false` - down
  */
 function moveListElement(list, index, direction) {  
+  let i = index - 1;
+  console.log(list, i);  
   //Element at the begining or at the end of the list
-  if(list.length == index - 1 || index == 0)
+  if(list.length == i - 1 || i == 0)
     return;
-  if(direction) {
-    let buf = list[index + 1];
-    Vue.set(list, index + 1, list[index]);
-    Vue.set(list, index, buf);
+  if(!direction) {
+    let buf = list[i + 1];
+    Vue.set(list, i + 1, list[i]);
+    Vue.set(list, i, buf);
+
+    Vue.set(list[i + 1], 'order', list[i].order);
+    Vue.set(list[i], 'order', list[i + 1].order);
   } else {
-    let buf = list[index - 1];
-    Vue.set(list, index - 1, list[index]);
-    Vue.set(list, index, buf);
+    let buf = list[i - 1];
+    Vue.set(list, i - 1, list[i]);
+    Vue.set(list, i, buf);
+
+    Vue.set(list[i - 1], 'order', list[i].order);
+    Vue.set(list[i], 'order', list[i - 1].order);
   }
+  console.log(list);
 }
 
 module.exports.moveListElement = moveListElement;

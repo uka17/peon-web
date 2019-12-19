@@ -5,14 +5,14 @@
         <div class="field is-grouped">
           <div class="field has-addons">
             <p class="control">
-              <button class="button" title="Move step up" @click="moveUpSelectedStep()">
+              <button class="button" :disabled="clickedRow === null || clickedRow == 1" title="Move step up" @click="moveUpSelectedStep()">
                 <span class="icon is-small">
                   <i class="mdi mdi-arrow-up-bold"></i>
                 </span>
               </button>
             </p>
             <p class="control">
-              <button class="button" title="Move step down" @click="moveDownSelectedStep()">
+              <button class="button" :disabled="clickedRow === null || clickedRow == stepList.length" title="Move step down" @click="moveDownSelectedStep()">
                 <span class="icon is-small">
                   <i class="mdi mdi-arrow-down-bold"></i>
                 </span>
@@ -34,7 +34,7 @@
       </div>
       <div class="column">
         <p class="control">
-          <button class="button is-danger is-pulled-right" title="Delete selected step(s)" @click="deleteSelectedStep()">
+          <button class="button is-danger is-pulled-right" :disabled="clickedRow === null" title="Delete selected step(s)" @click="deleteSelectedStep()">
             <span class="icon is-small">
               <i class="mdi mdi-trash-can-outline"></i>
             </span>
@@ -86,17 +86,18 @@ export default {
       this.activeStep = {};
     },
     onRowClass (dataItem, index) {
-      console.log(index);
       return (dataItem.order == this.clickedRow) ? 'is-selected' : ''
     },
     deleteSelectedStep: function() {
-      console.log(this.$refs.stepList.selectedTo);
+      //console.log(this.$refs.stepList.selectedTo);
     },
     moveUpSelectedStep: function() {
-      utils.moveListElement(this.stepList, 1, true);
+      if(this.clickedRow !== null)
+        utils.moveListElement(this.stepList, this.clickedRow, true);
     },
     moveDownSelectedStep: function() {
-      utils.moveListElement(this.stepList, 1, false);
+      if(this.clickedRow !== null)
+        utils.moveListElement(this.stepList, this.clickedRow, false);
     }
   },
   components: {
