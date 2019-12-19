@@ -11,12 +11,34 @@ function formatDateTime(value, options, locale) {
   return value === null ? '' : dateTime.toLocaleString(locale, options);  
 }
 
+/**
+ * Moves element under index and changes it' order accordingly to provided direction
+ * @param {Array} list Object list to be edited
+ * @param {number} index Index of element which should be moved
+ * @param {boolean} direction Direction of move `true` - up, `false` - down
+ */
+function moveListElement(list, index, direction) {  
+  //Element at the begining or at the end of the list
+  if(list.length == index - 1 || index == 0)
+    return;
+  if(direction) {
+    let buf = list[index + 1];
+    Vue.set(list, index + 1, list[index]);
+    Vue.set(list, index, buf);
+  } else {
+    let buf = list[index - 1];
+    Vue.set(list, index - 1, list[index]);
+    Vue.set(list, index, buf);
+  }
+}
+
+module.exports.moveListElement = moveListElement;
+
 module.exports.helpers = {
   checkbox: function (v) {
     let tooltip = v ? 'Enabled' : 'Disabled';
     let icon = v ? 'mdi mdi-check-box-outline' : 'mdi mdi-checkbox-blank-outline';
-    let color = v ? 'icon has-text-success' : 'icon has-text-grey';
-    return `<span class="${color}" title="${tooltip}"><i class="${icon}"></i></span>`;
+    return `<span title="${tooltip}"><i class="${icon}"></i></span>`;
   },
   runResult: function (v) {
     let icon, color, tooltip;
