@@ -91,7 +91,7 @@ import CodeMirrorMode from '../../../node_modules/codemirror/mode/sql/sql'
 export default {
   data() {
     return {
-
+      highlighter: null
     }
   },
   props: {
@@ -101,10 +101,11 @@ export default {
     }
   },
   updated: function() {
-    var editor = CodeMirror.fromTextArea(document.getElementById('command-code'), {
-      lineNumbers: true,
-      theme: "elegant"
-    });
+    if(this.highlighter === null)
+      this.highlighter = CodeMirror.fromTextArea(document.getElementById('command-code'), {
+        lineNumbers: true,
+        theme: "elegant"
+      });
   },
   methods: {
     stepModalClose: function() {

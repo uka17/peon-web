@@ -92,12 +92,16 @@ export default {
       //console.log(this.$refs.stepList.selectedTo);
     },
     moveUpSelectedStep: function() {
-      if(this.clickedRow !== null)
-        utils.moveListElement(this.stepList, this.clickedRow, true);
+      if(this.clickedRow !== null) {
+        utils.moveListElement(this.stepList, this.clickedRow - 1, true);
+        this.clickedRow--; 
+      }
     },
     moveDownSelectedStep: function() {
-      if(this.clickedRow !== null)
-        utils.moveListElement(this.stepList, this.clickedRow, false);
+      if(this.clickedRow !== null) {
+        utils.moveListElement(this.stepList, this.clickedRow - 1, false);
+        this.clickedRow++;
+      }
     }
   },
   components: {

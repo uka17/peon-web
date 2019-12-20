@@ -19,27 +19,51 @@ function formatDateTime(value, options, locale) {
  * @param {boolean} direction Direction of move `true` - up, `false` - down
  */
 function moveListElement(list, index, direction) {  
-  let i = index - 1;
-  console.log(list, i);  
-  //Element at the begining or at the end of the list
-  if(list.length == i - 1 || i == 0)
-    return;
-  if(!direction) {
-    let buf = list[i + 1];
-    Vue.set(list, i + 1, list[i]);
-    Vue.set(list, i, buf);
+  if(typeof direction !== 'boolean')
+    throw new Error('direction should be boolean');
+  if(typeof index !== 'number')
+    throw new Error('index should be number');   
+  if(!Array.isArray(list))
+    throw new Error('list should be Array');  
 
-    Vue.set(list[i + 1], 'order', list[i].order);
-    Vue.set(list[i], 'order', list[i + 1].order);
+  if(direction) {
+    if(index > 0) {
+      let buf = list[index - 1].order;
+
+      Vue.set(list[index - 1], 'order', list[index].order);
+      Vue.set(list[index], 'order', buf);
+      
+      swapElements(list, index - 1, index);
+    }
   } else {
-    let buf = list[i - 1];
-    Vue.set(list, i - 1, list[i]);
-    Vue.set(list, i, buf);
+    if(index < list.length - 1) {
+      let buf = list[index + 1].order;
 
-    Vue.set(list[i - 1], 'order', list[i].order);
-    Vue.set(list[i], 'order', list[i - 1].order);
+      Vue.set(list[index + 1], 'order', list[index].order);
+      Vue.set(list[index], 'order', buf);      
+
+      swapElements(list, index + 1, index);
+    }
   }
-  console.log(list);
+}
+/**
+ * Swap elements under provided indexes in list
+ * @param {Array} list List of elements
+ * @param {number} firstIndex First element index
+ * @param {number} secondIndex Second element index
+ */
+function swapElements(list, firstIndex, secondIndex) {
+  if(typeof secondIndex !== 'number')
+    throw new Error('secondIndex should be number');
+  if(typeof firstIndex !== 'number')
+    throw new Error('firstIndex should be number');   
+  if(!Array.isArray(list))
+    throw new Error('list should be Array');   
+    
+    
+  let buf = JSON.parse(JSON.stringify(list[firstIndex]));
+  Vue.set(list, firstIndex, JSON.parse(JSON.stringify(list[secondIndex])));
+  Vue.set(list, secondIndex, buf);
 }
 
 module.exports.moveListElement = moveListElement;
