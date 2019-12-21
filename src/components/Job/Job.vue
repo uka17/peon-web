@@ -28,7 +28,7 @@
             <job-general-tab v-bind:jobRecord="jobRecord"></job-general-tab>
           </section>
           <section class="tab-content" v-bind:class="{ 'is-hidden': this.activeTab != 'steps' }">
-            <step-list-tab v-bind:stepList="stepList"></step-list-tab>
+            <step-list-tab ref="stepList" v-bind:stepList="stepList"></step-list-tab>
           </section>
           <section class="tab-content" v-bind:class="{ 'is-hidden': this.activeTab != 'schedules' }">Schedules</section>
           <section class="tab-content" v-bind:class="{ 'is-hidden': this.activeTab != 'notifications' }">Notifications</section>
@@ -62,6 +62,7 @@ export default {
     jobModalClose: function() {
       this.activeTab = 'general';
       this.$emit('job-modal-close');
+      this.$refs.stepList.clickedRow = null;
     },
     jobTabClick: function(tabName) {
       this.activeTab = tabName;

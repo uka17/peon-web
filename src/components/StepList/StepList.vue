@@ -22,7 +22,7 @@
           <span>&nbsp;</span>
           <div class="field has-addons">      
             <p class="control">
-              <button class="button" title="Create new step">
+              <button class="button is-success" title="Create new step">
                 <span class="icon is-small">
                   <i class="mdi mdi-shape-square-plus"></i>
                 </span>
@@ -34,7 +34,7 @@
       </div>
       <div class="column">
         <p class="control">
-          <button class="button is-danger is-pulled-right" :disabled="clickedRow === null" title="Delete selected step(s)" @click="deleteSelectedStep()">
+          <button class="button is-danger is-pulled-right" :disabled="clickedRow === null" title="Delete selected step" @click="deleteSelectedStep()">
             <span class="icon is-small">
               <i class="mdi mdi-trash-can-outline"></i>
             </span>
@@ -89,7 +89,11 @@ export default {
       return (dataItem.order == this.clickedRow) ? 'is-selected' : ''
     },
     deleteSelectedStep: function() {
-      //console.log(this.$refs.stepList.selectedTo);
+      if(this.clickedRow !== null) {
+        this.stepList.splice(this.clickedRow - 1, 1);
+        utils.reorderElements(this.stepList);
+        this.clickedRow = null;
+      }
     },
     moveUpSelectedStep: function() {
       if(this.clickedRow !== null) {

@@ -27,25 +27,33 @@ function moveListElement(list, index, direction) {
     throw new Error('list should be Array');  
 
   if(direction) {
-    if(index > 0) {
-      let buf = list[index - 1].order;
-
-      Vue.set(list[index - 1], 'order', list[index].order);
-      Vue.set(list[index], 'order', buf);
-      
+    if(index > 0) {     
       swapElements(list, index - 1, index);
+      reorderElements(list);
     }
   } else {
     if(index < list.length - 1) {
-      let buf = list[index + 1].order;
-
-      Vue.set(list[index + 1], 'order', list[index].order);
-      Vue.set(list[index], 'order', buf);      
-
       swapElements(list, index + 1, index);
+      reorderElements(list);
     }
   }
 }
+module.exports.moveListElement = moveListElement;
+
+/**
+ * Changes `order` value of each element in `list` accordingly their native order in list
+ * @param {Array} list List of elements which should be reordered 
+ */
+function reorderElements(list) {
+  if(!Array.isArray(list))
+    throw new Error('list should be Array');
+
+  for (let index = 0; index < list.length; index++) {
+    list[index].order = index + 1;    
+  }
+}
+module.exports.reorderElements = reorderElements;
+
 /**
  * Swap elements under provided indexes in list
  * @param {Array} list List of elements
@@ -66,8 +74,6 @@ function swapElements(list, firstIndex, secondIndex) {
   Vue.set(list, secondIndex, buf);
 }
 
-module.exports.moveListElement = moveListElement;
-
 module.exports.helpers = {
   checkbox: function (v) {
     let tooltip = v ? 'Enabled' : 'Disabled';
@@ -86,7 +92,7 @@ module.exports.helpers = {
       return '';   
   },
   info: function (v) {
-    return `<span class="icon has-text-info" data-tooltip="${v}"><i class="mdi mdi-information"></i></span>`;
+    return `<span data-tooltip="${v}"><i class="mdi mdi-information-outline"></i></span>`;
   },
   link: function (v) {
     return `<a>${v}</a>`;
