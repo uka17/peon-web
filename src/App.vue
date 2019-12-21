@@ -14,8 +14,7 @@
       <div class="column">
         <div v-show="menuItemClass('job-list')" id="job-list-container">        
           <h1 class="title">{{ this.findMenuItemById('job-list').title }}</h1>
-          <job-list v-on:job-modal-show="jobModalShow($event)"></job-list>
-          <job v-bind:jobRecord="activeJobRecord" v-on:job-modal-close="jobModalClose"></job>
+          <job-list></job-list>
         </div>
         <div v-show="menuItemClass('schedule')" id="schedule-container">        
           <h1 class="title">{{ this.findMenuItemById('schedule').title }}</h1>
@@ -36,16 +35,13 @@
 
 <script>
 import JobList from './components/JobList/JobList.vue'
-import Job from './components/Job/Job.vue'
 import menuDefinition from './components/menu-definition.js'
-import axios from 'axios';
 import config from './components/config';
 
 export default {
   data () {
     return {
-      menu: menuDefinition,
-      activeJobRecord: {}
+      menu: menuDefinition
     }
   },
   methods: {
@@ -58,25 +54,13 @@ export default {
     },
     findMenuItemById(id) {
       return this.menu.find((elem) => { if(elem.id == id && !(elem.id.includes('---'))) return elem; })
-    },
-    jobModalShow: async function(jobId) {
-      try {        
-        const response = await axios.get(`${config.apiUrl}/jobs/${jobId}`);
-        this.activeJobRecord = response.data;
-      } catch (error) {
-        this.activeJobRecord = {};
-      }
-    },
-    jobModalClose: function() {
-      this.activeJobRecord = {};
-    }    
+    }
   },
   computed: {
     
   },
   components: {
-    'job-list': JobList,
-    'job': Job
+    'job-list': JobList
   }
 }
 </script>

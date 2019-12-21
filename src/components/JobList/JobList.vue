@@ -54,7 +54,7 @@
               <article class="message is-danger">
                 <div class="message-body">
                   Once you delete a job, there is no going back. <br/>
-                  Please be certain. Type <span><b>{{ selectedJobName }}</b></span> to confirm.<br/><br/>
+                  Please be certain. Type <span><b>{{ activeJobRecord.name }}</b></span> to confirm.<br/><br/>
                   <div class="field has-addons">
                     <div class="control">
                       <input class="input" v-model="jobNameToDelete" type="text" placeholder="Job name">
@@ -73,13 +73,16 @@
       </div>
       <button class="modal-close is-large" aria-label="close" @click="deleteDialogIsVisible = false"></button>
     </div>    
-  </div>            
+    <job v-bind:jobRecord="activeJobRecord" ref="job" v-on:job-modal-close="jobModalClose"></job>                
+  </div>
 </template>
 
 <script>
 import Vuetable from 'vuetable-2'
 import VuetablePagination from '../../../node_modules/vuetable-2/src/components/VuetablePagination.vue'
 import VuetablePaginationInfo from '../../../node_modules/vuetable-2/src/components/VuetablePaginationInfo.vue'
+import Job from '../Job/Job.vue'
+
 import vue_css from '../table-style.js'
 import fields_definition from './joblist-fields-defintion.js'
 import config from '../config.js';
@@ -89,7 +92,7 @@ export default {
   data () {
     return {
       selectedRow: null,
-      selectedJobName: null,
+      activeJobRecord: {},
       deleteDialogIsVisible: false,
       css: vue_css,
       fields: fields_definition,
@@ -105,16 +108,25 @@ export default {
     onChangePage (page) {
       this.$refs.vuetable.changePage(page)
     },
-    onCellClicked (data, field, event) {
+    async onCellClicked (data, field, event) {
       console.log(data.id);
       this.selectedRow = data.id;   
-      this.selectedJobName = data.name;   
-      if(field.name == 'name')
-        this.$emit('job-modal-show', data.id);
+      try {                
+        if(field.name == 'name') {
+          const response = await axios.get(`${config.apiUrl}/jobs/${data.id}`);
+          this.activeJobRecord = response.data;          
+        }
+      } catch (error) {
+        this.activeJobRecord = {};
+      }            
     },
     onRowClass (dataItem, index) {
       return (dataItem.id == this.selectedRow) ? 'is-selected' : ''
     },
+    jobModalClose: function() {
+      this.activeJobRecord = {};
+      this.$refs.jobList.refresh();
+    },        
     deleteSelectedJob: function() {
       if(this.selectedRow !== null) {
         this.deleteDialogIsVisible = true;
@@ -132,17 +144,18 @@ export default {
   },
   computed: {
     deleteLocked: function() {
-      if(this.selectedJobName !== null && this.jobNameToDelete !== null) {
-        return !(this.selectedJobName === this.jobNameToDelete);
+      if(this.activeJobRecord.name !== undefined && this.jobNameToDelete !== null) {
+        return !(this.activeJobRecord.name === this.jobNameToDelete);
       } else {
         return true;
       }
     }
   },
   components: {
-    Vuetable,
-    VuetablePagination,
-    VuetablePaginationInfo
+    'vuetable': Vuetable,
+    'vuetable-pagination': VuetablePagination,
+    'vuetable-pagination-info': VuetablePaginationInfo,
+    'job': Job
   }
 }
 </script>
