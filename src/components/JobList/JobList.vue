@@ -22,7 +22,7 @@
       </div>
     </div>
 
-    <vuetable ref="vuetable"
+    <vuetable ref="jobList"
       :api-url="apiUrl"
       :fields="fields"
       data-path="data"
@@ -60,7 +60,7 @@
                       <input class="input" v-model="jobNameToDelete" type="text" placeholder="Job name">
                     </div>
                     <div class="control">
-                      <a class="button is-danger" :disabled="deleteLocked" @click="executeJobDeletion()">
+                      <a class="button is-danger" :disabled="deleteLocked" @click="executeJobDeletion">
                         Delete
                       </a>
                     </div>
@@ -83,6 +83,7 @@ import VuetablePaginationInfo from '../../../node_modules/vuetable-2/src/compone
 import vue_css from '../table-style.js'
 import fields_definition from './joblist-fields-defintion.js'
 import config from '../config.js';
+import axios from 'axios';
 
 export default {
   data () {
@@ -119,9 +120,14 @@ export default {
         this.deleteDialogIsVisible = true;
       }
     },
-    executeJobDeletion: function() {
-      alert(this.selectedRow);
+    executeJobDeletion: async function() {      
       this.deleteDialogIsVisible = false;
+      try {        
+        const response = await axios.delete(`${config.apiUrl}/jobs/${this.selectedRow}`);
+        this.$refs.jobList.refresh();
+      } catch (error) {
+        console.log(error);
+      }
     }
   },
   computed: {

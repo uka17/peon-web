@@ -35,7 +35,7 @@
         </div>        
       </section>
       <footer class="modal-card-foot buttons is-right">
-          <button class="button is-link" @click="jobModalClose">Save changes</button>
+          <button class="button is-link" @click="jobSaveChanges">Save changes</button>
           <button @click="jobModalClose" class="button">Cancel</button>
       </footer>
     </div>
@@ -45,6 +45,8 @@
 <script>
 import JobGeneralTab from './JobGeneralTab.vue'
 import StepList from '../StepList/StepList.vue'
+import config from '../config.js';
+import axios from 'axios';
 
 export default {
   data() {
@@ -66,6 +68,15 @@ export default {
     },
     jobTabClick: function(tabName) {
       this.activeTab = tabName;
+    },
+    jobSaveChanges: async function() {
+      try {        
+        console.log(this.jobRecord);
+        const response = await axios.patch(`${config.apiUrl}/jobs/${this.jobRecord.id}`, this.jobRecord.job);
+        this.jobModalClose();
+      } catch (error) {
+        console.log(error);
+      }
     }
   },
   computed: {
