@@ -1,10 +1,10 @@
 <template>
-  <div class="modal" v-bind:class="{ 'is-active': stepModalIsActive }" v-on:keyup.esc="stepModalClose()">
+  <div class="modal" v-bind:class="{ 'is-active': modalIsActive }" v-on:keyup.esc="modalClose()">
     <div class="modal-background"></div>
     <div class="modal-card">
       <header class="modal-card-head">
         <p class="modal-card-title">Step properties: {{step.name}}</p>
-        <button class="delete" aria-label="close" @click="stepModalClose"></button>
+        <button class="delete" aria-label="close" @click="modalClose"></button>
       </header>
       <section class="modal-card-body">
         <div class="field">
@@ -34,7 +34,7 @@
         <div class="field">
           <label class="label">Command</label>
           <div class="control">
-            <textarea class="textarea" placeholder="Job description" v-model="step.command" id="command-code"></textarea>
+            <textarea class="textarea" placeholder="Job description" v-model="step.command" v-on:change="console.log('aaa')" id="command-code"></textarea>
           </div>
         </div>
         <label class="label">Retry</label>
@@ -42,7 +42,7 @@
           <div class="column is-two-fifths">
             <div class="field has-addons">
               <p class="control">
-                <input class="input" v-model="retryAttempts.number" type="text">
+                <input class="input" v-model.number="retryAttempts.number" type="text">
               </p>
               <p class="control">
                 <a class="button is-static">
@@ -50,7 +50,7 @@
                 </a>
               </p>
               <p class="control">
-                <input class="input" v-model="retryAttempts.interval" type="text"> 
+                <input class="input" v-model.number="retryAttempts.interval" type="text"> 
               </p>
               <p class="control">
                 <a class="button is-static">
@@ -64,19 +64,19 @@
         <div class="field">
           <label class="label">On succeed</label>
           <div class="control">
-            <step-result-action v-on:step-result-action-update="stepOnSucceedActionUpdate($event)" v-bind:onStepResult="step.onSucceed"></step-result-action>
+            <step-result-action v-on:step-result-action-update="onSucceedActionUpdate($event)" v-bind:onStepResult="step.onSucceed"></step-result-action>
           </div>
         </div>     
         <div class="field">
           <label class="label">On failure</label>
           <div class="control">
-            <step-result-action v-on:step-result-action-update="stepOnFailureActionUpdate($event)" v-bind:onStepResult="step.onFailure"></step-result-action>
+            <step-result-action v-on:step-result-action-update="onFailureActionUpdate($event)" v-bind:onStepResult="step.onFailure"></step-result-action>
           </div>
         </div>              
       </section>
       <footer class="modal-card-foot buttons is-right">
-          <button class="button is-link" @click="stepModalClose">Save changes</button>
-          <button @click="stepModalClose" class="button">Cancel</button>
+          <button class="button is-link" @click="saveChanges">Save changes</button>
+          <button @click="modalClose" class="button">Cancel</button>
       </footer>
     </div>
   </div>
@@ -91,35 +91,43 @@ import CodeMirrorMode from '../../../node_modules/codemirror/mode/sql/sql'
 export default {
   data() {
     return {
+      step: {},
       highlighter: null
     }
   },
-  props: {
-    step: {
-      type: Object,
-      required: true
-    }
-  },
-  updated: function() {
-    if(this.highlighter === null)
-      this.highlighter = CodeMirror.fromTextArea(document.getElementById('command-code'), {
-        lineNumbers: true,
-        theme: "elegant"
-      });
-  },
   methods: {
-    stepModalClose: function() {
-      this.$emit('step-modal-close');
+    modalShow: function(step) {    
+      this.$set(this, 'step', step);
+      //Have no idea how it works, but CodeMirror needs a tiny delay before init =(
+      setTimeout(() => {
+        if(this.highlighter === null) {
+            this.highlighter = CodeMirror.fromTextArea(document.getElementById('command-code'), {
+              lineNumbers: true,
+              theme: "elegant"
+          });
+        };   
+      }, 1)      
+    },    
+    saveChanges: function() {
+      //Codemirror is not reactive element unfortunately
+      this.step.command = this.highlighter.getValue();     
+      this.$emit('step-modal-save', this.step);       
+      this.modalClose();
     },
-    stepOnSucceedActionUpdate: function(v) {
+    modalClose: function() {
+      this.$set(this, 'step', {});
+      this.highlighter.toTextArea();
+      this.highlighter = null;
+    },
+    onSucceedActionUpdate: function(v) {
       this.step.onSucceed = v;
     },
-    stepOnFailureActionUpdate: function(v) {
+    onFailureActionUpdate: function(v) {
       this.step.onFailure = v;
     }
   },
   computed: {
-    stepModalIsActive: function() {
+    modalIsActive: function() {
       return this.step.name !== undefined;
     },
     retryAttempts: function() {

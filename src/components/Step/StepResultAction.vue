@@ -14,7 +14,7 @@
         </p>
         <template v-if="stepResultAction== 'gotoStep'">       
           <p class="control">
-            <input class="input" v-model="stepNumber" type="text" style="text-align:center;">   
+            <input class="input" v-model.number="stepNumber" type="text" style="text-align:center;">   
           </p>
         </template>
       </div>

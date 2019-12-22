@@ -52,7 +52,7 @@
       :css="css.table"
     >
     </vuetable>
-    <step v-bind:step="activeStep" v-on:step-modal-close="stepModalClose"></step>
+    <step ref="step" v-on:step-modal-save="stepSave($event)"></step>
   </div>
 </template>
 
@@ -71,22 +71,23 @@ export default {
     return {
       clickedRow: null,
       css: vue_css,
-      fields: fields_definition,
-      activeStep: {}     
+      fields: fields_definition
     }
   },
   props: ['stepList'],
   methods: {
     onCellClicked (data, field, event) {
       this.clickedRow = data.order;
-      if(field.name == 'name')
-        this.activeStep = data;
-    },
-    stepModalClose: function () {
-      this.activeStep = {};
+      if(field.name == 'name') {
+        //Break reactivity for modal edit
+        this.$refs.step.modalShow(JSON.parse(JSON.stringify(data)));
+      }
     },
     onRowClass (dataItem, index) {
       return (dataItem.order == this.clickedRow) ? 'is-selected' : ''
+    },
+    stepSave (v){
+      this.$set(this.stepList, this.clickedRow - 1, v);
     },
     deleteSelectedStep: function() {
       if(this.clickedRow !== null) {

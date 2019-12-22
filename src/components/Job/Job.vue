@@ -71,11 +71,12 @@ export default {
     },
     jobSaveChanges: async function() {
       try {        
-        console.log(this.jobRecord);
+        //TODO avoid changes if job was not changed ???
         const response = await axios.patch(`${config.apiUrl}/jobs/${this.jobRecord.id}`, this.jobRecord.job);
         this.jobModalClose();
       } catch (error) {
         console.log(error);
+        console.log(error.request.response);
       }
     }
   },

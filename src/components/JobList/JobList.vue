@@ -132,6 +132,7 @@ export default {
     deleteSelectedJob: function() {
       if(this.selectedRow !== null) {
         this.deleteDialogIsVisible = true;
+        this.jobNameToDelete = '';
       }
     },
     executeJobDeletion: async function() {      
@@ -147,9 +148,6 @@ export default {
   computed: {
     deleteLocked: function() {
       return !(this.selectedJobName === this.jobNameToDelete);
-    },
-    selectedJobName: function() {
-      return this.activeJobRecord.job !== undefined ? this.activeJobRecord.job.name : 'confirm';
     }
   },
   components: {
