@@ -6,12 +6,17 @@ th#_last_run_on,
 th#_next_run, 
 th#_created_on,
 th#_modified_on
-  { min-width: 170px; }
+  { width: 170px; }
 
-th#_last_run_result,
+th#_last_run_result 
+  { width: 90px; }
 th#_name 
-  { min-width: 75px; }
+  { min-width: 175px; }
 
 th#_modified_by,
 th#_created_by  
   { min-width: 110px; }
+
+th#_enabled,
+th#_last_run_result
+{ text-align: center; }

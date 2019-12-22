@@ -1,7 +1,7 @@
 <template>
   <div id="main">
     <div class="columns">
-      <div class="column is-one-fifth">
+      <div class="column is-narrow" style="width: 220px;">
         <aside class="menu">
           <ul class="menu-list">
               <li v-for="item in menu" v-bind:key="item.id">

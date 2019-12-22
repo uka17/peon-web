@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div>
     <div class="columns">   
       <div class="column">
         <p class="control">
@@ -35,11 +35,11 @@
     </vuetable>
     <div class="columns">
       <div class="column is-paddingless">
-        <vuetable-pagination-info ref="paginationInfo"
+        <vuetable-pagination-info ref="jobListPaginationInfo"
         ></vuetable-pagination-info>
       </div>
       <div class="column">
-        <vuetable-pagination ref="pagination"
+        <vuetable-pagination ref="jobListPagination"
           @vuetable-pagination:change-page="onChangePage"
           :css="css.pagination"
         ></vuetable-pagination>
@@ -54,7 +54,7 @@
               <article class="message is-danger">
                 <div class="message-body">
                   Once you delete a job, there is no going back. <br/>
-                  Please be certain. Type <span><b>{{ activeJobRecord.name }}</b></span> to confirm.<br/><br/>
+                  Please be certain. Type <span><b>{{ selectedJobName }}</b></span> to confirm.<br/><br/>
                   <div class="field has-addons">
                     <div class="control">
                       <input class="input" v-model="jobNameToDelete" type="text" placeholder="Job name">
@@ -92,25 +92,27 @@ export default {
   data () {
     return {
       selectedRow: null,
+      selectedJobName: null,
       activeJobRecord: {},
       deleteDialogIsVisible: false,
+      jobNameToDelete: null,
       css: vue_css,
       fields: fields_definition,
-      apiUrl: `${config.apiUrl}/jobs`,
-      jobNameToDelete: null
+      apiUrl: `${config.apiUrl}/jobs`
     }
   },
   methods: {
     onPaginationData (paginationData) {
-      this.$refs.pagination.setPaginationData(paginationData)
-      this.$refs.paginationInfo.setPaginationData(paginationData)
+      this.$refs.jobListPagination.setPaginationData(paginationData)
+      this.$refs.jobListPaginationInfo.setPaginationData(paginationData)
     },
     onChangePage (page) {
-      this.$refs.vuetable.changePage(page)
+      this.$refs.jobList.changePage(page)
     },
     async onCellClicked (data, field, event) {
       console.log(data.id);
       this.selectedRow = data.id;   
+      this.selectedJobName = data.name;
       try {                
         if(field.name == 'name') {
           const response = await axios.get(`${config.apiUrl}/jobs/${data.id}`);
@@ -120,23 +122,23 @@ export default {
         this.activeJobRecord = {};
       }            
     },
-    onRowClass (dataItem, index) {
-      return (dataItem.id == this.selectedRow) ? 'is-selected' : ''
-    },
     jobModalClose: function() {
       this.activeJobRecord = {};
       this.$refs.jobList.refresh();
-    },        
+    },            
+    onRowClass (dataItem, index) {
+      return (dataItem.id == this.selectedRow) ? 'is-selected' : ''
+    },
     deleteSelectedJob: function() {
       if(this.selectedRow !== null) {
         this.deleteDialogIsVisible = true;
       }
     },
     executeJobDeletion: async function() {      
-      this.deleteDialogIsVisible = false;
       try {        
         const response = await axios.delete(`${config.apiUrl}/jobs/${this.selectedRow}`);
         this.$refs.jobList.refresh();
+        this.deleteDialogIsVisible = false;
       } catch (error) {
         console.log(error);
       }
@@ -144,11 +146,10 @@ export default {
   },
   computed: {
     deleteLocked: function() {
-      if(this.activeJobRecord.name !== undefined && this.jobNameToDelete !== null) {
-        return !(this.activeJobRecord.name === this.jobNameToDelete);
-      } else {
-        return true;
-      }
+      return !(this.selectedJobName === this.jobNameToDelete);
+    },
+    selectedJobName: function() {
+      return this.activeJobRecord.job !== undefined ? this.activeJobRecord.job.name : 'confirm';
     }
   },
   components: {
