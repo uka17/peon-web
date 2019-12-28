@@ -47,7 +47,7 @@ module.exports.moveListElement = moveListElement;
  */
 function reorderElements(list) {
   if(!Array.isArray(list))
-    throw new TypeError('list should be Array');
+    throw new TypeError('list should be an Array');
 
   for (let index = 0; index < list.length; index++) {
     list[index].order = index + 1;    
@@ -67,13 +67,14 @@ function swapElements(list, firstIndex, secondIndex) {
   if(typeof firstIndex !== 'number' || isNaN(parseInt(firstIndex)))
     throw new TypeError('firstIndex should be a number');   
   if(!Array.isArray(list))
-    throw new TypeError('list should be Array');   
+    throw new TypeError('list should be an Array');   
     
     
   let buf = JSON.parse(JSON.stringify(list[firstIndex]));
   Vue.set(list, firstIndex, JSON.parse(JSON.stringify(list[secondIndex])));
   Vue.set(list, secondIndex, buf);
 }
+module.exports.swapElements = swapElements;
 
 module.exports.helpers = {
   checkbox: function (v) {
@@ -92,13 +93,13 @@ module.exports.helpers = {
     else
       return '';   
   },
-  info: function (v) {
+  info: /*istanbul ignore next*/ function (v) {
     return `<span data-tooltip="${v}"><i class="mdi mdi-information-outline"></i></span>`;
   },
-  link: function (v) {
+  link: /*istanbul ignore next*/ function (v) {
     return `<a>${v}</a>`;
   },
-  formatDateTime: function (v) {
+  formatDateTime: /*istanbul ignore next*/ function (v) {
     return formatDateTime(v, config.tableDateTimeFormat, 'en');
   },
   retryAttempts: function (v) {
@@ -119,6 +120,7 @@ module.exports.helpers = {
         return 'Quit with success';
       case 'quitWithFailure':
         return 'Quit with failure';
+      /*istanbul ignore next*/
       default:
         return '';
       }

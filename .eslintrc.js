@@ -17,10 +17,6 @@ module.exports = {
             "warn",
             2
         ],
-        "linebreak-style": [
-            "error",
-            "unix"
-        ],
         "semi": [
             "warn",
             "always"
