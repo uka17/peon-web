@@ -11,6 +11,7 @@ function formatDateTime(value, options, locale) {
   let dateTime = new Date(value);
   return value === null ? '' : dateTime.toLocaleString(locale, options);  
 }
+module.exports.formatDateTime = formatDateTime;
 
 /**
  * Moves element under index and changes it' order accordingly to provided direction
@@ -20,11 +21,11 @@ function formatDateTime(value, options, locale) {
  */
 function moveListElement(list, index, direction) {  
   if(typeof direction !== 'boolean')
-    throw new Error('direction should be boolean');
-  if(typeof index !== 'number')
-    throw new Error('index should be number');   
+    throw new TypeError('direction should be boolean');
+  if(typeof index !== 'number' || isNaN(parseInt(index)))
+    throw new TypeError('index should be a number');   
   if(!Array.isArray(list))
-    throw new Error('list should be Array');  
+    throw new TypeError('list should be an Array');  
 
   if(direction) {
     if(index > 0) {     
@@ -46,7 +47,7 @@ module.exports.moveListElement = moveListElement;
  */
 function reorderElements(list) {
   if(!Array.isArray(list))
-    throw new Error('list should be Array');
+    throw new TypeError('list should be Array');
 
   for (let index = 0; index < list.length; index++) {
     list[index].order = index + 1;    
@@ -61,12 +62,12 @@ module.exports.reorderElements = reorderElements;
  * @param {number} secondIndex Second element index
  */
 function swapElements(list, firstIndex, secondIndex) {
-  if(typeof secondIndex !== 'number')
-    throw new Error('secondIndex should be number');
-  if(typeof firstIndex !== 'number')
-    throw new Error('firstIndex should be number');   
+  if(typeof secondIndex !== 'number' || isNaN(parseInt(secondIndex)))
+    throw new TypeError('secondIndex should be a number');
+  if(typeof firstIndex !== 'number' || isNaN(parseInt(firstIndex)))
+    throw new TypeError('firstIndex should be a number');   
   if(!Array.isArray(list))
-    throw new Error('list should be Array');   
+    throw new TypeError('list should be Array');   
     
     
   let buf = JSON.parse(JSON.stringify(list[firstIndex]));
