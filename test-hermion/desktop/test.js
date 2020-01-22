@@ -1,7 +1,7 @@
 const assert = require('chai').assert;
 
 describe('hermione-hw', function() {
-  it('should find work-area', function() {
+  it('Should find work-area', function() {
     return this.browser
       .url('http://localhost:9000')
       .waitForVisible('=TestJob2')
