@@ -22,7 +22,7 @@
           <span>&nbsp;</span>
           <div class="field has-addons">      
             <p class="control">
-              <button class="button is-success" title="Create new step">
+              <button class="button is-success" title="Create new step" @click="modalNewShow()">
                 <span class="icon is-small">
                   <i class="mdi mdi-shape-square-plus"></i>
                 </span>
@@ -48,11 +48,14 @@
       :data="stepList"
       :fields="fields"
       :row-class="onRowClass"
-      @vuetable:cell-clicked="onCellClicked"
+      @vuetable:cell-clicked="onCellClicked"      
       :css="css.table"
     >
+      <template ref="stepname" slot="step-name" slot-scope="props">
+        <a @click="$emit('step-modal-edit', props.rowData)">{{ props.rowData.name }}</a>
+      </template>    
     </vuetable>
-    <step ref="step" v-on:step-modal-save="stepSave($event)"></step>
+    <step ref="step" v-on:step-modal-save="stepSave($event)" v-on:step-modal-new="stepCreate($event)"></step>
   </div>
 </template>
 
@@ -61,8 +64,11 @@ import Vuetable from 'vuetable-2'
 import VuetablePagination from '../../../node_modules/vuetable-2/src/components/VuetablePagination.vue'
 import VuetablePaginationInfo from '../../../node_modules/vuetable-2/src/components/VuetablePaginationInfo.vue'
 import Step from '../Step/Step.vue'
+
 import vue_css from '../table-style.js'
-import fields_definition from './steplist-fields-defintion'
+import fields_definition from './steplist-fields-defintion.js'
+import step_template from '../Step/step-template.js'
+
 import config from '../config.js';
 import utils from '../utils.js';
 
@@ -77,18 +83,28 @@ export default {
   props: ['stepList'],
   methods: {
     onCellClicked (data, field, event) {
-      this.clickedRow = data.order;
-      if(field.name == 'name') {
-        //Break reactivity for modal edit
-        this.$refs.step.modalShow(JSON.parse(JSON.stringify(data)));
-      }
+      this.clickedRow = data.order;      
     },
+    modalEditShow(step) {
+      alert(step);
+      //Break reactivity for modal edit
+      this.$refs.step.modalShow(JSON.parse(JSON.stringify(step)));
+    },
+    modalNewShow() {
+      //Break reactivity for modal edit
+      this.$refs.step.modalShow(JSON.parse(JSON.stringify(step_template.newStep)), true);         
+    },    
+    stepSave (step){
+      this.$set(this.stepList, this.clickedRow - 1, step);
+    },
+    stepCreate(newStep) {
+      let index = this.clickedRow === null ? this.stepList.length : this.clickedRow;          
+      this.stepList.splice(index, 0, newStep);
+      utils.reorderElements(this.stepList);
+    },    
     onRowClass (dataItem, index) {
       return (dataItem.order == this.clickedRow) ? 'is-selected' : ''
-    },
-    stepSave (v){
-      this.$set(this.stepList, this.clickedRow - 1, v);
-    },
+    },    
     deleteSelectedStep: function() {
       if(this.clickedRow !== null) {
         this.stepList.splice(this.clickedRow - 1, 1);

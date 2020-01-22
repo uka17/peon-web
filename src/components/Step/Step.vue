@@ -75,7 +75,8 @@
         </div>              
       </section>
       <footer class="modal-card-foot buttons is-right">
-          <button class="button is-link" @click="saveChanges">Save changes</button>
+          <button v-if="!isNew" class="button is-link" @click="saveChanges">Save changes</button>
+          <button v-if="isNew" class="button is-success" @click="createStep">Create step</button>
           <button @click="modalClose" class="button">Cancel</button>
       </footer>
     </div>
@@ -92,11 +93,13 @@ export default {
   data() {
     return {
       step: {},
-      highlighter: null
+      highlighter: null,
+      isNew: null
     }
   },
   methods: {
-    modalShow: function(step) {    
+    modalShow(step, isNew = false) {
+      this.$set(this, 'isNew', isNew);
       this.$set(this, 'step', step);
       //Have no idea how it works, but CodeMirror needs a tiny delay before init =(
       setTimeout(() => {
@@ -106,12 +109,18 @@ export default {
               theme: "elegant"
           });
         };   
-      }, 1)      
-    },    
+      }, 1)  
+    },
     saveChanges: function() {
       //Codemirror is not reactive element unfortunately
       this.step.command = this.highlighter.getValue();     
       this.$emit('step-modal-save', this.step);       
+      this.modalClose();
+    },
+    createStep() {
+      //Codemirror is not reactive element unfortunately
+      this.step.command = this.highlighter.getValue();     
+      this.$emit('step-modal-new', this.step);       
       this.modalClose();
     },
     modalClose: function() {
