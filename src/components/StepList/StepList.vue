@@ -52,7 +52,7 @@
       :css="css.table"
     >
       <template ref="stepname" slot="step-name" slot-scope="props">
-        <a @click="$emit('step-modal-edit', props.rowData)">{{ props.rowData.name }}</a>
+        <a @click="modalEditShow(props.rowData)">{{ props.rowData.name }}</a>
       </template>    
     </vuetable>
     <step ref="step" v-on:step-modal-save="stepSave($event)" v-on:step-modal-new="stepCreate($event)"></step>
@@ -86,7 +86,6 @@ export default {
       this.clickedRow = data.order;      
     },
     modalEditShow(step) {
-      alert(step);
       //Break reactivity for modal edit
       this.$refs.step.modalShow(JSON.parse(JSON.stringify(step)));
     },
