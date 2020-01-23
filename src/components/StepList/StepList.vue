@@ -51,7 +51,7 @@
       @vuetable:cell-clicked="onCellClicked"      
       :css="css.table"
     >
-      <template ref="stepname" slot="step-name" slot-scope="props">
+      <template slot="step-name" slot-scope="props">
         <a @click="modalEditShow(props.rowData)">{{ props.rowData.name }}</a>
       </template>    
     </vuetable>

@@ -3,7 +3,7 @@ let utils = require('../utils.js');
 module.exports = 
 [           
   {name: 'description', title: '', dataClass: '_description', callback: utils.helpers.info},
-  {name: 'name', sortField: 'name', dataClass: '_name', title: 'Name', callback: utils.helpers.link},
+  {name: '__slot:job-name', title: 'Name', sortField: 'name'},
   {name: 'enabled', sortField: 'enabled', dataClass: 'has-text-centered', title: 'Enabled', callback: utils.helpers.checkbox},
   {name: 'status', sortField: 'status', title: 'Status'},
   {name: 'last_run_result', sortField: 'last_run_result', dataClass: 'has-text-centered', title: 'Last run', callback: utils.helpers.runResult},

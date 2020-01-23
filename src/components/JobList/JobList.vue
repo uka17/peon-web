@@ -32,6 +32,9 @@
       @vuetable:cell-clicked="onCellClicked"
       :css="css.table"
     >
+      <template slot="job-name" slot-scope="props">
+        <a @click="modalEditShow(props.rowData.id)">{{ props.rowData.name }}</a>
+      </template>     
     </vuetable>
     <div class="columns">
       <div class="column is-paddingless">
@@ -112,15 +115,15 @@ export default {
     async onCellClicked (data, field, event) {
       console.log(data.id);
       this.selectedRow = data.id;   
-      this.selectedJobName = data.name;
-      try {                
-        if(field.name == 'name') {
-          const response = await axios.get(`${config.apiUrl}/jobs/${data.id}`);
-          this.activeJobRecord = response.data;          
-        }
+      this.selectedJobName = data.name;        
+    },
+    async modalEditShow(jobId) {
+      try {        
+        const response = await axios.get(`${config.apiUrl}/jobs/${jobId}`);
+        this.activeJobRecord = response.data;          
       } catch (error) {
         this.activeJobRecord = {};
-      }            
+      }    
     },
     jobModalClose: function() {
       this.activeJobRecord = {};
