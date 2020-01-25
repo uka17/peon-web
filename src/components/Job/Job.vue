@@ -1,25 +1,25 @@
 <template>
-  <div class="modal" v-bind:class="{ 'is-active': jobModalIsActive }" v-on:keyup.esc="jobModalClose()">
+  <div class="modal" v-bind:class="{ 'is-active': modalIsActive }" v-on:keyup.esc="modalClose()">
     <div class="modal-background"></div>
     <div class="modal-card">
       <header class="modal-card-head">
         <p class="modal-card-title">Job properties: {{job.name}}</p>
-        <button class="delete" aria-label="close" @click="jobModalClose"></button>
+        <button class="delete" aria-label="close" @click="modalClose"></button>
       </header>
       <section class="modal-card-body">
         <div class="tabs is-boxed">
           <ul>
             <li v-bind:class="{ 'is-active': this.activeTab == 'general' }">
-              <a @click="jobTabClick('general')"><span>General</span></a>
+              <a @click="tabClick('general')"><span>General</span></a>
             </li>
             <li v-bind:class="{ 'is-active': this.activeTab == 'steps' }">
-              <a @click="jobTabClick('steps')"><span>Steps</span></a>
+              <a @click="tabClick('steps')"><span>Steps</span></a>
             </li>
             <li v-bind:class="{ 'is-active': this.activeTab == 'schedules' }">
-              <a @click="jobTabClick('schedules')"><span>Schedules</span></a>
+              <a @click="tabClick('schedules')"><span>Schedules</span></a>
             </li>
             <li v-bind:class="{ 'is-active': this.activeTab == 'notifications' }">
-              <a @click="jobTabClick('notifications')"> <span>Notifications</span></a>
+              <a @click="tabClick('notifications')"> <span>Notifications</span></a>
             </li>
           </ul>
         </div>
@@ -35,8 +35,9 @@
         </div>        
       </section>
       <footer class="modal-card-foot buttons is-right">
-          <button class="button is-link" @click="jobSaveChanges">Save changes</button>
-          <button @click="jobModalClose" class="button">Cancel</button>
+          <button v-if="!isNew" class="button is-link" @click="saveChanges">Save changes</button>
+          <button v-if="isNew" class="button is-success" @click="createJob">Create job</button>
+          <button @click="modalClose" class="button">Cancel</button>
       </footer>
     </div>
   </div>
@@ -45,50 +46,65 @@
 <script>
 import JobGeneralTab from './JobGeneralTab.vue'
 import StepList from '../StepList/StepList.vue'
+
 import config from '../config.js';
+import utils from '../utils.js';
 import axios from 'axios';
+
+import { EventBus } from '../utils.js';
 
 export default {
   data() {
     return {
-      activeTab: 'general'
-    }
-  },
-  props: {
-    jobRecord: {
-      type: Object,
-      required: true
+      jobRecord: {},
+      activeTab: 'general',
+      isNew: null
     }
   },
   methods: {
-    jobModalClose: function() {
-      this.activeTab = 'general';
-      this.$emit('job-modal-close');
+    modalShow(jobRecord, isNew = false) {
+      this.$set(this, 'isNew', isNew);
+      this.$set(this, 'jobRecord', jobRecord);      
+    },    
+    modalClose: function() {
+      this.activeTab = 'general';      
       this.$refs.stepList.clickedRow = null;
+      this.$set(this, 'jobRecord', {});
     },
-    jobTabClick: function(tabName) {
+    tabClick: function(tabName) {
       this.activeTab = tabName;
     },
-    jobSaveChanges: async function() {
-      try {        
-        //TODO avoid changes if job was not changed ???
-        const response = await axios.patch(`${config.apiUrl}/jobs/${this.jobRecord.id}`, this.jobRecord.job);
-        this.jobModalClose();
-      } catch (error) {
-        console.log(error);
-        console.log(error.request.response);
+    async saveChanges() {
+      try {                
+        const response = await axios.patch(`${config.apiUrl}/jobs/${this.jobRecord.id}`, this.jobRecord.job);        
+        if(response.status === 200)
+          this.modalClose();
+        this.$emit('job-list-refresh');
+      } catch (error) {      
+        EventBus.$emit('app-error', utils.parceApiError(error));
       }
-    }
+    },
+    async createJob() {      
+      try {             
+        debugger;   
+        const response = await axios.post(`${config.apiUrl}/jobs`, this.jobRecord.job);        
+        if(response.status === 201)
+          this.modalClose();
+        this.$emit('job-list-refresh');
+      } catch (error) {      
+        EventBus.$emit('app-error', utils.parceApiError(error));
+      }
+    }    
   },
   computed: {
-    jobModalIsActive: function() {
+    modalIsActive: function() {
       return this.jobRecord.job !== undefined;
     },
     job: function() {
       return this.jobRecord.job !== undefined ? this.jobRecord.job : {};
     },
     stepList: function() {
-      return this.job.steps !== undefined ? this.job.steps : {};
+      return this.job.steps !== undefined ? this.job.steps : [];
     }
   },
   components: {

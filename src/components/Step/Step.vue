@@ -34,7 +34,7 @@
         <div class="field">
           <label class="label">Command</label>
           <div class="control">
-            <textarea class="textarea" placeholder="Job description" v-model="step.command" v-on:change="console.log('aaa')" id="command-code"></textarea>
+            <textarea class="textarea" placeholder="Job description" v-model="step.command" id="command-code"></textarea>
           </div>
         </div>
         <label class="label">Retry</label>

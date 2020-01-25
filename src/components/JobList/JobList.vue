@@ -3,7 +3,7 @@
     <div class="columns">   
       <div class="column">
         <p class="control">
-          <button class="button is-success" title="Create new step">
+          <button class="button is-success" title="Create new job" @click="modalNewShow()">
             <span class="icon is-small">
               <i class="mdi mdi-shape-square-plus"></i>
             </span>
@@ -13,7 +13,7 @@
       </div>
       <div class="column">
         <p class="control">
-          <button class="button is-danger is-pulled-right" :disabled="selectedRow === null" title="Delete selected job" @click="deleteSelectedJob()">
+          <button class="button is-danger is-pulled-right" :disabled="selectedRow === null" title="Delete selected job" @click="modalDeleteShow()">
             <span class="icon is-small">
               <i class="mdi mdi-trash-can-outline"></i>
             </span>
@@ -27,6 +27,7 @@
       :fields="fields"
       data-path="data"
       :row-class="onRowClass"
+      :sort-order="sortOrder"
       pagination-path="pagination"
       @vuetable:pagination-data="onPaginationData"
       @vuetable:cell-clicked="onCellClicked"
@@ -76,7 +77,7 @@
       </div>
       <button class="modal-close is-large" aria-label="close" @click="deleteDialogIsVisible = false"></button>
     </div>    
-    <job v-bind:jobRecord="activeJobRecord" ref="job" v-on:job-modal-close="jobModalClose"></job>                
+    <job ref="jobDialog" v-on:job-list-refresh="refreshJobList()"></job>                
   </div>
 </template>
 
@@ -88,6 +89,9 @@ import Job from '../Job/Job.vue'
 
 import vue_css from '../table-style.js'
 import fields_definition from './joblist-fields-defintion.js'
+import job_template from '../Job/job-template.js'
+import { EventBus } from '../../components/utils.js';
+
 import config from '../config.js';
 import axios from 'axios';
 
@@ -96,12 +100,17 @@ export default {
     return {
       selectedRow: null,
       selectedJobName: null,
-      activeJobRecord: {},
       deleteDialogIsVisible: false,
       jobNameToDelete: null,
       css: vue_css,
       fields: fields_definition,
-      apiUrl: `${config.apiUrl}/jobs`
+      apiUrl: `${config.apiUrl}/jobs`,
+      sortOrder: [
+        {
+          field: 'created_on',
+          direction: 'desc'
+        }
+      ]
     }
   },
   methods: {
@@ -117,22 +126,25 @@ export default {
       this.selectedRow = data.id;   
       this.selectedJobName = data.name;        
     },
+    refreshJobList() {
+      this.$refs.jobList.refresh();
+    },
     async modalEditShow(jobId) {
       try {        
-        const response = await axios.get(`${config.apiUrl}/jobs/${jobId}`);
-        this.activeJobRecord = response.data;          
+        const response = await axios.get(`${this.apiUrl}/${jobId}`);
+        this.$refs.jobDialog.modalShow(response.data);
       } catch (error) {
-        this.activeJobRecord = {};
+        EventBus.$emit('app-error', utils.parceApiError(error));
       }    
     },
-    jobModalClose: function() {
-      this.activeJobRecord = {};
-      this.$refs.jobList.refresh();
-    },            
+    modalNewShow() {
+      //Break reactivity for modal edit
+      this.$refs.jobDialog.modalShow(JSON.parse(JSON.stringify(job_template.newJob)), true);         
+    },         
     onRowClass (dataItem, index) {
       return (dataItem.id == this.selectedRow) ? 'is-selected' : ''
     },
-    deleteSelectedJob: function() {
+    modalDeleteShow: function() {
       if(this.selectedRow !== null) {
         this.deleteDialogIsVisible = true;
         this.jobNameToDelete = '';
@@ -140,11 +152,12 @@ export default {
     },
     executeJobDeletion: async function() {      
       try {        
-        const response = await axios.delete(`${config.apiUrl}/jobs/${this.selectedRow}`);
-        this.$refs.jobList.refresh();
+        const response = await axios.delete(`${this.apiUrl}/${this.selectedRow}`);
+        this.selectedRow = null;
+        this.refreshJobList();
         this.deleteDialogIsVisible = false;
       } catch (error) {
-        console.log(error);
+        EventBus.$emit('app-error', utils.parceApiError(error));
       }
     }
   },

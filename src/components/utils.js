@@ -1,5 +1,6 @@
 let config = require('./config.js');
 let Vue = require('vue/dist/vue.js');
+module.exports.EventBus = new Vue();
 
 /**
  * Converts `date-time` into appropriate format
@@ -75,6 +76,22 @@ function swapElements(list, firstIndex, secondIndex) {
   Vue.set(list, secondIndex, buf);
 }
 module.exports.swapElements = swapElements;
+
+/**
+ * Parces `errorObject` to string representation
+ * @param {object} errorObject Error object
+ * @returns {string} String representation of API error
+ */
+function parceApiError(errorObject) {
+  let errorMessage = errorObject;  
+  if(errorObject.response.data.logId !== undefined) {
+    errorMessage = `${errorObject.response.data.error} LogId: ${errorObject.response.data.logId}`;
+  }
+  
+  return errorMessage;
+}
+module.exports.parceApiError = parceApiError;
+
 
 module.exports.helpers = {
   checkbox: function (v) {

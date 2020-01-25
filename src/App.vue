@@ -14,7 +14,7 @@
       <div class="column">
         <div v-show="menuItemClass('job-list')" id="job-list-container">        
           <h1 class="title">{{ this.findMenuItemById('job-list').title }}</h1>
-          <job-list></job-list>
+          <job-list v-on:app-error="throwAppError($event)"></job-list>
         </div>
         <div v-show="menuItemClass('schedule')" id="schedule-container">        
           <h1 class="title">{{ this.findMenuItemById('schedule').title }}</h1>
@@ -29,20 +29,46 @@
           <h1 class="title">{{ this.findMenuItemById('settings').title }}</h1>
         </div>                                      
       </div>
-    </div>    
+    </div>  
+    <div class="modal" v-bind:class="{ 'is-active': this.erorrMessage !== null }">
+      <div class="modal-background"></div>
+      <div class="modal-card">
+        <header class="modal-card-head">
+          <p class="modal-card-title">Error</p>
+          <button class="delete" aria-label="close" @click="erorrMessage = null"></button>
+        </header>
+        <section class="modal-card-body">
+          <article class="message is-danger">
+            <div class="message-body">
+              <span>{{ erorrMessage }}</span>                  
+            </div>                    
+          </article>      
+        </section>
+        <footer class="modal-card-foot buttons is-right">
+          <button class="button" @click="erorrMessage = null">OK</button>
+        </footer>
+      </div>
+    </div>      
   </div>   
 </template>
 
 <script>
 import JobList from './components/JobList/JobList.vue'
 import menuDefinition from './components/menu-definition.js'
-import config from './components/config';
+import config from './components/config.js';
+
+import { EventBus } from './components/utils.js';
+
 
 export default {
   data () {
     return {
-      menu: menuDefinition
+      menu: menuDefinition,
+      erorrMessage: null
     }
+  },
+  created() {
+    EventBus.$on('app-error', v => { this.erorrMessage = v; })
   },
   methods: {
     menuItemClick: function() {
