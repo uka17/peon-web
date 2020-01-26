@@ -21,7 +21,7 @@
         </p>          
       </div>
     </div>
-
+    <filter-bar></filter-bar>
     <vuetable ref="jobList"
       :api-url="apiUrl"
       :fields="fields"
@@ -32,6 +32,7 @@
       @vuetable:pagination-data="onPaginationData"
       @vuetable:cell-clicked="onCellClicked"
       :css="css.table"
+      :append-params="moreParams"      
     >
       <template slot="job-name" slot-scope="props">
         <a @click="modalEditShow(props.rowData.id)">{{ props.rowData.name }}</a>
@@ -82,10 +83,12 @@
 </template>
 
 <script>
+import Vue from 'vue'
 import Vuetable from 'vuetable-2'
 import VuetablePagination from '../../../node_modules/vuetable-2/src/components/VuetablePagination.vue'
 import VuetablePaginationInfo from '../../../node_modules/vuetable-2/src/components/VuetablePaginationInfo.vue'
 import Job from '../Job/Job.vue'
+import FilterBar from '../../components/FilterBar/FilterBar.vue'
 
 import vue_css from '../table-style.js'
 import fields_definition from './joblist-fields-defintion.js'
@@ -98,6 +101,7 @@ import axios from 'axios';
 export default {
   data () {
     return {
+      moreParams: {},
       selectedRow: null,
       selectedJobName: null,
       deleteDialogIsVisible: false,
@@ -113,7 +117,21 @@ export default {
       ]
     }
   },
+  created() {
+    EventBus.$on('job-list-filter-set', v => this.onFilterSet(v));
+    EventBus.$on('job-list-filter-reset', v => this.onFilterReset());
+  },  
   methods: {
+    onFilterReset() {
+      this.moreParams = {};
+      Vue.nextTick( () => this.$refs.jobList.refresh());
+    },
+    onFilterSet(filterText) {
+      this.moreParams = {
+          'filter': filterText
+      };
+      Vue.nextTick( () => this.$refs.jobList.refresh());
+    },
     onPaginationData (paginationData) {
       this.$refs.jobListPagination.setPaginationData(paginationData)
       this.$refs.jobListPaginationInfo.setPaginationData(paginationData)
@@ -170,7 +188,8 @@ export default {
     'vuetable': Vuetable,
     'vuetable-pagination': VuetablePagination,
     'vuetable-pagination-info': VuetablePaginationInfo,
-    'job': Job
+    'job': Job,
+    'filter-bar': FilterBar
   }
 }
 </script>
