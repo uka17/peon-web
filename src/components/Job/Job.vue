@@ -35,8 +35,8 @@
         </div>        
       </section>
       <footer class="modal-card-foot buttons is-right">
-          <button v-if="!isNew" class="button is-link" @click="saveChanges">Save changes</button>
-          <button v-if="isNew" class="button is-success" @click="createJob">Create job</button>
+          <button v-if="!isNew" class="button is-link" v-bind:class="{ 'is-static': !formIsValid }" @click="saveChanges">Save changes</button>
+          <button v-if="isNew" class="button is-success" v-bind:class="{ 'is-static': !formIsValid }" @click="createJob">Create job</button>
           <button @click="modalClose" class="button">Cancel</button>
       </footer>
     </div>
@@ -50,6 +50,8 @@ import StepList from '../StepList/StepList.vue'
 import config from '../config.js';
 import utils from '../utils.js';
 import axios from 'axios';
+import validate from 'validate.js';
+import constraints from './job-validation.js';
 
 import { EventBus } from '../utils.js';
 
@@ -75,7 +77,7 @@ export default {
       this.activeTab = tabName;
     },
     async saveChanges() {
-      try {                
+      try {            
         const response = await axios.patch(`${config.apiUrl}/jobs/${this.jobRecord.id}`, this.jobRecord.job);        
         if(response.status === 200)
           this.modalClose();
@@ -105,7 +107,10 @@ export default {
     },
     stepList: function() {
       return this.job.steps !== undefined ? this.job.steps : [];
-    }
+    },
+    formIsValid() {
+      return (validate(this.jobRecord.job, constraints('en')) === undefined);      
+    },
   },
   components: {
     'job-general-tab': JobGeneralTab,

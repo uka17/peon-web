@@ -1,10 +1,11 @@
 <template>
   <div>
     <div class="field">
-      <label class="label">Name</label>
+      <label class="label">Name*</label>
       <div class="control">
-        <input v-model="job.name" class="input" type="text" placeholder="Job name">
+        <input v-model="job.name" class="input" v-bind:class="{ 'is-danger': jobNameIsValid !== '' }" type="text" placeholder="Job name">
       </div>
+      <p class="help is-danger">{{ jobNameIsValid }}</p>
     </div>
     <div class="field">
       <div class="control">
@@ -71,6 +72,8 @@
 <script>
 import utils from '../utils'
 import config from '../config'
+import validate from 'validate.js';
+import constraints from './job-validation.js';
 
 export default {
   data() {
@@ -85,13 +88,17 @@ export default {
     }
   },
   methods: {
-    formatDateTime: function(dateTime) {
+    formatDateTime(dateTime) {
       return utils.helpers.formatDateTime(dateTime);
-    }
+    }    
   },
   computed: {
     job: function() {
       return this.jobRecord.job !== undefined ? this.jobRecord.job : {};
+    },
+    jobNameIsValid() {
+      const result = validate(this.job, constraints('en'));      
+      return result ? result.name[0] : '';
     }
   },
   components: {
