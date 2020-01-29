@@ -4,30 +4,17 @@
       <div class="column is-narrow" style="width: 220px;">
         <aside class="menu">
           <ul class="menu-list">
-              <li v-for="item in menu" v-bind:key="item.id">
-                <p v-if="item.id.includes('---')" class="menu-label"><br>{{ item.title }}</p>
-                <a v-if="!item.id.includes('---')" :id="item.id" v-bind:class="{ 'is-active': menuItemClass(item.id) }" @click="menuItemClick">{{ item.title }}</a>
-              </li>
+            <li><p class="menu-label" is-active><br>General</p></li>
+            <li><router-link to="/jobs">Job list</router-link></li>
+            <li><router-link to="/schedules">Schedules</router-link></li>
+            <li><router-link to="/monitor">Activity monitor</router-link></li>
+            <li><p class="menu-label"><br>Configuration</p></li>
+            <li><router-link to="/settings">Settings</router-link></li>
           </ul>
         </aside>
       </div>
       <div class="column">
-        <div v-show="menuItemClass('job-list')" id="job-list-container">        
-          <h1 class="title">{{ this.findMenuItemById('job-list').title }}</h1>
-          <job-list v-on:app-error="throwAppError($event)"></job-list>
-        </div>
-        <div v-show="menuItemClass('schedule')" id="schedule-container">        
-          <h1 class="title">{{ this.findMenuItemById('schedule').title }}</h1>
-        </div>
-        <div v-show="menuItemClass('activity-monitor')" id="activity-monitor-container">        
-          <h1 class="title">{{ this.findMenuItemById('activity-monitor').title }}</h1>
-        </div>
-        <div v-show="menuItemClass('log-viewer')" id="log-viewer-container">        
-          <h1 class="title">{{ this.findMenuItemById('log-viewer').title }}</h1>
-        </div>
-        <div v-show="menuItemClass('settings')" id="settings-container">        
-          <h1 class="title">{{ this.findMenuItemById('settings').title }}</h1>
-        </div>                                      
+        <router-view></router-view>                             
       </div>
     </div>  
     <div class="modal" v-bind:class="{ 'is-active': this.erorrMessage !== null }">
@@ -53,17 +40,32 @@
 </template>
 
 <script>
+import Vue from 'vue';
+import VueRouter from 'vue-router';
+Vue.use(VueRouter);
+
 import JobList from './components/JobList/JobList.vue'
-import menuDefinition from './components/menu-definition.js'
+import Job from './components/Job/Job.vue'
 import config from './components/config.js';
 
 import { EventBus } from './components/utils.js';
 
+const appRouter = new VueRouter({
+  routes: [
+    { path: '/jobs', component: JobList },
+    { path: '/jobs/:id', component: JobList }/*,
+    { path: '/schedules', component: JobList },
+    { path: '/monitor', component: JobList },
+    { path: '/settings', component: JobList }
+    */
+  ],
+  linkActiveClass: 'is-active'
+});
 
 export default {
+  router: appRouter,  
   data () {
     return {
-      menu: menuDefinition,
       erorrMessage: null
     }
   },
@@ -71,22 +73,10 @@ export default {
     EventBus.$on('app-error', v => { this.erorrMessage = v; })
   },
   methods: {
-    menuItemClick: function() {
-      this.menu.map((elem) => elem.active = false);
-      this.findMenuItemById(event.target.id).active = true; 
-    },
-    menuItemClass: function (id) {
-      return this.findMenuItemById(id).active;
-    },
-    findMenuItemById(id) {
-      return this.menu.find((elem) => { if(elem.id == id && !(elem.id.includes('---'))) return elem; })
-    }
+
   },
   computed: {
     
-  },
-  components: {
-    'job-list': JobList
   }
 }
 </script>

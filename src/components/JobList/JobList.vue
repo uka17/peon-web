@@ -1,5 +1,6 @@
 <template>
   <div>
+    <h1 class="title">Job list</h1>
     <div class="columns">   
       <div class="column">
         <p class="control">
@@ -35,7 +36,7 @@
       :append-params="moreParams"      
     >
       <template slot="job-name" slot-scope="props">
-        <a @click="modalEditShow(props.rowData.id)">{{ props.rowData.name }}</a>
+        <router-link :to="`/jobs/${props.rowData.id}`">{{ props.rowData.name }}</router-link>
       </template>     
     </vuetable>
     <div class="columns">
@@ -115,6 +116,12 @@ export default {
           direction: 'desc'
         }
       ]
+    }
+  },
+  watch: {
+    $route(to, from) {
+      if(to.params.id)
+        this.modalEditShow(to.params.id);
     }
   },
   created() {

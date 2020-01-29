@@ -72,6 +72,7 @@ export default {
       this.activeTab = 'general';      
       this.$refs.stepList.clickedRow = null;
       this.$set(this, 'jobRecord', {});
+      this.$router.push('/jobs/');
     },
     tabClick: function(tabName) {
       this.activeTab = tabName;
