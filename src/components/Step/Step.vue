@@ -8,10 +8,11 @@
       </header>
       <section class="modal-card-body">
         <div class="field">
-          <label class="label">Name</label>
+          <label class="label">Name*</label>
           <div class="control">
-            <input v-model="step.name" class="input" type="text" placeholder="Step name">
+            <input v-model="step.name" class="input" type="text" v-bind:class="{ 'is-danger': stepFieldIsValid('name') !== '' }" placeholder="Step name">
           </div>
+          <p id="step-dialog-name-error" class="help is-danger">{{ stepFieldIsValid('name') }}</p>
         </div>
         <div class="field">
           <div class="control">
@@ -21,7 +22,7 @@
           </div>
         </div>
         <div class="field">
-          <label class="label">Connection</label>
+          <label class="label">Connection*</label>
           <div class="control">
             <div class="select">
               <select>
@@ -32,14 +33,15 @@
           </div>
         </div>           
         <div class="field">
-          <label class="label">Command</label>
+          <label class="label">Command*</label>
           <div class="control">
-            <textarea class="textarea" placeholder="Job description" v-model="step.command" id="command-code"></textarea>
+            <textarea class="textarea" placeholder="Job description" v-bind:class="{ 'is-danger': stepFieldIsValid('command') !== '' }" v-model="step.command" id="command-code"></textarea>
           </div>
+          <p id="step-dialog-command-error" class="help is-danger">{{ stepFieldIsValid('command') }}</p>
         </div>
-        <label class="label">Retry</label>
+        <label class="label">Retry</label>        
         <div class="columns">
-          <div class="column is-two-fifths">
+          <div class="column">            
             <div class="field has-addons">
               <p class="control">
                 <input class="input" v-model.number="retryAttempts.number" type="text">
@@ -75,8 +77,8 @@
         </div>              
       </section>
       <footer class="modal-card-foot buttons is-right">
-          <button v-if="!isNew" class="button is-link" @click="saveChanges">Save changes</button>
-          <button v-if="isNew" class="button is-success" @click="createStep">Create step</button>
+          <button v-if="!isNew" class="button is-link" @click="saveChanges" v-bind:class="{ 'is-static': !formIsValid }" title="Save step changes">Save changes</button>
+          <button v-if="isNew" class="button is-success" @click="createStep" v-bind:class="{ 'is-static': !formIsValid }" title="Create step">Create step</button>
           <button @click="modalClose" class="button">Cancel</button>
       </footer>
     </div>
@@ -87,6 +89,9 @@
 import StepResultAction from './StepResultAction.vue'
 import CodeMirror from '../../../node_modules/codemirror/lib/codemirror'
 import CodeMirrorMode from '../../../node_modules/codemirror/mode/sql/sql'
+
+import validate from 'validate.js';
+import constraints from './step-validation.js';
 
 
 export default {
@@ -104,22 +109,23 @@ export default {
       //Have no idea how it works, but CodeMirror needs a tiny delay before init =(
       setTimeout(() => {
         if(this.highlighter === null) {
-            this.highlighter = CodeMirror.fromTextArea(document.getElementById('command-code'), {
-              lineNumbers: true,
-              theme: "elegant"
+          this.highlighter = CodeMirror.fromTextArea(document.getElementById('command-code'), {
+            lineNumbers: true,
+            theme: "elegant"
+          });
+          this.highlighter.on('keyup', function(instance, event) {
+            //Codemirror is not reactive element unfortunately
+            console.log(instance);
+            this.step.command = this.highlighter.getValue();     
           });
         };   
       }, 1)  
     },
     saveChanges: function() {
-      //Codemirror is not reactive element unfortunately
-      this.step.command = this.highlighter.getValue();     
       this.$emit('step-modal-save', this.step);       
       this.modalClose();
     },
     createStep() {
-      //Codemirror is not reactive element unfortunately
-      this.step.command = this.highlighter.getValue();     
       this.$emit('step-modal-new', this.step);       
       this.modalClose();
     },
@@ -133,7 +139,14 @@ export default {
     },
     onFailureActionUpdate: function(v) {
       this.step.onFailure = v;
-    }
+    },
+    stepFieldIsValid(field) {
+      const result = validate(this.step, constraints('en'));
+      if(result && result.hasOwnProperty(field))
+        return result[field][0];
+      else
+        return '';
+    }    
   },
   computed: {
     modalIsActive: function() {
@@ -141,7 +154,10 @@ export default {
     },
     retryAttempts: function() {
       return this.step.retryAttempts !== undefined ? this.step.retryAttempts : {};
-    } 
+    },
+    formIsValid() {
+      return (validate(this.step, constraints('en')) === undefined)
+    }
   },
   components: {
     'step-result-action': StepResultAction

@@ -4,12 +4,12 @@
     <div class="columns">   
       <div class="column">
         <p class="control">
-          <button class="button is-success" title="Create new job" @click="modalNewShow()">
+          <router-link id="new-job" class="button is-success" title="Create new job" :to="'/jobs/create'">
             <span class="icon is-small">
               <i class="mdi mdi-shape-square-plus"></i>
             </span>
             <span>New</span>
-          </button>
+          </router-link>
         </p>                       
       </div>
       <div class="column">
@@ -78,8 +78,7 @@
         </div>
       </div>
       <button class="modal-close is-large" aria-label="close" @click="deleteDialogIsVisible = false"></button>
-    </div>    
-    <job ref="jobDialog" v-on:job-list-refresh="refreshJobList()"></job>                
+    </div>                
   </div>
 </template>
 
@@ -88,12 +87,10 @@ import Vue from 'vue'
 import Vuetable from 'vuetable-2'
 import VuetablePagination from '../../../node_modules/vuetable-2/src/components/VuetablePagination.vue'
 import VuetablePaginationInfo from '../../../node_modules/vuetable-2/src/components/VuetablePaginationInfo.vue'
-import Job from '../Job/Job.vue'
 import FilterBar from '../../components/FilterBar/FilterBar.vue'
 
 import vue_css from '../table-style.js'
 import fields_definition from './joblist-fields-defintion.js'
-import job_template from '../Job/job-template.js'
 import { EventBus } from '../../components/utils.js';
 
 import config from '../config.js';
@@ -116,12 +113,6 @@ export default {
           direction: 'desc'
         }
       ]
-    }
-  },
-  watch: {
-    $route(to, from) {
-      if(to.params.id)
-        this.modalEditShow(to.params.id);
     }
   },
   created() {
@@ -154,18 +145,6 @@ export default {
     refreshJobList() {
       this.$refs.jobList.refresh();
     },
-    async modalEditShow(jobId) {
-      try {        
-        const response = await axios.get(`${this.apiUrl}/${jobId}`);
-        this.$refs.jobDialog.modalShow(response.data);
-      } catch (error) {
-        EventBus.$emit('app-error', utils.parceApiError(error));
-      }    
-    },
-    modalNewShow() {
-      //Break reactivity for modal edit
-      this.$refs.jobDialog.modalShow(JSON.parse(JSON.stringify(job_template.newJob)), true);         
-    },         
     onRowClass (dataItem, index) {
       return (dataItem.id == this.selectedRow) ? 'is-selected' : ''
     },
@@ -195,7 +174,6 @@ export default {
     'vuetable': Vuetable,
     'vuetable-pagination': VuetablePagination,
     'vuetable-pagination-info': VuetablePaginationInfo,
-    'job': Job,
     'filter-bar': FilterBar
   }
 }

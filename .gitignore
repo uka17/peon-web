@@ -65,3 +65,6 @@ typings/
 
 # parceljs cache
 .cache
+
+#test cash
+tests_output

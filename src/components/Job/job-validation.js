@@ -4,7 +4,7 @@ module.exports = (language = 'en') => {
       presence: true,
       format: {
         pattern: /[\w_\-,\s]{1,100}/,
-        message: messages.job[language]
+        message: messages.job.name[language]
       }
     }
   };
@@ -12,7 +12,9 @@ module.exports = (language = 'en') => {
 
 const messages = {
   job: {
-    en: "^Job name must be a latin alphanumeric string (including spaces and symbols -_,), not longer than 100 chars",
-    ru: "^Имя задания должно быть латинской буквенно-цифровой строкой (включая пробелы и символы -_,), длиной не более 100 символов"
+    name: {
+      en: "^Job name must be a latin alphanumeric string (including spaces and symbols -_,), not longer than 100 chars",
+      ru: "^Имя задания должно быть латинской буквенно-цифровой строкой (включая пробелы и символы -_,), длиной не более 100 символов"
+    } 
   }
 };

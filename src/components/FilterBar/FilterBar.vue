@@ -28,12 +28,10 @@ export default {
   methods: {
     doFilter () {
       EventBus.$emit('job-list-filter-set', this.filterText);
-      console.log('doFilter:', this.filterText)
     },
     resetFilter () {
       this.filterText = ''
       EventBus.$emit('job-list-filter-reset');
-      console.log('resetFilter')
     }
   }
 }

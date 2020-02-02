@@ -14,7 +14,9 @@
         </aside>
       </div>
       <div class="column">
-        <router-view></router-view>                             
+        <transition name="fade">
+          <router-view></router-view>                             
+        </transition>
       </div>
     </div>  
     <div class="modal" v-bind:class="{ 'is-active': this.erorrMessage !== null }">
@@ -53,7 +55,9 @@ import { EventBus } from './components/utils.js';
 const appRouter = new VueRouter({
   routes: [
     { path: '/jobs', component: JobList },
-    { path: '/jobs/:id', component: JobList }/*,
+    { path: '/jobs/:id', component: Job, props: true },
+    
+    /*,
     { path: '/schedules', component: JobList },
     { path: '/monitor', component: JobList },
     { path: '/settings', component: JobList }
@@ -80,3 +84,12 @@ export default {
   }
 }
 </script>
+<style lang="scss" >
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity .3s;
+  }
+  .fade-enter, .fade-leave-to /* .fade-leave-active до версии 2.1.8 */ {
+    opacity: 0;
+  }
+</style>
+
