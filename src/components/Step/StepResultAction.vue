@@ -1,29 +1,32 @@
 <template>
-  <div class="columns">
-    <div class="column is-one-third">
-      <div class="field has-addons">
-        <p class="control">
-          <span class="select">
-            <select v-model="stepResultAction">
-              <option value="gotoNextStep">Go to next step</option>
-              <option value="quitWithSuccess">Quit with success</option>
-              <option value="quitWithFailure">Quit with failure</option>
-              <option value="gotoStep">Go to step</option>
-            </select>
-          </span>
-        </p>
-        <template v-if="stepResultAction== 'gotoStep'">       
-          <p class="control">
-            <input class="input" v-model.number="stepNumber" type="text" style="text-align:center;">   
-          </p>
-        </template>
-      </div>
-    </div>
-    <div class="column"></div>
-  </div> 
+  <div class="field has-addons">
+    <p class="control">
+      <span class="select">
+        <select v-model="stepResultAction">
+          <option value="gotoNextStep">Go to next step</option>
+          <option value="quitWithSuccess">Quit with success</option>
+          <option value="quitWithFailure">Quit with failure</option>
+          <option v-if="stepList.length > 0" value="gotoStep">Go to step</option>
+        </select>
+      </span>
+    </p>
+    <template v-if="stepResultAction== 'gotoStep'">       
+      <p class="control">
+        <span class="select">
+          <select v-model="stepNumber">
+            <option v-for="option in stepList" v-bind:value="option.order">
+              {{ `${option.order} (${truncateString(option.name, 10)})` }}
+            </option>
+          </select>
+        </span>
+      </p>
+    </template>
+  </div>
 </template>
 
 <script>
+
+import utils from '../utils.js';
 
 export default {
   data() {
@@ -33,25 +36,29 @@ export default {
     }
   },
   props: {
-    onStepResult: {
+    stepResult: {
       required: true
-    }
+    },
+    stepList: {
+      required: true
+    }    
   },
   methods: {
     updateStepResultAction: function() {
       if(this.stepResultAction == 'gotoStep')
-        this.$emit('step-result-action-update', { gotoStep: this.stepNumber });
+        this.$emit('step-result-action-update', { gotoStep: parseInt(this.stepNumber) });
       else
         this.$emit('step-result-action-update', this.stepResultAction);
-    }
+    },
+    truncateString: utils.truncateString
   },
   watch: {
-    onStepResult: function() {
-      if(typeof this.onStepResult === 'object') {
+    stepResult: function() {
+      if(typeof this.stepResult === 'object') {
         this.stepResultAction = 'gotoStep';
-        this.stepNumber = this.onStepResult.gotoStep;
+        this.stepNumber = this.stepResult.gotoStep;
       } else {
-        this.stepResultAction = this.onStepResult;
+        this.stepResultAction = this.stepResult;
         this.stepNumber = 1;
       }
     },
@@ -64,3 +71,9 @@ export default {
   }
 }
 </script>
+<style lang="scss" >
+ #goto-step-number {
+    width: 50px;
+    text-align: center;
+  }
+</style>

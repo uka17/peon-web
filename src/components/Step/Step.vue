@@ -39,40 +39,55 @@
           </div>
           <p id="step-dialog-command-error" class="help is-danger">{{ stepFieldIsValid('command') }}</p>
         </div>
-        <label class="label">Retry</label>        
-        <div class="columns">
-          <div class="column">            
-            <div class="field has-addons">
-              <p class="control">
-                <input class="input" v-model.number="retryAttempts.number" type="text">
-              </p>
-              <p class="control">
-                <a class="button is-static">
-                  per each
-                </a>
-              </p>
-              <p class="control">
-                <input class="input" v-model.number="retryAttempts.interval" type="text"> 
-              </p>
-              <p class="control">
-                <a class="button is-static">
-                  minute(s)          
-                </a>
-              </p>
-            </div>        
-          </div>
-          <div class="column"></div>
-        </div>
+        <label class="label">Retry</label>                 
+          <div class="field has-addons">
+            <p class="control">
+              <input 
+                id="retry-number" class="input" maxlength="2" @keypress="isNumber($event)" type="text"
+                v-model.number="retryAttempts.number" 
+                v-bind:class="{ 'is-danger': stepFieldIsValid('retryAttempts.number') !== '' }" >
+            </p>
+            <p class="control">
+              <a class="button is-static" v-if="retryAttempts.number !== 0">
+                per each
+              </a>
+              <a class="button is-static" v-if="retryAttempts.number === 0">
+                retries
+              </a>                
+            </p>
+            <p class="control" v-if="retryAttempts.number !== 0">
+              <input 
+                id="retry-interval" class="input" maxlength="3" @keypress="isNumber($event)" type="text"
+                v-model.number="retryAttempts.interval"                   
+                v-bind:class="{ 'is-danger': stepFieldIsValid('retryAttempts.interval') !== '' }"
+              > 
+            </p>
+            <p class="control" v-if="retryAttempts.number !== 0">
+              <a class="button is-static">
+                minute(s)          
+              </a>
+            </p>
+          </div>        
+          <p id="step-dialog-retry-number-error" class="help is-danger">{{ stepFieldIsValid('retryAttempts.number') }}</p>
+          <p id="step-dialog-retry-interval-error" class="help is-danger">{{ stepFieldIsValid('retryAttempts.interval') }}</p>                            
         <div class="field">
           <label class="label">On succeed</label>
           <div class="control">
-            <step-result-action v-on:step-result-action-update="onSucceedActionUpdate($event)" v-bind:onStepResult="step.onSucceed"></step-result-action>
+            <step-result-action 
+              v-on:step-result-action-update="onSucceedActionUpdate($event)"               
+              v-bind:stepList="stepList"
+              v-bind:stepResult="step.onSucceed">
+            </step-result-action>
           </div>
         </div>     
         <div class="field">
           <label class="label">On failure</label>
           <div class="control">
-            <step-result-action v-on:step-result-action-update="onFailureActionUpdate($event)" v-bind:onStepResult="step.onFailure"></step-result-action>
+            <step-result-action 
+              v-on:step-result-action-update="onFailureActionUpdate($event)" 
+              v-bind:stepList="stepList"
+              v-bind:stepResult="step.onFailure">
+            </step-result-action>
           </div>
         </div>              
       </section>
@@ -92,6 +107,7 @@ import CodeMirrorMode from '../../../node_modules/codemirror/mode/sql/sql'
 
 import validate from 'validate.js';
 import constraints from './step-validation.js';
+import utils from '../utils.js';
 
 
 export default {
@@ -99,13 +115,15 @@ export default {
     return {
       step: {},
       highlighter: null,
-      isNew: null
+      isNew: null,
+      stepList: []
     }
   },
   methods: {
-    modalShow(step, isNew = false) {
+    modalShow(step, stepList, isNew = false) {
       this.$set(this, 'isNew', isNew);
       this.$set(this, 'step', step);
+      this.$set(this, 'stepList', stepList);
       //Have no idea how it works, but CodeMirror needs a tiny delay before init =(
       setTimeout(() => {
         if(this.highlighter === null) {
@@ -113,10 +131,10 @@ export default {
             lineNumbers: true,
             theme: "elegant"
           });
+          let step = this.step;
           this.highlighter.on('keyup', function(instance, event) {
             //Codemirror is not reactive element unfortunately
-            console.log(instance);
-            this.step.command = this.highlighter.getValue();     
+            step.command = instance.getValue();
           });
         };   
       }, 1)  
@@ -146,7 +164,8 @@ export default {
         return result[field][0];
       else
         return '';
-    }    
+    },
+    isNumber: utils.isNumber   
   },
   computed: {
     modalIsActive: function() {
@@ -176,5 +195,9 @@ export default {
   }
   .CodeMirror:hover {
     border: 1px solid #b5b5b5;    
+  }
+  #retry-number, #retry-interval {
+    width: 50px;
+    text-align: center;
   }
 </style>

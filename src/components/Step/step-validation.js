@@ -12,7 +12,22 @@ module.exports = (language = 'en') => {
         message: messages.step.command[language],
         allowEmpty: false
       }
-    }    
+    },
+    "retryAttempts.number": {
+      numericality: {
+        onlyInteger: true,
+        greaterThanOrEqualTo: 0,
+        lessThanOrEqualTo: 10,
+        message: messages.step.retryAttempts.number[language]
+      }
+    },
+    "retryAttempts.interval": {
+      numericality: {
+        onlyInteger: true,
+        greaterThan: 0,
+        message: messages.step.retryAttempts.interval[language]
+      }
+    }        
   };
 };
 
@@ -25,6 +40,16 @@ const messages = {
     command: {
       en: "^Field can not be empty",
       ru: "^Поле не может быть пустым"
+    },
+    retryAttempts: {
+      number: {
+        en: "^Retry attempts number must be greater than or equal to zero and less than 11",
+        ru: "^Число повторных попыток должно быть больше и равно нулю и меньше 11"
+      },
+      interval: {
+        en: "^Retry attempt interval must be greater than 0",
+        ru: "^Интервал между попытками должен быть больше 0"
+      }
     }            
   }
 };

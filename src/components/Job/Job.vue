@@ -136,7 +136,7 @@ export default {
       return this.job.steps !== undefined ? this.job.steps : [];
     },
     formIsValid() {
-      return (validate(this.jobRecord.job, constraints('en')) === undefined) && (this.stepList.length > 0);      
+      return (validate(this.jobRecord.job, constraints('en')) === undefined) && (job.stepList.length > 0);      
     },
   },
   components: {

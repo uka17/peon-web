@@ -87,11 +87,11 @@ export default {
     },
     modalEditShow(step) {
       //Break reactivity for modal edit
-      this.$refs.stepDialog.modalShow(JSON.parse(JSON.stringify(step)));
+      this.$refs.stepDialog.modalShow(JSON.parse(JSON.stringify(step)), this.stepList);
     },
     modalNewShow() {
       //Break reactivity for modal edit
-      this.$refs.stepDialog.modalShow(JSON.parse(JSON.stringify(step_template.newStep)), true);         
+      this.$refs.stepDialog.modalShow(JSON.parse(JSON.stringify(step_template.newStep)), this.stepList, true);         
     },    
     stepSave (step){
       this.$set(this.stepList, this.clickedRow - 1, step);
