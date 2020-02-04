@@ -114,8 +114,11 @@ module.exports.swapElements = swapElements;
  */
 function parceApiError(errorObject) {
   let errorMessage = errorObject;  
-  if(errorObject.response.data.logId !== undefined) {
-    errorMessage = `${errorObject.response.data.error} LogId: ${errorObject.response.data.logId}`;
+  if(errorObject.response.data !== undefined) {
+    if(errorObject.response.data.logId !== undefined)
+      errorMessage = `${errorObject.response.data.error} LogId: ${errorObject.response.data.logId}`;
+    else
+      errorMessage = errorObject.response.data;
   }
   
   return errorMessage;

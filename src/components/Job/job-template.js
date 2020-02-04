@@ -6,6 +6,7 @@ module.exports = {
       "description": "",    
       "steps": [],
       "schedules": [{
+        "name": "schedule1",        
         "enabled": true,
         "startDateTime": "2018-01-31T20:55:23.071Z",
         "eachNWeek": 1,

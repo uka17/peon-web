@@ -81,7 +81,7 @@ export default {
       }
       else {
         dialogRecord = await axios.get(`${this.apiUrl}/${this.id}`);
-        this.modalShow(dialogRecord);
+        this.modalShow(dialogRecord.data);
       }
     } catch (error) {
       EventBus.$emit('app-error', utils.parceApiError(error));
@@ -136,7 +136,7 @@ export default {
       return this.job.steps !== undefined ? this.job.steps : [];
     },
     formIsValid() {
-      return (validate(this.jobRecord.job, constraints('en')) === undefined) && (job.stepList.length > 0);      
+      return (validate(this.jobRecord.job, constraints('en')) === undefined) && (this.stepList.length > 0);      
     },
   },
   components: {
