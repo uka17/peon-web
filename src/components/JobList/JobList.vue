@@ -1,19 +1,20 @@
 <template>
   <div>
+    <h1 class="title">Job list</h1>
     <div class="columns">   
       <div class="column">
         <p class="control">
-          <button class="button is-success" title="Create new step">
+          <router-link id="new-job" class="button is-success" title="Create new job" :to="'/jobs/create'">
             <span class="icon is-small">
               <i class="mdi mdi-shape-square-plus"></i>
             </span>
             <span>New</span>
-          </button>
+          </router-link>
         </p>                       
       </div>
       <div class="column">
         <p class="control">
-          <button class="button is-danger is-pulled-right" :disabled="selectedRow === null" title="Delete selected job" @click="deleteSelectedJob()">
+          <button class="button is-danger is-pulled-right" :disabled="selectedRow === null" title="Delete selected job" @click="modalDeleteShow()">
             <span class="icon is-small">
               <i class="mdi mdi-trash-can-outline"></i>
             </span>
@@ -21,19 +22,21 @@
         </p>          
       </div>
     </div>
-
+    <filter-bar></filter-bar>
     <vuetable ref="jobList"
       :api-url="apiUrl"
       :fields="fields"
       data-path="data"
       :row-class="onRowClass"
+      :sort-order="sortOrder"
       pagination-path="pagination"
       @vuetable:pagination-data="onPaginationData"
       @vuetable:cell-clicked="onCellClicked"
       :css="css.table"
+      :append-params="moreParams"      
     >
       <template slot="job-name" slot-scope="props">
-        <a @click="modalEditShow(props.rowData.id)">{{ props.rowData.name }}</a>
+        <router-link :to="`/jobs/${props.rowData.id}`">{{ props.rowData.name }}</router-link>
       </template>     
     </vuetable>
     <div class="columns">
@@ -75,36 +78,58 @@
         </div>
       </div>
       <button class="modal-close is-large" aria-label="close" @click="deleteDialogIsVisible = false"></button>
-    </div>    
-    <job v-bind:jobRecord="activeJobRecord" ref="job" v-on:job-modal-close="jobModalClose"></job>                
+    </div>                
   </div>
 </template>
 
 <script>
+import Vue from 'vue'
 import Vuetable from 'vuetable-2'
 import VuetablePagination from '../../../node_modules/vuetable-2/src/components/VuetablePagination.vue'
 import VuetablePaginationInfo from '../../../node_modules/vuetable-2/src/components/VuetablePaginationInfo.vue'
-import Job from '../Job/Job.vue'
+import FilterBar from '../../components/FilterBar/FilterBar.vue'
 
 import vue_css from '../table-style.js'
 import fields_definition from './joblist-fields-defintion.js'
+import { EventBus } from '../../components/utils.js';
+
 import config from '../config.js';
 import axios from 'axios';
 
 export default {
   data () {
     return {
+      moreParams: {},
       selectedRow: null,
       selectedJobName: null,
-      activeJobRecord: {},
       deleteDialogIsVisible: false,
       jobNameToDelete: null,
       css: vue_css,
       fields: fields_definition,
-      apiUrl: `${config.apiUrl}/jobs`
+      apiUrl: `${config.apiUrl}/jobs`,
+      sortOrder: [
+        {
+          field: 'created_on',
+          direction: 'desc'
+        }
+      ]
     }
   },
+  created() {
+    EventBus.$on('job-list-filter-set', v => this.onFilterSet(v));
+    EventBus.$on('job-list-filter-reset', v => this.onFilterReset());
+  },  
   methods: {
+    onFilterReset() {
+      this.moreParams = {};
+      Vue.nextTick( () => this.$refs.jobList.refresh());
+    },
+    onFilterSet(filterText) {
+      this.moreParams = {
+          'filter': filterText
+      };
+      Vue.nextTick( () => this.$refs.jobList.refresh());
+    },
     onPaginationData (paginationData) {
       this.$refs.jobListPagination.setPaginationData(paginationData)
       this.$refs.jobListPaginationInfo.setPaginationData(paginationData)
@@ -117,22 +142,13 @@ export default {
       this.selectedRow = data.id;   
       this.selectedJobName = data.name;        
     },
-    async modalEditShow(jobId) {
-      try {        
-        const response = await axios.get(`${config.apiUrl}/jobs/${jobId}`);
-        this.activeJobRecord = response.data;          
-      } catch (error) {
-        this.activeJobRecord = {};
-      }    
-    },
-    jobModalClose: function() {
-      this.activeJobRecord = {};
+    refreshJobList() {
       this.$refs.jobList.refresh();
-    },            
+    },
     onRowClass (dataItem, index) {
       return (dataItem.id == this.selectedRow) ? 'is-selected' : ''
     },
-    deleteSelectedJob: function() {
+    modalDeleteShow: function() {
       if(this.selectedRow !== null) {
         this.deleteDialogIsVisible = true;
         this.jobNameToDelete = '';
@@ -140,11 +156,12 @@ export default {
     },
     executeJobDeletion: async function() {      
       try {        
-        const response = await axios.delete(`${config.apiUrl}/jobs/${this.selectedRow}`);
-        this.$refs.jobList.refresh();
+        const response = await axios.delete(`${this.apiUrl}/${this.selectedRow}`);
+        this.selectedRow = null;
+        this.refreshJobList();
         this.deleteDialogIsVisible = false;
       } catch (error) {
-        console.log(error);
+        EventBus.$emit('app-error', utils.parceApiError(error));
       }
     }
   },
@@ -157,7 +174,7 @@ export default {
     'vuetable': Vuetable,
     'vuetable-pagination': VuetablePagination,
     'vuetable-pagination-info': VuetablePaginationInfo,
-    'job': Job
+    'filter-bar': FilterBar
   }
 }
 </script>

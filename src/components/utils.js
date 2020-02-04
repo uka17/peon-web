@@ -1,5 +1,36 @@
 let config = require('./config.js');
 let Vue = require('vue/dist/vue.js');
+module.exports.EventBus = new Vue();
+
+/**
+ * Allows to put only numeric values into input field
+ * @param {event} event Key press event
+ */
+function isNumber(event) {
+  let keyCode = (event.keyCode ? event.keyCode : event.which);
+  if ((keyCode < 48 || keyCode > 57) && keyCode !== 46) { 
+    event.preventDefault();
+  }
+}
+module.exports.isNumber = isNumber;
+
+/**
+ * Replace string with truncated in case if length is more than `len` and adds at the end
+ * @param {string} val String which should be truncated
+ * @param {number} len Maximal length. All characters after will be cut and replaced with ...
+ * @returns {string} Truncated string
+ */
+function truncateString(val, len) {
+  if(typeof val !== 'string')
+    throw new TypeError('val should be a string');
+  if(typeof len !== 'number' || isNaN(parseInt(len)))
+    throw new TypeError('len should be a number');     
+  if(val.length > len)
+    return `${val.substr(0, len)}...`;
+  else
+    return val;
+}
+module.exports.truncateString = truncateString;
 
 /**
  * Converts `date-time` into appropriate format
@@ -75,6 +106,22 @@ function swapElements(list, firstIndex, secondIndex) {
   Vue.set(list, secondIndex, buf);
 }
 module.exports.swapElements = swapElements;
+
+/**
+ * Parces `errorObject` to string representation
+ * @param {object} errorObject Error object
+ * @returns {string} String representation of API error
+ */
+function parceApiError(errorObject) {
+  let errorMessage = errorObject;  
+  if(errorObject.response.data.logId !== undefined) {
+    errorMessage = `${errorObject.response.data.error} LogId: ${errorObject.response.data.logId}`;
+  }
+  
+  return errorMessage;
+}
+module.exports.parceApiError = parceApiError;
+
 
 module.exports.helpers = {
   checkbox: function (v) {

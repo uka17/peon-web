@@ -1,10 +1,11 @@
 <template>
-  <div>
+  <div id="job-general">
     <div class="field">
-      <label class="label">Name</label>
+      <label class="label">Name*</label>
       <div class="control">
-        <input v-model="job.name" class="input" type="text" placeholder="Job name">
+        <input v-model="job.name" id="job-dialog-name" class="input" v-bind:class="{ 'is-danger': jobFieldIsValid('name') !== '' }" type="text" placeholder="Job name">
       </div>
+      <p id="job-dialog-name-error" class="help is-danger">{{ jobFieldIsValid('name') }}</p>
     </div>
     <div class="field">
       <div class="control">
@@ -16,7 +17,7 @@
     <div class="field">
       <label class="label">Description</label>
       <div class="control">
-        <textarea class="textarea" placeholder="Job description"  v-model="job.description"></textarea>
+        <textarea class="textarea" id="job-dialog-description" placeholder="Job description"  v-model="job.description"></textarea>
       </div>
     </div>
     <div class="columns">
@@ -71,6 +72,8 @@
 <script>
 import utils from '../utils'
 import config from '../config'
+import validate from 'validate.js';
+import constraints from './job-validation.js';
 
 export default {
   data() {
@@ -85,14 +88,21 @@ export default {
     }
   },
   methods: {
-    formatDateTime: function(dateTime) {
+    formatDateTime(dateTime) {
       return utils.helpers.formatDateTime(dateTime);
-    }
+    },
+    jobFieldIsValid(field) {
+      const result = validate(this.job, constraints('en'));
+      if(result && result.hasOwnProperty(field))
+        return result[field][0];
+      else
+        return '';
+    }     
   },
   computed: {
     job: function() {
       return this.jobRecord.job !== undefined ? this.jobRecord.job : {};
-    }
+    } 
   },
   components: {
 

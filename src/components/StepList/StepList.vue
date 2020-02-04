@@ -55,7 +55,7 @@
         <a @click="modalEditShow(props.rowData)">{{ props.rowData.name }}</a>
       </template>    
     </vuetable>
-    <step ref="step" v-on:step-modal-save="stepSave($event)" v-on:step-modal-new="stepCreate($event)"></step>
+    <step ref="stepDialog" v-on:step-modal-save="stepSave($event)" v-on:step-modal-new="stepCreate($event)"></step>
   </div>
 </template>
 
@@ -87,11 +87,11 @@ export default {
     },
     modalEditShow(step) {
       //Break reactivity for modal edit
-      this.$refs.step.modalShow(JSON.parse(JSON.stringify(step)));
+      this.$refs.stepDialog.modalShow(JSON.parse(JSON.stringify(step)), this.stepList);
     },
     modalNewShow() {
       //Break reactivity for modal edit
-      this.$refs.step.modalShow(JSON.parse(JSON.stringify(step_template.newStep)), true);         
+      this.$refs.stepDialog.modalShow(JSON.parse(JSON.stringify(step_template.newStep)), this.stepList, true);         
     },    
     stepSave (step){
       this.$set(this.stepList, this.clickedRow - 1, step);

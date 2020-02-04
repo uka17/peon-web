@@ -4,63 +4,92 @@
       <div class="column is-narrow" style="width: 220px;">
         <aside class="menu">
           <ul class="menu-list">
-              <li v-for="item in menu" v-bind:key="item.id">
-                <p v-if="item.id.includes('---')" class="menu-label"><br>{{ item.title }}</p>
-                <a v-if="!item.id.includes('---')" :id="item.id" v-bind:class="{ 'is-active': menuItemClass(item.id) }" @click="menuItemClick">{{ item.title }}</a>
-              </li>
+            <li><p class="menu-label" is-active><br>General</p></li>
+            <li><router-link to="/jobs">Job list</router-link></li>
+            <li><router-link to="/schedules">Schedules</router-link></li>
+            <li><router-link to="/monitor">Activity monitor</router-link></li>
+            <li><p class="menu-label"><br>Configuration</p></li>
+            <li><router-link to="/settings">Settings</router-link></li>
           </ul>
         </aside>
       </div>
       <div class="column">
-        <div v-show="menuItemClass('job-list')" id="job-list-container">        
-          <h1 class="title">{{ this.findMenuItemById('job-list').title }}</h1>
-          <job-list></job-list>
-        </div>
-        <div v-show="menuItemClass('schedule')" id="schedule-container">        
-          <h1 class="title">{{ this.findMenuItemById('schedule').title }}</h1>
-        </div>
-        <div v-show="menuItemClass('activity-monitor')" id="activity-monitor-container">        
-          <h1 class="title">{{ this.findMenuItemById('activity-monitor').title }}</h1>
-        </div>
-        <div v-show="menuItemClass('log-viewer')" id="log-viewer-container">        
-          <h1 class="title">{{ this.findMenuItemById('log-viewer').title }}</h1>
-        </div>
-        <div v-show="menuItemClass('settings')" id="settings-container">        
-          <h1 class="title">{{ this.findMenuItemById('settings').title }}</h1>
-        </div>                                      
+        <transition name="fade">
+          <router-view></router-view>                             
+        </transition>
       </div>
-    </div>    
+    </div>  
+    <div class="modal" v-bind:class="{ 'is-active': this.erorrMessage !== null }">
+      <div class="modal-background"></div>
+      <div class="modal-card">
+        <header class="modal-card-head">
+          <p class="modal-card-title">Error</p>
+          <button class="delete" aria-label="close" @click="erorrMessage = null"></button>
+        </header>
+        <section class="modal-card-body">
+          <article class="message is-danger">
+            <div class="message-body">
+              <span>{{ erorrMessage }}</span>                  
+            </div>                    
+          </article>      
+        </section>
+        <footer class="modal-card-foot buttons is-right">
+          <button class="button" @click="erorrMessage = null">OK</button>
+        </footer>
+      </div>
+    </div>      
   </div>   
 </template>
 
 <script>
+import Vue from 'vue';
+import VueRouter from 'vue-router';
+Vue.use(VueRouter);
+
 import JobList from './components/JobList/JobList.vue'
-import menuDefinition from './components/menu-definition.js'
-import config from './components/config';
+import Job from './components/Job/Job.vue'
+import config from './components/config.js';
+
+import { EventBus } from './components/utils.js';
+
+const appRouter = new VueRouter({
+  routes: [
+    { path: '/jobs', component: JobList },
+    { path: '/jobs/:id', component: Job, props: true },
+    
+    /*,
+    { path: '/schedules', component: JobList },
+    { path: '/monitor', component: JobList },
+    { path: '/settings', component: JobList }
+    */
+  ],
+  linkActiveClass: 'is-active'
+});
 
 export default {
+  router: appRouter,  
   data () {
     return {
-      menu: menuDefinition
+      erorrMessage: null
     }
   },
+  created() {
+    EventBus.$on('app-error', v => { this.erorrMessage = v; })
+  },
   methods: {
-    menuItemClick: function() {
-      this.menu.map((elem) => elem.active = false);
-      this.findMenuItemById(event.target.id).active = true; 
-    },
-    menuItemClass: function (id) {
-      return this.findMenuItemById(id).active;
-    },
-    findMenuItemById(id) {
-      return this.menu.find((elem) => { if(elem.id == id && !(elem.id.includes('---'))) return elem; })
-    }
+
   },
   computed: {
     
-  },
-  components: {
-    'job-list': JobList
   }
 }
 </script>
+<style lang="scss" >
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity .3s;
+  }
+  .fade-enter, .fade-leave-to /* .fade-leave-active до версии 2.1.8 */ {
+    opacity: 0;
+  }
+</style>
+
