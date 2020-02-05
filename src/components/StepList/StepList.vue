@@ -55,6 +55,7 @@
         <a @click="modalEditShow(props.rowData)">{{ props.rowData.name }}</a>
       </template>    
     </vuetable>
+    <p id="step-list-empty-error" v-if="this.stepList.length === 0" class="help is-danger">{{ messages.stepListShouldNotBeEmpty['en'] }}</p>
     <step ref="stepDialog" v-on:step-modal-save="stepSave($event)" v-on:step-modal-new="stepCreate($event)"></step>
   </div>
 </template>
@@ -70,6 +71,7 @@ import fields_definition from './steplist-fields-defintion.js'
 import step_template from '../Step/step-template.js'
 
 import config from '../config.js';
+import messages from '../translation/messages.js'
 import utils from '../utils.js';
 
 export default {
@@ -77,7 +79,8 @@ export default {
     return {
       clickedRow: null,
       css: vue_css,
-      fields: fields_definition
+      fields: fields_definition,
+      messages: messages
     }
   },
   props: ['stepList'],

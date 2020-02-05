@@ -15,10 +15,14 @@
           <div class="tabs is-boxed">
             <ul>
               <li v-bind:class="{ 'is-active': this.activeTab == 'general' }">
-                <a id="general-tab" @click="tabClick('general')"><span>General</span></a>
+                <a id="general-tab" @click="tabClick('general')">
+                  <span>General</span><span v-if="!generalTabIsValid" class="icon has-text-danger"><i class="mdi mdi-alert-circle-outline"></i></span>
+                </a>
               </li>
               <li  v-bind:class="{ 'is-active': this.activeTab == 'steps' }">
-                <a id="steps-tab" @click="tabClick('steps')"><span>Steps</span></a>
+                <a id="steps-tab" @click="tabClick('steps')">
+                  <span>Steps</span><span v-if="!stepListTabIsValid" class="icon has-text-danger"><i class="mdi mdi-alert-circle-outline"></i></span>
+                </a>
               </li>
               <li v-bind:class="{ 'is-active': this.activeTab == 'schedules' }">
                 <a id="schedules-tab" @click="tabClick('schedules')"><span>Schedules</span></a>
@@ -136,8 +140,14 @@ export default {
       return this.job.steps !== undefined ? this.job.steps : [];
     },
     formIsValid() {
-      return (validate(this.jobRecord.job, constraints('en')) === undefined) && (this.stepList.length > 0);      
+      return this.generalTabIsValid && this.stepListTabIsValid;      
     },
+    generalTabIsValid() {
+      return validate(this.jobRecord.job, constraints('en')) === undefined;
+    },
+    stepListTabIsValid() {
+      return this.stepList.length > 0;
+    }
   },
   components: {
     'job-general-tab': JobGeneralTab,
