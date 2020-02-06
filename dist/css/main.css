@@ -18,5 +18,11 @@ th#_created_by
   { min-width: 110px; }
 
 th#_enabled,
-th#_last_run_result
-{ text-align: center; }
+th#_last_run_result { 
+  text-align: center; 
+  width: 80px;
+}
+
+td[class*="default-cursor"] {
+  cursor: default;
+}

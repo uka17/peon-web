@@ -40,8 +40,8 @@
               <step-list-tab ref="stepList" v-bind:stepList="stepList"></step-list-tab>
             </section>
             <section class="tab-content" v-bind:class="{ 'is-hidden': this.activeTab != 'schedules' }">
-				<schedule-list-tab ref="scheduleList" v-bind:scheduleList="stepList"></schedule-list-tab>
-			</section>
+              <schedule-list-tab ref="scheduleList" v-bind:scheduleList="scheduleList"></schedule-list-tab>
+            </section>
             <section class="tab-content" v-bind:class="{ 'is-hidden': this.activeTab != 'notifications' }">Notifications</section>
           </div>    
         </div>    
@@ -58,6 +58,7 @@
 <script>
 import JobGeneralTab from './JobGeneralTab.vue'
 import StepList from '../StepList/StepList.vue'
+import ScheduleList from '../ScheduleList/ScheduleList.vue'
 
 import config from '../config.js';
 import utils from '../utils.js';
@@ -141,6 +142,9 @@ export default {
     stepList: function() {
       return this.job.steps !== undefined ? this.job.steps : [];
     },
+    scheduleList: function() {
+      return this.job.schedules !== undefined ? this.job.schedules : [];
+    },    
     formIsValid() {
       return this.generalTabIsValid && this.stepListTabIsValid;      
     },
@@ -153,7 +157,8 @@ export default {
   },
   components: {
     'job-general-tab': JobGeneralTab,
-    'step-list-tab': StepList
+    'step-list-tab': StepList,
+    'schedule-list-tab': ScheduleList
   }
 }
 </script>
