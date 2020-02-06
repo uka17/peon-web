@@ -62,8 +62,6 @@
 
 <script>
 import Vuetable from 'vuetable-2'
-import VuetablePagination from '../../../node_modules/vuetable-2/src/components/VuetablePagination.vue'
-import VuetablePaginationInfo from '../../../node_modules/vuetable-2/src/components/VuetablePaginationInfo.vue'
 import Step from '../Step/Step.vue'
 
 import vue_css from '../table-style.js'
@@ -129,8 +127,6 @@ export default {
   },
   components: {
     Vuetable,
-    VuetablePagination,
-    VuetablePaginationInfo,
     Step
   }
 }
