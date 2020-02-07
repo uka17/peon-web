@@ -3,97 +3,54 @@
     <div class="modal-background"></div>
     <div class="modal-card">
       <header class="modal-card-head">
-        <p class="modal-card-title">Step properties: {{step.name}}</p>
+        <p class="modal-card-title">Schedule properties: {{schedule.name}}</p>
         <button class="delete" aria-label="close" @click="modalClose"></button>
       </header>
       <section class="modal-card-body">
         <div class="field">
           <label class="label">Name*</label>
           <div class="control">
-            <input v-model="step.name" class="input" type="text" v-bind:class="{ 'is-danger': stepFieldIsValid('name') !== '' }" placeholder="Step name">
+            <input v-model="schedule.name" class="input" type="text" v-bind:class="{ 'is-danger': fieldIsValid('name') !== '' }" placeholder="Schedule name">
           </div>
-          <p id="step-dialog-name-error" class="help is-danger">{{ stepFieldIsValid('name') }}</p>
-        </div>
+          <p id="schedule-dialog-name-error" class="help is-danger">{{ fieldIsValid('name') }}</p>
+        </div>  
         <div class="field">
-          <div class="control">
-            <label class="checkbox">
-              <input type="checkbox" v-model="step.enabled"> Enabled
-            </label>
-          </div>
-        </div>
-        <div class="field">
-          <label class="label">Connection*</label>
+          <label class="label">Schedule type*</label>
           <div class="control">
             <div class="select">
-              <select>
-                <option>Connection 1</option>
-                <option>Connection 2</option>
+              <select v-model="scheduleType">
+                <option value="onetime">One time</option>
+                <option value="daily">Daily</option>
+                <option value="weekly">Weekly</option>
+                <option value="monthly">Monthly</option>
               </select>
             </div>
-          </div>
-        </div>           
-        <div class="field">
-          <label class="label">Command*</label>
-          <div class="control">
-            <textarea class="textarea" placeholder="Job description" v-bind:class="{ 'is-danger': stepFieldIsValid('command') !== '' }" v-model="step.command" id="command-code"></textarea>
-          </div>
-          <p id="step-dialog-command-error" class="help is-danger">{{ stepFieldIsValid('command') }}</p>
-        </div>
-        <label class="label">Retry</label>                 
-          <div class="field has-addons">
-            <p class="control">
-              <input 
-                id="retry-number" class="input" maxlength="2" @keypress="isNumber($event)" type="text"
-                v-model.number="retryAttempts.number" 
-                v-bind:class="{ 'is-danger': stepFieldIsValid('retryAttempts.number') !== '' }" >
-            </p>
-            <p class="control">
-              <a class="button is-static" v-if="retryAttempts.number !== 0">
-                per each
-              </a>
-              <a class="button is-static" v-if="retryAttempts.number === 0">
-                retries
-              </a>                
-            </p>
-            <p class="control" v-if="retryAttempts.number !== 0">
-              <input 
-                id="retry-interval" class="input" maxlength="3" @keypress="isNumber($event)" type="text"
-                v-model.number="retryAttempts.interval"                   
-                v-bind:class="{ 'is-danger': stepFieldIsValid('retryAttempts.interval') !== '' }"
-              > 
-            </p>
-            <p class="control" v-if="retryAttempts.number !== 0">
-              <a class="button is-static">
-                minute(s)          
-              </a>
-            </p>
-          </div>        
-          <p id="step-dialog-retry-number-error" class="help is-danger">{{ stepFieldIsValid('retryAttempts.number') }}</p>
-          <p id="step-dialog-retry-interval-error" class="help is-danger">{{ stepFieldIsValid('retryAttempts.interval') }}</p>                            
-        <div class="field">
-          <label class="label">On succeed</label>
-          <div class="control">
-            <step-result-action 
-              v-on:step-result-action-update="onSucceedActionUpdate($event)"               
-              v-bind:stepList="stepList"
-              v-bind:stepResult="step.onSucceed">
-            </step-result-action>
-          </div>
-        </div>     
-        <div class="field">
-          <label class="label">On failure</label>
-          <div class="control">
-            <step-result-action 
-              v-on:step-result-action-update="onFailureActionUpdate($event)" 
-              v-bind:stepList="stepList"
-              v-bind:stepResult="step.onFailure">
-            </step-result-action>
-          </div>
-        </div>              
-      </section>
+          </div>     
+        </div> 
+        <div>
+          <section v-bind:class="{ 'is-hidden': this.scheduleType != 'onetime' }">
+            <div class="field">
+              <label class="label">Date and time*</label>
+              <div class="control">
+                <input v-model="schedule.oneTime" class="input" type="text" v-bind:class="{ 'is-danger': fieldIsValid('name') !== '' }" placeholder="Schedule name">
+              </div>
+              <p id="schedule-dialog-onetime-error" class="help is-danger">{{ fieldIsValid('oneTime') }}</p>
+            </div>  
+          </section>
+          <section v-bind:class="{ 'is-hidden': this.scheduleType != 'daily' }">
+            DAILY
+          </section>
+          <section v-bind:class="{ 'is-hidden': this.scheduleType != 'weekly' }">
+            WEEKLY
+          </section>
+          <section v-bind:class="{ 'is-hidden': this.scheduleType != 'monthly' }">
+            MONTHLY
+          </section>                               
+        </div>                                   
+      </section>      
       <footer class="modal-card-foot buttons is-right">
-          <button v-if="!isNew" class="button is-link" @click="saveChanges" v-bind:class="{ 'is-static': !formIsValid }" title="Save step changes">Save changes</button>
-          <button v-if="isNew" class="button is-success" @click="createStep" v-bind:class="{ 'is-static': !formIsValid }" title="Create step">Create step</button>
+          <button v-if="!isNew" class="button is-link" @click="save" v-bind:class="{ 'is-static': !formIsValid }" title="Save schedule changes">Save changes</button>
+          <button v-if="isNew" class="button is-success" @click="create" v-bind:class="{ 'is-static': !formIsValid }" title="Create schedule">Create schedule</button>
           <button @click="modalClose" class="button">Cancel</button>
       </footer>
     </div>
@@ -101,65 +58,51 @@
 </template>
 
 <script>
-import StepResultAction from './StepResultAction.vue'
-import CodeMirror from '../../../node_modules/codemirror/lib/codemirror'
-import CodeMirrorMode from '../../../node_modules/codemirror/mode/sql/sql'
 
 import validate from 'validate.js';
-import constraints from './step-validation.js';
+import constraints from './schedule-validation.js';
 import utils from '../utils.js';
 
 
 export default {
   data() {
     return {
-      step: {},
-      highlighter: null,
-      isNew: null,
-      stepList: []
+      schedule: {},
+      isNew: undefined,
+      scheduleType: undefined
     }
   },
   methods: {
-    modalShow(step, stepList, isNew = false) {
+    modalShow(schedule, isNew = false) {
       this.$set(this, 'isNew', isNew);
-      this.$set(this, 'step', step);
-      this.$set(this, 'stepList', stepList);
-      //Have no idea how it works, but CodeMirror needs a tiny delay before init =(
-      setTimeout(() => {
-        if(this.highlighter === null) {
-          this.highlighter = CodeMirror.fromTextArea(document.getElementById('command-code'), {
-            lineNumbers: true,
-            theme: "elegant"
-          });
-          let step = this.step;
-          this.highlighter.on('keyup', function(instance, event) {
-            //Codemirror is not reactive element unfortunately
-            step.command = instance.getValue();
-          });
-        };   
-      }, 1)  
+      this.$set(this, 'schedule', schedule);
+
+      if(Object.prototype.hasOwnProperty.call(schedule, 'oneTime')) {
+        this.$set(this, 'scheduleType', 'onetime');
+      }      
+      if(Object.prototype.hasOwnProperty.call(schedule, 'eachNDay')) {
+        this.$set(this, 'scheduleType', 'daily');
+      }      
+      if(Object.prototype.hasOwnProperty.call(schedule, 'eachNWeek')) {
+        this.$set(this, 'scheduleType', 'weekly');
+      }      
+      if(Object.prototype.hasOwnProperty.call(schedule, 'month')) {
+        this.$set(this, 'scheduleType', 'monthly');
+      }      
     },
-    saveChanges: function() {
-      this.$emit('step-modal-save', this.step);       
+    save: function() {
+      this.$emit('schedule-modal-save', this.schedule);       
       this.modalClose();
     },
-    createStep() {
-      this.$emit('step-modal-new', this.step);       
+    create() {
+      this.$emit('schedule-modal-new', this.schedule);       
       this.modalClose();
     },
     modalClose: function() {
-      this.$set(this, 'step', {});
-      this.highlighter.toTextArea();
-      this.highlighter = null;
+      this.$set(this, 'schedule', {});
     },
-    onSucceedActionUpdate: function(v) {
-      this.step.onSucceed = v;
-    },
-    onFailureActionUpdate: function(v) {
-      this.step.onFailure = v;
-    },
-    stepFieldIsValid(field) {
-      const result = validate(this.step, constraints('en'));
+    fieldIsValid(field) {
+      const result = validate(this.schedule, constraints('en'));
       if(result && result.hasOwnProperty(field))
         return result[field][0];
       else
@@ -169,35 +112,21 @@ export default {
   },
   computed: {
     modalIsActive: function() {
-      return this.step.name !== undefined;
+      return this.schedule.name !== undefined;
     },
     retryAttempts: function() {
-      return this.step.retryAttempts !== undefined ? this.step.retryAttempts : {};
+      return this.schedule.retryAttempts !== undefined ? this.schedule.retryAttempts : {};
     },
     formIsValid() {
-      return (validate(this.step, constraints('en')) === undefined)
+      return (validate(this.schedule, constraints('en')) === undefined)
     }
   },
   components: {
-    'step-result-action': StepResultAction
+    //'schedule-result-action': ScheduleResultAction
   }
 }
 </script>
 
 <style lang="scss" >
-  @import '../../../node_modules/codemirror/lib/codemirror.css';
-  @import '../../../node_modules/codemirror/theme/elegant.css';
-  .CodeMirror {
-    height: 100px;
-    border: 1px solid #dbdbdb;
-    border-radius: 4px;
-    font-size: 10pt;
-  }
-  .CodeMirror:hover {
-    border: 1px solid #b5b5b5;    
-  }
-  #retry-number, #retry-interval {
-    width: 50px;
-    text-align: center;
-  }
+
 </style>

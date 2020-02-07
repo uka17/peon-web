@@ -33,17 +33,18 @@
         <a @click="modalEditShow(props.rowData)">{{ props.rowData.name }}</a>
       </template>    
     </vuetable>
-    <!-- <schedule ref="schedule" v-on:schedule-modal-save="save($event)" v-on:schedule-modal-new="create($event)"></schedule> -->
+    <schedule ref="schedule" v-on:schedule-modal-save="save($event)" v-on:schedule-modal-new="create($event)"></schedule>
   </div>
 </template>
 
 <script>
 import Vuetable from 'vuetable-2'
-//import Schedule from '../Schedule/Schedule.vue'
+import Schedule from '../Schedule/Schedule.vue'
 
 import vue_css from '../table-style.js'
 import fields_definition from './schedulelist-fields-defintion.js'
 import schedule_template from '../Schedule/schedule-template.js'
+import scheduleSummary from '../Schedule/schedule-summary.js'
 
 import config from '../config.js';
 import utils from '../utils.js';
@@ -62,10 +63,12 @@ export default {
       this.clickedRow = data.name;      
     },
     getDescription(name) {
-      if(this.scheduleList)
-        return this.scheduleList.find((elem) => elem.name === name);
-      else 
+      if(this.scheduleList) {
+        let cellSchedule = this.scheduleList.find((elem) => elem.name === name);
+        return cellSchedule === undefined ? undefined : scheduleSummary(cellSchedule);
+      } else {
         return undefined;
+      }
     },
     modalEditShow(schedule) {
       //Break reactivity for modal edit
@@ -95,8 +98,8 @@ export default {
     }
   },
   components: {
-    Vuetable
-    //Schedule
+    Vuetable,
+    Schedule
   }
 }
 </script>

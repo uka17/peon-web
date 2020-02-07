@@ -19,12 +19,17 @@ describe.only('schedule-summary', function() {
   });
   
   it('1.3 weekly', (done) => {
-    assert.equal(summary(testData.schedules.weekly), '-');
+    assert.equal(summary(testData.schedules.weekly), 'Each 1 week(s) on Monday, Wednesday and Friday, at 11:30:00, starting 1/1/2019, 4:00:00 AM');
     done();
   });
 
   it('1.4 monthly', (done) => {
-    assert.equal(summary(testData.schedules.monthly), '-');
+    assert.equal(summary(testData.schedules.monthly), 'In December and July each 10, 15, 21, 29, 30 and 31 day, every 90 minute(s) between 09:00:00 and 23:59:59, starting 12/31/2018, 4:00:00 AM and till 12/31/2001, 4:00:00 AM');
+    done();
+  });
+
+  it('1.5 monthly2', (done) => {
+    assert.equal(summary(testData.schedules.monthly2), 'In December each 10 day, every 1 hour(s) between 09:00:00 and 23:59:59, starting 12/31/2018, 4:00:00 AM and till 12/31/2001, 4:00:00 AM');
     done();
   });
 

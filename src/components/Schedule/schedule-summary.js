@@ -3,20 +3,20 @@ let formatDateTime = require('../utils.js').formatDateTime;
 function scheduleSumary(schedule) {
   let result = '';
 	
-  if(schedule.hasOwnProperty('oneTime')) {
+  if(Object.prototype.hasOwnProperty.call(schedule, 'oneTime')) {
     result = `Once at ${formatDateTime(schedule.oneTime)}`;
   }
 	
-  if(schedule.hasOwnProperty('eachNDay')) {
+  if(Object.prototype.hasOwnProperty.call(schedule, 'eachNDay')) {
     result = `Each ${schedule.eachNDay} day(s), ${getDailyFrequency(schedule.dailyFrequency)}, ${getStartEnd(schedule)}`;
   }
 	
-  if(schedule.hasOwnProperty('eachNWeek')) {
-    result = `Each ${schedule.eachNWeek} week(s), ${getWeekDays(schedule.dayOfWeek)}, ${getDailyFrequency(schedule.dailyFrequency)}, ${getStartEnd(schedule)}`;
+  if(Object.prototype.hasOwnProperty.call(schedule, 'eachNWeek')) {
+    result = `Each ${schedule.eachNWeek} week(s) on ${getWeekDays(schedule.dayOfWeek)}, ${getDailyFrequency(schedule.dailyFrequency)}, ${getStartEnd(schedule)}`;
   }
 	
-  if(schedule.hasOwnProperty('month')) {
-    result = `In ${getMonths(schedule.month)}, each ${getMonthDays(schedule.day)} day(s), ${getDailyFrequency(schedule.dailyFrequency)}, ${getStartEnd(schedule)}`;
+  if(Object.prototype.hasOwnProperty.call(schedule, 'month')) {
+    result = `In ${getMonths(schedule.month)} each ${getMonthDays(schedule.day)} day, ${getDailyFrequency(schedule.dailyFrequency)}, ${getStartEnd(schedule)}`;
   }
 
   return result;
@@ -31,6 +31,17 @@ function getDailyFrequency(dailyFrequency) {
   }
 }
 
+function listReducer(acc, cur, ind, arr) {
+  //x, y, z and a
+  let result = `${acc}${cur}`;
+  if(arr.length > 2 && ind < arr.length - 2)
+    result = `${result}, `;
+  if(ind === arr.length - 2)
+    result = `${result} and `;
+
+  return result;
+}
+
 function getWeekDays(weekDays) {
   let weekDayList = {
     "sun": "Sunday", 
@@ -41,11 +52,12 @@ function getWeekDays(weekDays) {
     "fri": "Friday", 
     "sat": "Saturday"
   };
+
+  let choosenWeekDays = weekDays.map((val) => weekDayList[val]);
 	
-  return weekDays.reduce((acc, cur, ind, arr) => {
-    return ind === arr.length - 1 ? `${acc} and ${weekDayList[cur]}` : `${acc} ${weekDayList[cur]},`;
-  }, 'on');
+  return choosenWeekDays.reduce(listReducer, '');
 }
+
 function getMonths(months) {
   let monthList = {
     "jan": "January", 
@@ -62,11 +74,12 @@ function getMonths(months) {
     "dec": "December"
   };
 	
-  return months.reduce((acc, cur) => `${acc}, ${monthList[cur]}`, '');
+  let choosenMonths = months.map((val) => monthList[val]);
+  return choosenMonths.reduce(listReducer, '');
 }
 
 function getMonthDays(monthDays) {
-  return monthDays.reduce((acc, cur) => `${acc}, ${cur}`, '');
+  return monthDays.reduce(listReducer, '');
 }
 
 function getStartEnd(schedule) {

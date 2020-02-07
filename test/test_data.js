@@ -39,7 +39,7 @@ module.exports.schedules = {
     "startDateTime": "2018-12-31T01:00:00.000Z",
     "endDateTime": "2001-12-31T01:00:00.000Z",
     "month": ["dec", "jul"],
-    "day": [29, 30, 31],
+    "day": [10, 15, 21, 29, 30, 31],
     "dailyFrequency": { 
       "start": "09:00:00", 
       "occursEvery": {
@@ -47,5 +47,18 @@ module.exports.schedules = {
         "intervalType": "minute"
       }
     }
-  }
+  },
+  "monthly2": { 
+    "startDateTime": "2018-12-31T01:00:00.000Z",
+    "endDateTime": "2001-12-31T01:00:00.000Z",
+    "month": ["dec"],
+    "day": [10],
+    "dailyFrequency": { 
+      "start": "09:00:00", 
+      "occursEvery": {
+        "intervalValue": 1, 
+        "intervalType": "hour"
+      }
+    }
+  }  
 };
