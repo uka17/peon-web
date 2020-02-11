@@ -1,4 +1,5 @@
 let formatDateTime = require('../utils.js').formatDateTime;
+let reference = require('./week-month-reference')['en'];
 
 function scheduleSumary(schedule) {
   let result = '';
@@ -43,38 +44,15 @@ function listReducer(acc, cur, ind, arr) {
 }
 
 function getWeekDays(weekDays) {
-  let weekDayList = {
-    "sun": "Sunday", 
-    "mon": "Monday", 
-    "tue": "Tuesday", 
-    "wed": "Wednesday", 
-    "thu": "Thursday", 
-    "fri": "Friday", 
-    "sat": "Saturday"
-  };
 
-  let choosenWeekDays = weekDays.map((val) => weekDayList[val]);
+  let choosenWeekDays = weekDays.map((val) => reference.weekDayList[val]);
 	
   return choosenWeekDays.reduce(listReducer, '');
 }
 
 function getMonths(months) {
-  let monthList = {
-    "jan": "January", 
-    "feb": "February", 
-    "mar": "March", 
-    "apr": "April", 
-    "may": "May", 
-    "jun": "June", 
-    "jul": "July", 
-    "aug": "August", 
-    "sep": "September", 
-    "oct": "October", 
-    "nov": "November", 
-    "dec": "December"
-  };
 	
-  let choosenMonths = months.map((val) => monthList[val]);
+  let choosenMonths = months.map((val) => reference.monthList[val]);
   return choosenMonths.reduce(listReducer, '');
 }
 
