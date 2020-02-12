@@ -7,37 +7,34 @@
         <button class="delete" aria-label="close" @click="modalClose"></button>
       </header>
       <section class="modal-card-body">
-        <div class="columns">
-          <div class="column">
-            <div class="field">
-              <label class="label">Name*</label>
-              <div class="control">
-                <input v-model="schedule.name" class="input" type="text" v-bind:class="{ 'is-danger': fieldIsValid('name') !== '' }" placeholder="Schedule name">
-              </div>
-              <p id="schedule-name-error" class="help is-danger">{{ fieldIsValid('name') }}</p>
-            </div>  
+        <div class="field">
+          <label class="label">Name*</label>
+          <div class="control">
+            <input v-model="schedule.name" class="input" type="text" v-bind:class="{ 'is-danger': fieldIsValid('name') !== '' }" placeholder="Schedule name">
           </div>
-          <div class="column">
-            <div class="field">
-              <label class="label">Schedule type*</label>
-              <div class="control">
-                <div class="select">
-                  <select v-model="scheduleType">
-                    <option value="onetime">One time</option>
-                    <option value="daily">Daily</option>
-                    <option value="weekly">Weekly</option>
-                    <option value="monthly">Monthly</option>
-                  </select>
-                </div>
-              </div>     
-            </div>
-          </div>            
         </div>  
+        <p id="schedule-name-error" class="help is-danger">{{ fieldIsValid('name') }}</p>                                    
+        <div class="field">
+          <label class="label">Schedule type*</label>
+          <div class="control">
+            <div class="select">
+              <select v-model="scheduleType">
+                <option value="onetime">One time</option>
+                <option value="daily">Daily</option>
+                <option value="weekly">Weekly</option>
+                <option value="monthly">Monthly</option>
+              </select>
+            </div>
+          </div>     
+        </div>
         <!-- Onetime --> 
         <div class="field" v-bind:class="{ 'is-hidden': scheduleType !== 'onetime' }">
           <label class="label">Date and time*</label>
           <div class="control">
-            <input id="schedule-onetime" v-model="schedule.oneTime" class="input" type="text" v-bind:class="{ 'is-danger': fieldIsValid('oneTime') !== '' }" placeholder="Execution date and time">
+            <input id="schedule-onetime" 
+              v-model="schedule.oneTime" class="input" type="text" 
+              v-bind:class="{ 'is-danger': fieldIsValid('oneTime') !== '' }" 
+              placeholder="Execution date and time">
           </div>
           <p id="schedule-onetime-error" class="help is-danger">{{ fieldIsValid('oneTime') }}</p>
         </div>  
@@ -52,15 +49,27 @@
               </a>           
             </p>              
             <p class="control">
-              <input id="schedule-duaration-start" v-model="schedule.startDate" class="input" type="text">
+              <date-time-pick 
+                id="schedule-duaration-start" v-bind:inputAttributes="{ class: 'input'}" 
+                v-model="schedule.startDate" placeholder="Valid from"                
+                :pickTime="true"
+                :format="'YYYY-MM-DD HH:mm:ss'"
+                >
+              </date-time-pick>                  
             </p>
             <p v-if="!endless" class="control">
               <a class="button is-static">
                 End date
               </a>           
             </p>  
-            <p v-if="!endless" class="control">
-              <input id="schedule-duaration-end" v-model="schedule.endDate" class="input" type="text">
+            <p v-if="!endless" class="control">              
+              <date-time-pick 
+                id="schedule-duaration-end" v-bind:inputAttributes="{ class: 'input'}" 
+                v-model="schedule.endDate" placeholder="Valid till"                
+                :pickTime="true"
+                :format="'YYYY-MM-DD HH:mm:ss'"
+                >
+              </date-time-pick>              
             </p>
           </div> 
         </div>  
@@ -139,8 +148,8 @@
           </div>
           <div class="field" v-bind:class="{ 'is-hidden': !every}">
             <label class="label">Time*</label>
-            <div class="control">
-              <input id="schedule-occursonce" v-model="schedule.occursOnceAt" class="input" type="text" placeholder="Execute at">
+            <div class="control">     
+              <time-pick></time-pick>         
             </div>
           </div>   
           <div v-bind:class="{ 'is-hidden': every}">
@@ -183,6 +192,10 @@ import constraints from './schedule-validation.js';
 import scheduleTemplate from './schedule-template.js';
 import utils from '../utils.js';
 import weekMonthReference from './week-month-reference.js';
+import DatePick from 'vue-date-pick';
+import 'vue-date-pick/dist/vueDatePick.css';
+import VueTimepicker from 'vue2-timepicker'
+import 'vue2-timepicker/dist/VueTimepicker.css'
 
 
 export default {
@@ -289,7 +302,8 @@ export default {
     }
   },
   components: {
-
+    'date-time-pick': DatePick,
+    'time-pick': VueTimepicker
   }
 }
 </script>
@@ -310,5 +324,8 @@ export default {
   }
   #schedule-interval-value, #schedule-eachndays {
     width: 60px
+  }
+  .input {
+    vertical-align: inherit !important
   }
 </style>
