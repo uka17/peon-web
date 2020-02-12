@@ -38,6 +38,9 @@
       <template slot="connection-name" slot-scope="props">
         <router-link :to="`/connections/${props.rowData.id}`">{{ props.rowData.name }}</router-link>
       </template>     
+      <template slot="connection-summary" slot-scope="props">
+        <span>{{ `${props.rowData.login}@${props.rowData.host}:${props.rowData.port}` }}</span>
+      </template>         
     </vuetable>
     <div class="columns">
       <div class="column is-paddingless">

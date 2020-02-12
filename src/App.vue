@@ -49,7 +49,7 @@ Vue.use(VueRouter);
 import JobList from './components/JobList/JobList.vue';
 import Job from './components/Job/Job.vue';
 import ConnectionList from './components/ConnectionList/ConnectionList.vue';
-//import Connection from './components/Connection/Connection.vue';
+import Connection from './components/Connection/Connection.vue';
 import config from './components/config.js';
 
 import { EventBus } from './components/utils.js';
@@ -59,9 +59,8 @@ const appRouter = new VueRouter({
     { path: '/jobs', component: JobList },
     { path: '/jobs/:id', component: Job, props: true },
     { path: '/connections', component: ConnectionList },
-	
-	/*
     { path: '/connections/:id', component: Connection, props: true }   
+	  /*    
     { path: '/monitor', component: JobList },
     { path: '/settings', component: JobList }
     */
