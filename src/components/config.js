@@ -8,6 +8,7 @@ module.exports = {
     minute: '2-digit',
     second: '2-digit'    
   },
+  dateTimeFormat: 'YYYY-MM-DD HH:mm:ss',
   apiUrl: 'http://localhost:8080/v1.0',
   onStepResultRef: {
     'gotoNextStep': 'Go to next step',

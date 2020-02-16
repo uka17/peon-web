@@ -31,10 +31,15 @@
         <div class="field" v-bind:class="{ 'is-hidden': scheduleType !== 'onetime' }">
           <label class="label">Date and time*</label>
           <div class="control">
-            <input id="schedule-onetime" 
-              v-model="schedule.oneTime" class="input" type="text" 
-              v-bind:class="{ 'is-danger': fieldIsValid('oneTime') !== '' }" 
-              placeholder="Execution date and time">
+            <date-time-pick 
+                id="schedule-onetime"
+                v-model="oneTime" placeholder="Execution date and time"                
+                :pickTime="true"
+                :inputAttributes="{readonly: true, class: 'input'}"
+                :format="config.dateTimeFormat"
+                :isDateDisabled="dateIsInPast"
+                >
+            </date-time-pick>             
           </div>
           <p id="schedule-onetime-error" class="help is-danger">{{ fieldIsValid('oneTime') }}</p>
         </div>  
@@ -53,7 +58,7 @@
                 id="schedule-duaration-start" v-bind:inputAttributes="{ class: 'input'}" 
                 v-model="schedule.startDate" placeholder="Valid from"                
                 :pickTime="true"
-                :format="'YYYY-MM-DD HH:mm:ss'"
+                :format="config.dateTimeFormat"
                 >
               </date-time-pick>                  
             </p>
@@ -83,7 +88,6 @@
         <!-- Duration END--> 
         <!-- Daily --> 
         <div class="field" v-bind:class="{ 'is-hidden': scheduleType !== 'daily' }">
-          <br>
           <label class="label">Daily*</label>
           <div class="field has-addons">
             <p class="control">
@@ -102,7 +106,6 @@
           </div>
         </div>
         <div class="field" v-bind:class="{ 'is-hidden': scheduleType !== 'weekly' }">
-          <br>
           <label class="label">Week day*</label>
           <div class="control">
             <div class="buttons has-addons">                
@@ -116,7 +119,6 @@
           </div>
         </div>
         <div class="field" v-bind:class="{ 'is-hidden': scheduleType !== 'monthly' }">
-          <br>
           <label class="label">Month*</label>
           <div class="control">
             <div class="buttons has-addons">                
@@ -132,7 +134,6 @@
         <!-- Schedule types END--> 
         <!-- Daily frequency --> 
         <div v-bind:class="{ 'is-hidden': scheduleType === 'onetime' }">
-          <br>
           <label class="label">Daily frequency*</label>
           <div class="field">            
             <div class="control">
@@ -149,7 +150,7 @@
           <div class="field" v-bind:class="{ 'is-hidden': !every}">
             <label class="label">Time*</label>
             <div class="control">     
-              <time-pick></time-pick>         
+              <input id="schedule-occurs-once-at" v-model="schedule.dailyFrequency.occursOnceAt" class="input" type="text">   
             </div>
           </div>   
           <div v-bind:class="{ 'is-hidden': every}">
@@ -191,11 +192,12 @@ import validate from 'validate.js';
 import constraints from './schedule-validation.js';
 import scheduleTemplate from './schedule-template.js';
 import utils from '../utils.js';
+import config from '../config.js';
 import weekMonthReference from './week-month-reference.js';
 import DatePick from 'vue-date-pick';
 import 'vue-date-pick/dist/vueDatePick.css';
-import VueTimepicker from 'vue2-timepicker'
-import 'vue2-timepicker/dist/VueTimepicker.css'
+
+import dayjs from 'dayjs';
 
 
 export default {
@@ -207,7 +209,8 @@ export default {
       scheduleType: 'onetime',
       endless: true,
       every: false,
-      reference: weekMonthReference['en']
+      reference: weekMonthReference['en'],
+      config: config
     }
   },
   methods: {
@@ -258,7 +261,7 @@ export default {
       this.$set(this, 'modalIsActive', false);
     },
     fieldIsValid(field) {
-      const result = validate(this.schedule, constraints('en'));
+      const result = validate(this.schedule, constraints('en')[this.scheduleType]);
       if(result && result.hasOwnProperty(field))
         return result[field][0];
       else
@@ -294,16 +297,28 @@ export default {
       } else {
         return false;
       }
-    }    
+    },
+    dateIsInPast(date) {
+      const currentDate = new Date();
+      return date < currentDate;
+    }
   },
   computed: {
     formIsValid() {
-      return (validate(this.schedule, constraints('en')) === undefined)
+      return (validate(this.schedule, constraints('en')[this.scheduleType]) === undefined)
+    },
+    oneTime: {
+      get: function() {
+        let dateTime = Date.parse(this.schedule.oneTime);
+        return !isNaN(dateTime) ? dayjs(dateTime).format(config.dateTimeFormat) : '';
+      },
+      set: function(val) {
+        this.schedule.oneTime = val === '' ? '' : dayjs(val).toISOString();
+      }
     }
   },
   components: {
-    'date-time-pick': DatePick,
-    'time-pick': VueTimepicker
+    'date-time-pick': DatePick
   }
 }
 </script>
@@ -311,15 +326,15 @@ export default {
 <style lang="scss" >
   #schedule-modal-content {
     width: 750px;
-    height: 700px;    
+    height: 780px;    
   }
   [class*="is-info"] {
     border: 1px solid #fff !important 
   }
   #schedule-onetime, #schedule-duaration-start, #schedule-duaration-end {
-    width: 165px !important 
+    width: 190px !important 
   }
-  #schedule-occursonce {
+  #schedule-occurs-once-at {
     width: 95px
   }
   #schedule-interval-value, #schedule-eachndays {
