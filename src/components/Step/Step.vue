@@ -10,9 +10,9 @@
         <div class="field">
           <label class="label">Name*</label>
           <div class="control">
-            <input v-model="step.name" class="input" type="text" v-bind:class="{ 'is-danger': stepFieldIsValid('name') !== '' }" placeholder="Step name">
+            <input v-model="step.name" class="input" type="text" v-bind:class="{ 'is-danger': fieldIsValid('name') !== '' }" placeholder="Step name">
           </div>
-          <p id="step-dialog-name-error" class="help is-danger">{{ stepFieldIsValid('name') }}</p>
+          <p id="step-dialog-name-error" class="help is-danger">{{ fieldIsValid('name') }}</p>
         </div>
         <div class="field">
           <div class="control">
@@ -35,9 +35,9 @@
         <div class="field">
           <label class="label">Command*</label>
           <div class="control">
-            <textarea class="textarea" placeholder="Job description" v-bind:class="{ 'is-danger': stepFieldIsValid('command') !== '' }" v-model="step.command" id="command-code"></textarea>
+            <textarea class="textarea" placeholder="Job description" v-bind:class="{ 'is-danger': fieldIsValid('command') !== '' }" v-model="step.command" id="command-code"></textarea>
           </div>
-          <p id="step-dialog-command-error" class="help is-danger">{{ stepFieldIsValid('command') }}</p>
+          <p id="step-dialog-command-error" class="help is-danger">{{ fieldIsValid('command') }}</p>
         </div>
         <label class="label">Retry</label>                 
           <div class="field has-addons">
@@ -45,7 +45,7 @@
               <input 
                 id="retry-number" class="input" maxlength="2" @keypress="isNumber($event)" type="text"
                 v-model.number="retryAttempts.number" 
-                v-bind:class="{ 'is-danger': stepFieldIsValid('retryAttempts.number') !== '' }" >
+                v-bind:class="{ 'is-danger': fieldIsValid('retryAttempts.number') !== '' }" >
             </p>
             <p class="control">
               <a class="button is-static" v-if="retryAttempts.number !== 0">
@@ -59,7 +59,7 @@
               <input 
                 id="retry-interval" class="input" maxlength="3" @keypress="isNumber($event)" type="text"
                 v-model.number="retryAttempts.interval"                   
-                v-bind:class="{ 'is-danger': stepFieldIsValid('retryAttempts.interval') !== '' }"
+                v-bind:class="{ 'is-danger': fieldIsValid('retryAttempts.interval') !== '' }"
               > 
             </p>
             <p class="control" v-if="retryAttempts.number !== 0">
@@ -68,8 +68,8 @@
               </a>
             </p>
           </div>        
-          <p id="step-dialog-retry-number-error" class="help is-danger">{{ stepFieldIsValid('retryAttempts.number') }}</p>
-          <p id="step-dialog-retry-interval-error" class="help is-danger">{{ stepFieldIsValid('retryAttempts.interval') }}</p>                            
+          <p id="step-dialog-retry-number-error" class="help is-danger">{{ fieldIsValid('retryAttempts.number') }}</p>
+          <p id="step-dialog-retry-interval-error" class="help is-danger">{{ fieldIsValid('retryAttempts.interval') }}</p>                            
         <div class="field">
           <label class="label">On succeed</label>
           <div class="control">
@@ -92,8 +92,8 @@
         </div>              
       </section>
       <footer class="modal-card-foot buttons is-right">
-          <button v-if="!isNew" class="button is-link" @click="saveChanges" v-bind:class="{ 'is-static': !formIsValid }" title="Save step changes">Save changes</button>
-          <button v-if="isNew" class="button is-success" @click="createStep" v-bind:class="{ 'is-static': !formIsValid }" title="Create step">Create step</button>
+          <button v-if="!isNew" class="button is-link" @click="save" v-bind:class="{ 'is-static': !formIsValid }" title="Save step changes">Save changes</button>
+          <button v-if="isNew" class="button is-success" @click="create" v-bind:class="{ 'is-static': !formIsValid }" title="Create step">Create step</button>
           <button @click="modalClose" class="button">Cancel</button>
       </footer>
     </div>
@@ -139,11 +139,11 @@ export default {
         };   
       }, 1)  
     },
-    saveChanges: function() {
+    save: function() {
       this.$emit('step-modal-save', this.step);       
       this.modalClose();
     },
-    createStep() {
+    create() {
       this.$emit('step-modal-new', this.step);       
       this.modalClose();
     },
@@ -158,7 +158,7 @@ export default {
     onFailureActionUpdate: function(v) {
       this.step.onFailure = v;
     },
-    stepFieldIsValid(field) {
+    fieldIsValid(field) {
       const result = validate(this.step, constraints('en'));
       if(result && result.hasOwnProperty(field))
         return result[field][0];

@@ -6,7 +6,7 @@
           <ul class="menu-list">
             <li><p class="menu-label" is-active><br>General</p></li>
             <li><router-link to="/jobs">Job list</router-link></li>
-            <li><router-link to="/schedules">Schedules</router-link></li>
+            <li><router-link to="/connections">Connections</router-link></li>
             <li><router-link to="/monitor">Activity monitor</router-link></li>
             <li><p class="menu-label"><br>Configuration</p></li>
             <li><router-link to="/settings">Settings</router-link></li>
@@ -46,8 +46,10 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 Vue.use(VueRouter);
 
-import JobList from './components/JobList/JobList.vue'
-import Job from './components/Job/Job.vue'
+import JobList from './components/JobList/JobList.vue';
+import Job from './components/Job/Job.vue';
+import ConnectionList from './components/ConnectionList/ConnectionList.vue';
+import Connection from './components/Connection/Connection.vue';
 import config from './components/config.js';
 
 import { EventBus } from './components/utils.js';
@@ -56,9 +58,9 @@ const appRouter = new VueRouter({
   routes: [
     { path: '/jobs', component: JobList },
     { path: '/jobs/:id', component: Job, props: true },
-    
-    /*,
-    { path: '/schedules', component: JobList },
+    { path: '/connections', component: ConnectionList },
+    { path: '/connections/:id', component: Connection, props: true }   
+	  /*    
     { path: '/monitor', component: JobList },
     { path: '/settings', component: JobList }
     */

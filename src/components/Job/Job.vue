@@ -39,14 +39,16 @@
             <section class="tab-content" v-bind:class="{ 'is-hidden': this.activeTab != 'steps' }">
               <step-list-tab ref="stepList" v-bind:stepList="stepList"></step-list-tab>
             </section>
-            <section class="tab-content" v-bind:class="{ 'is-hidden': this.activeTab != 'schedules' }">Schedules</section>
+            <section class="tab-content" v-bind:class="{ 'is-hidden': this.activeTab != 'schedules' }">
+              <schedule-list-tab ref="scheduleList" v-bind:scheduleList="scheduleList"></schedule-list-tab>
+            </section>
             <section class="tab-content" v-bind:class="{ 'is-hidden': this.activeTab != 'notifications' }">Notifications</section>
           </div>    
         </div>    
       </section>
       <footer class="modal-card-foot buttons is-right" v-if="jobRecord.job">
-          <button v-if="!isNew" id="button-job-save-changes" class="button is-link" v-bind:class="{ 'is-static': !formIsValid }" @click="saveChanges">Save changes</button>
-          <button v-if="isNew" id="button-job-create" class="button is-success" v-bind:class="{ 'is-static': !formIsValid }" @click="createJob">Create job</button>
+          <button v-if="!isNew" id="button-job-save-changes" class="button is-link" v-bind:class="{ 'is-static': !formIsValid }" @click="save">Save changes</button>
+          <button v-if="isNew" id="button-job-create" class="button is-success" v-bind:class="{ 'is-static': !formIsValid }" @click="create">Create job</button>
           <button @click="modalClose" id="button-job-cancel" class="button">Cancel</button>
       </footer>
     </div>
@@ -56,6 +58,7 @@
 <script>
 import JobGeneralTab from './JobGeneralTab.vue'
 import StepList from '../StepList/StepList.vue'
+import ScheduleList from '../ScheduleList/ScheduleList.vue'
 
 import config from '../config.js';
 import utils from '../utils.js';
@@ -110,7 +113,7 @@ export default {
     tabClick: function(tabName) {
       this.activeTab = tabName;
     },
-    async saveChanges() {
+    async save() {
       try {            
         const response = await axios.patch(`${config.apiUrl}/jobs/${this.jobRecord.id}`, this.jobRecord.job);        
         if(response.status === 200)
@@ -119,7 +122,7 @@ export default {
         EventBus.$emit('app-error', utils.parceApiError(error));
       }
     },
-    async createJob() {      
+    async create() {      
       try {             
         const response = await axios.post(`${config.apiUrl}/jobs`, this.jobRecord.job);        
         if(response.status === 201)
@@ -139,6 +142,9 @@ export default {
     stepList: function() {
       return this.job.steps !== undefined ? this.job.steps : [];
     },
+    scheduleList: function() {
+      return this.job.schedules !== undefined ? this.job.schedules : [];
+    },    
     formIsValid() {
       return this.generalTabIsValid && this.stepListTabIsValid;      
     },
@@ -151,7 +157,8 @@ export default {
   },
   components: {
     'job-general-tab': JobGeneralTab,
-    'step-list-tab': StepList
+    'step-list-tab': StepList,
+    'schedule-list-tab': ScheduleList
   }
 }
 </script>
