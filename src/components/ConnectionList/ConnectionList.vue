@@ -145,7 +145,7 @@ export default {
       this.selectedRow = data.id;   
       this.selectedConnectionName = data.name;        
     },
-    refreshConnectionList() {
+    refresh() {
       this.$refs.connectionList.refresh();
     },
     onRowClass (dataItem, index) {
@@ -161,7 +161,7 @@ export default {
       try {        
         const response = await axios.delete(`${this.apiUrl}/${this.selectedRow}`);
         this.selectedRow = null;
-        this.refreshConnectionList();
+        this.refresh();
         this.deleteDialogIsVisible = false;
       } catch (error) {
         EventBus.$emit('app-error', utils.parceApiError(error));

@@ -1,7 +1,7 @@
 <template>
   <div class="modal" v-bind:class="{ 'is-active': modalIsActive }" v-on:keyup.esc="modalClose()">
     <div class="modal-background"></div>
-    <div class="modal-card">
+    <div class="modal-card" id="connection-modal-content">
       <header class="modal-card-head">
         <p class="modal-card-title">Connection properties: {{connection.name}}</p>
         <button class="delete" aria-label="close" @click="modalClose"></button>
@@ -24,14 +24,21 @@
         <div class="field">
           <label class="label">Host*</label>
           <div class="control">
-            <input v-model="connection.host" class="input" type="text" v-bind:class="{ 'is-danger': fieldIsValid('host') !== '' }" placeholder="Database endpoint">
+            <input v-model="connection.host" class="input" type="text" v-bind:class="{ 'is-danger': fieldIsValid('host') !== '' }" placeholder="Server endpoint">
           </div>
           <p id="connection-dialog-host-error" class="help is-danger">{{ fieldIsValid('host') }}</p>
         </div>
         <div class="field">
-          <label class="label">Port</label>
+          <label class="label">Database*</label>
           <div class="control">
-            <input v-model="connection.port" class="input" type="text" v-bind:class="{ 'is-danger': fieldIsValid('port') !== '' }" placeholder="Connection port">
+            <input v-model="connection.database" class="input" type="text" v-bind:class="{ 'is-danger': fieldIsValid('database') !== '' }" placeholder="Database name">
+          </div>
+          <p id="connection-dialog-host-error" class="help is-danger">{{ fieldIsValid('database') }}</p>
+        </div>        
+        <div class="field">
+          <label class="label">Port*</label>
+          <div class="control">
+            <input v-model.number="connection.port" class="input" type="text" v-bind:class="{ 'is-danger': fieldIsValid('port') !== '' }" placeholder="Connection port">
           </div>
           <p id="connection-dialog-port-error" class="help is-danger">{{ fieldIsValid('port') }}</p>
         </div>
@@ -45,7 +52,7 @@
         <div class="field">
           <label class="label">Password</label>
           <div class="control">
-            <input v-model="connection.password" class="input" type="text" v-bind:class="{ 'is-danger': fieldIsValid('password') !== '' }" placeholder="Password for database connection">
+            <input v-model="connection.password" class="input" type="password" v-bind:class="{ 'is-danger': fieldIsValid('password') !== '' }" placeholder="Password for database connection">
           </div>
           <p id="connection-dialog-password-error" class="help is-danger">{{ fieldIsValid('password') }}</p>
         </div>  
@@ -111,14 +118,24 @@ export default {
       this.$set(this, 'isNew', isNew);
       this.$set(this, 'connectionRecord', connection);     
     },
-    save: function() {
-      this.$emit('connection-modal-save', this.connection);       
-      this.modalClose();
+    async save() {
+      try {            
+        const response = await axios.patch(`${config.apiUrl}/connections/${this.connectionRecord.id}`, this.connectionRecord.connection);        
+        if(response.status === 200)
+          this.modalClose();
+      } catch (error) {      
+        EventBus.$emit('app-error', utils.parceApiError(error));
+      }
     },
-    create() {
-      this.$emit('connection-modal-new', this.connection);       
-      this.modalClose();
-    },
+    async create() {      
+      try {             
+        const response = await axios.post(`${config.apiUrl}/connections`, this.connectionRecord.connection);        
+        if(response.status === 201)
+          this.modalClose();
+      } catch (error) {      
+        EventBus.$emit('app-error', utils.parceApiError(error));
+      }
+    },   
     modalClose: function() {
       try {
         this.$set(this, 'connectionRecord', {});
@@ -154,5 +171,7 @@ export default {
 </script>
 
 <style lang="scss" >
-
+#connection-modal-content {
+  width: 700px;
+}
 </style>

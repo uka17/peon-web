@@ -47,8 +47,8 @@
         </div>    
       </section>
       <footer class="modal-card-foot buttons is-right" v-if="jobRecord.job">
-          <button v-if="!isNew" id="button-job-save-changes" class="button is-link" v-bind:class="{ 'is-static': !formIsValid }" @click="saveChanges">Save changes</button>
-          <button v-if="isNew" id="button-job-create" class="button is-success" v-bind:class="{ 'is-static': !formIsValid }" @click="createJob">Create job</button>
+          <button v-if="!isNew" id="button-job-save-changes" class="button is-link" v-bind:class="{ 'is-static': !formIsValid }" @click="save">Save changes</button>
+          <button v-if="isNew" id="button-job-create" class="button is-success" v-bind:class="{ 'is-static': !formIsValid }" @click="create">Create job</button>
           <button @click="modalClose" id="button-job-cancel" class="button">Cancel</button>
       </footer>
     </div>
@@ -113,7 +113,7 @@ export default {
     tabClick: function(tabName) {
       this.activeTab = tabName;
     },
-    async saveChanges() {
+    async save() {
       try {            
         const response = await axios.patch(`${config.apiUrl}/jobs/${this.jobRecord.id}`, this.jobRecord.job);        
         if(response.status === 200)
@@ -122,7 +122,7 @@ export default {
         EventBus.$emit('app-error', utils.parceApiError(error));
       }
     },
-    async createJob() {      
+    async create() {      
       try {             
         const response = await axios.post(`${config.apiUrl}/jobs`, this.jobRecord.job);        
         if(response.status === 201)

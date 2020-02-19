@@ -1,11 +1,14 @@
 module.exports = {
   newConnection: {
-    name: "",
-    host: "",
-    port: 80,
-    enabled: true,      
-    login: "",
-    password: "",
-    type: 'mongodb'
+    connection: {
+      name: "",
+      host: "",
+      database: "",
+      port: 80,
+      enabled: true,      
+      login: "",
+      password: "",
+      type: 'mongodb'
+    }
   }
 };
