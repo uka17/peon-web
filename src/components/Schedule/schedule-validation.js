@@ -1,7 +1,7 @@
 module.exports = (language = 'en') => {
   return {
     onetime: {
-      name: scheduleNameConstraint(language),    
+      name: scheduleNameConstraint(language),
       oneTime: {
         presence: {
           message: messages.schedule.oneTime[language],
@@ -10,7 +10,65 @@ module.exports = (language = 'en') => {
       }
     },
     daily: {
-
+      name: scheduleNameConstraint(language), 
+      eachNDay: {
+        numericality: {
+          onlyInteger: true,
+          greaterThanOrEqualTo: 0,
+          lessThanOrEqualTo: 999,
+          message: messages.schedule.notEmptyNumber[language]
+        }
+      }
+    },
+    weekly: {
+      name: scheduleNameConstraint(language), 
+      eachNWeek: {
+        numericality: {
+          onlyInteger: true,
+          greaterThanOrEqualTo: 0,
+          lessThanOrEqualTo: 999,
+          message: messages.schedule.notEmptyNumber[language]
+        }
+      },
+      dayOfWeek: {
+        length: {
+          minimum: 1,
+          message: messages.schedule.notEmptyWeekList[language]
+        }
+      }      
+    }, 
+    monthly: {
+      name: scheduleNameConstraint(language), 
+      day: {
+        presence: true,
+        format: {
+          pattern: /[\d,]{1,100}/,
+          message: messages.schedule.name[language]
+        }
+      },
+      month: {
+        length: {
+          minimum: 1,
+          message: messages.schedule.notEmptyMonthList[language]
+        }
+      }      
+    },     
+    occursOnceAt: {
+      occursOnceAt: scheduleOccursOnceAt(language)
+    },
+    intervalValue: {
+      intervalValue: {
+        numericality: {
+          onlyInteger: true,
+          greaterThanOrEqualTo: 0,
+          lessThanOrEqualTo: 999,
+          message: messages.schedule.notEmptyNumber[language]
+        }        
+      }
+    },
+    startEndDateTime: {
+      startDateTime: startDateTime(language),
+      endDateTime: endDateTime(language)
     }
   };
 };
@@ -25,6 +83,34 @@ function scheduleNameConstraint(language) {
   };
 }
 
+function startDateTime(language) {
+  return {
+    presence: {
+      message: messages.schedule.startDateTime[language],
+      allowEmpty: false
+    }
+  };
+}
+
+function endDateTime(language) {
+  return {
+    presence: {
+      message: messages.schedule.endDateTime[language],
+      allowEmpty: false
+    }
+  };
+}
+
+function scheduleOccursOnceAt(language) {
+  return {
+    presence: true,
+    format: {
+      pattern: /(?:[01]\d|2[0123]):(?:[012345]\d):(?:[012345]\d)/,
+      message: messages.schedule.occursOnceAt[language]
+    }
+  };
+}
+
 const messages = {
   schedule: {
     name: {
@@ -34,6 +120,30 @@ const messages = {
     oneTime: {
       en: "^Schedule date and time should not be empty",
       ru: "^Дата и время расписания не могут быть пустыми"
-    }                
+    },
+    startDateTime: {
+      en: "^Schedule start date and time can not be empty",
+      ru: "^Время начала действия расписания не может быть пустым"
+    },
+    endDateTime: {
+      en: "^Schedule end date and time can not be empty",
+      ru: "^Время окончания действия расписания не может быть пустым"
+    },    
+    occursOnceAt: {
+      en: "^Time can not be empty and should have HH:MM:SS format",
+      ru: "^Время начала не может быть пустым и должно иметь формат HH:MM:SS"      
+    },
+    notEmptyNumber: {
+      en: "^Field value should be a number and can not be empty",
+      ru: "^Значение поля должно быть числом и не может быть пустым"            
+    },
+    notEmptyWeekList: {
+      en: "^You should choose at least 1 day of week",
+      ru: "^Необходимо выбрать хотя бы 1 день недели"    
+    },
+    notEmptyMonthList: {
+      en: "^You should choose at least 1 month",
+      ru: "^Необходимо выбрать хотя бы 1 месяц"    
+    }                                
   }
 };

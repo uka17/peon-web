@@ -13,6 +13,15 @@ function isNumber(event) {
   }
 }
 module.exports.isNumber = isNumber;
+/**
+ * Checks if provided value is a valid 24H time
+ * @param {string} value Time value
+ * @returns {Boolean} `true` in case if `value` is a vlid 24H time in format HH:MM:SS, `false` in other case
+ */  
+function is24HTime(value) {
+  return /(?:[01]\d|2[0123]):(?:[012345]\d):(?:[012345]\d)/.test(value);
+}
+module.exports.is24HTime = is24HTime;
 
 /**
  * Replace string with truncated in case if length is more than `len` and adds at the end
