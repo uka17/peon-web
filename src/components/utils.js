@@ -115,6 +115,18 @@ function swapElements(list, firstIndex, secondIndex) {
   Vue.set(list, secondIndex, buf);
 }
 module.exports.swapElements = swapElements;
+/**
+ * Splits `string` to array and converts each element to number. All non `number` and  >31 and <0 elements will be excluded
+ * @param {string} val String value which should be converted into `Number` array
+ * @returns {(number|Array)} Array of numbers
+ */
+function stringToNumberArray(val) {
+  let arr = val.split(',');
+  arr = arr.filter(v => !isNaN(parseInt(v)) && parseInt(v) > 0 && parseInt(v) < 32 );
+  arr = arr.map(v => parseInt(v));
+  return [...new Set(arr)];
+}
+module.exports.stringToNumberArray = stringToNumberArray;
 
 /**
  * Parces `errorObject` to string representation
