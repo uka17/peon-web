@@ -79,7 +79,8 @@ export default {
       this.$refs.schedule.modalShow(JSON.parse(JSON.stringify(schedule_template.newSchedule)), true);         
     },    
     save (schedule){
-      this.$set(this.scheduleList, this.clickedRow - 1, schedule);
+      //TODO ID for schedule
+      this.$set(this.scheduleList, 0, schedule);
     },
     create(newSchedule) {
       let index = this.clickedRow === null ? this.scheduleList.length : this.clickedRow;          

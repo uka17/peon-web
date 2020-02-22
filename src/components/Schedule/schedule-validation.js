@@ -42,8 +42,8 @@ module.exports = (language = 'en') => {
       day: {
         presence: true,
         format: {
-          pattern: /[\d,]{1,100}/,
-          message: messages.schedule.name[language]
+          pattern: /((3[01]|[12][0-9]|[1-9]),)*(3[01]|[12][0-9]|[1-9])/,
+          message: messages.schedule.dayList[language]
         }
       },
       month: {
@@ -54,7 +54,11 @@ module.exports = (language = 'en') => {
       }      
     },     
     occursOnceAt: {
-      occursOnceAt: scheduleOccursOnceAt(language)
+      occursOnceAt: timeVaidation(language)
+    },
+    every: {
+      start: timeVaidation(language),
+      end: timeVaidation(language)
     },
     intervalValue: {
       intervalValue: {
@@ -101,12 +105,12 @@ function endDateTime(language) {
   };
 }
 
-function scheduleOccursOnceAt(language) {
+function timeVaidation(language) {
   return {
     presence: true,
     format: {
       pattern: /(?:[01]\d|2[0123]):(?:[012345]\d):(?:[012345]\d)/,
-      message: messages.schedule.occursOnceAt[language]
+      message: messages.schedule.time[language]
     }
   };
 }
@@ -129,9 +133,9 @@ const messages = {
       en: "^Schedule end date and time can not be empty",
       ru: "^Время окончания действия расписания не может быть пустым"
     },    
-    occursOnceAt: {
+    time: {
       en: "^Time can not be empty and should have HH:MM:SS format",
-      ru: "^Время начала не может быть пустым и должно иметь формат HH:MM:SS"      
+      ru: "^Время не может быть пустым и должно иметь формат HH:MM:SS"      
     },
     notEmptyNumber: {
       en: "^Field value should be a number and can not be empty",
@@ -144,6 +148,10 @@ const messages = {
     notEmptyMonthList: {
       en: "^You should choose at least 1 month",
       ru: "^Необходимо выбрать хотя бы 1 месяц"    
-    }                                
+    },
+    dayList: {
+      en: "^Month days enumeration should be a comma separated list (e.g. 1,13,29)",
+      ru: "^Перечисление дней месяца должно быть списком через запятую (например, 1,13,29)"    
+    }                                       
   }
 };

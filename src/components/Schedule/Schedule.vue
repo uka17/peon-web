@@ -209,7 +209,27 @@
             <div class="field has-addons">
               <p class="control">
                 <a class="button is-static">
-                  Every
+                  Starting
+                </a>           
+              </p>              
+              <p class="control">
+                <input id="schedule-occurs-every-start" maxlength="8" type="text"
+                  v-bind:class="{ 'is-danger': fieldIsValid('start', schedule.dailyFrequency, constraints('en')['every']) !== '' }"
+                  v-model="schedule.dailyFrequency.start" class="input">
+              </p>
+              <p class="control">
+                <a class="button is-static">
+                  till
+                </a>           
+              </p>  
+              <p class="control">              
+                <input id="schedule-occurs-every-end" maxlength="8" type="text"
+                  v-bind:class="{ 'is-danger': fieldIsValid('end', schedule.dailyFrequency, constraints('en')['every']) !== '' }"
+                  v-model="schedule.dailyFrequency.end" class="input">
+              </p>
+              <p class="control">
+                <a class="button is-static">
+                  every
                 </a>           
               </p>
               <p class="control">
@@ -220,12 +240,14 @@
               <p class="control">
                 <span class="select">
                   <select v-model.number="schedule.dailyFrequency.occursEvery.intervalType">
-                    <option v-bind:value="`minute`">Minute(s)</option>
-                    <option v-bind:value="`hour`">Hour(s)</option>
+                    <option v-bind:value="`minute`">minute(s)</option>
+                    <option v-bind:value="`hour`">hour(s)</option>
                   </select>
                 </span>
-              </p>              
+              </p>                    
             </div>
+            <p id="schedule-occurs-every-start-error" class="help is-danger">{{ fieldIsValid('start', schedule.dailyFrequency, constraints('en')['every']) }}</p>
+            <p id="schedule-occurs-every-end-error" class="help is-danger">{{ fieldIsValid('end', schedule.dailyFrequency, constraints('en')['every']) }}</p>
             <p id="schedule-every-error" class="help is-danger">{{ fieldIsValid('intervalValue', schedule.dailyFrequency.occursEvery, constraints('en')['intervalValue']) }}</p>
           </div>  
         </div>        
@@ -293,6 +315,7 @@ export default {
         }      
         if(Object.prototype.hasOwnProperty.call(schedule, 'month')) {
           this.$set(this, 'scheduleType', 'monthly');
+          this.$set(this.schedule, 'day', this.schedule.day.join(','));
         }      
         if(Object.prototype.hasOwnProperty.call(schedule, 'endDateTime')) {
           this.$set(this, 'endless', false);      
@@ -304,12 +327,64 @@ export default {
         }
       }
     },
-    save: function() {
-      this.$emit('schedule-modal-save', this.schedule);       
+    compileSchedule() {
+      let result;
+
+      switch (this.scheduleType) {
+        case 'onetime':
+          result = { oneTime: this.schedule.oneTime };
+          break;
+
+        case 'daily':
+          result = { eachNDay: this.schedule.eachNDay }; 
+          break;      
+
+        case 'weekly':
+          result = {
+            eachNWeek: this.schedule.eachNWeek,
+            dayOfWeek: this.schedule.dayOfWeek
+          }
+          break;           
+
+        case 'monthly':
+          result = {       
+            month: this.schedule.month,
+            day: utils.stringToNumberArray(this.schedule.day)
+          }
+          break;           
+
+        default:
+          break;
+      }
+
+      result.name = this.schedule.name;
+      result.enabled = this.schedule.enabled;
+
+      if(this.scheduleType !== 'onetime') {
+        result.startDateTime = this.schedule.startDateTime;
+        if(this.schedule.endDateTime !== '') {
+          result.endDateTime = this.schedule.endDateTime;
+        }
+        
+        result.dailyFrequency = {};
+        if(this.every) {
+          result.dailyFrequency.start = this.schedule.dailyFrequency.start;
+          result.dailyFrequency.end = this.schedule.dailyFrequency.end;
+          result.dailyFrequency.occursEvery = this.schedule.dailyFrequency.occursEvery;
+        } else {
+          result.dailyFrequency.occursOnceAt = this.schedule.dailyFrequency.occursOnceAt;
+        }
+        
+      }
+
+      return result;
+    },
+    save: function() {      
+      this.$emit('schedule-modal-save', this.compileSchedule());       
       this.modalClose();
     },
     create() {
-      this.$emit('schedule-modal-new', this.schedule);       
+      this.$emit('schedule-modal-new', this.compileSchedule());       
       this.modalClose();
     },
     modalClose: function() {
@@ -400,7 +475,7 @@ export default {
       set: function(val) {
         this.schedule.endDateTime = val === '' ? '' : dayjs(val).toISOString();
       }
-    }    
+    }        
   },
   components: {
     'date-time-pick': DatePick
@@ -419,7 +494,7 @@ export default {
   #schedule-onetime, #schedule-duaration-start, #schedule-duaration-end {
     width: 190px !important 
   }
-  #schedule-occurs-once-at {
+  #schedule-occurs-once-at, #schedule-occurs-every-start, #schedule-occurs-every-end {
     width: 95px
   }
   #schedule-interval-value, #schedule-eachnday, #schedule-eachnweek {
