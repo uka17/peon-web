@@ -25,7 +25,9 @@
                 </a>
               </li>
               <li v-bind:class="{ 'is-active': this.activeTab == 'schedules' }">
-                <a id="schedules-tab" @click="tabClick('schedules')"><span>Schedules</span></a>
+                <a id="schedules-tab" @click="tabClick('schedules')">
+                  <span>Schedules</span><span v-if="!scheduleListTabIsValid" class="icon has-text-danger"><i class="mdi mdi-alert-circle-outline"></i></span>
+                </a>
               </li>
               <li v-bind:class="{ 'is-active': this.activeTab == 'notifications' }">
                 <a id="notifications-tab" @click="tabClick('notifications')"> <span>Notifications</span></a>
@@ -47,8 +49,8 @@
         </div>    
       </section>
       <footer class="modal-card-foot buttons is-right" v-if="jobRecord.job">
-          <button v-if="!isNew" id="button-job-save-changes" class="button is-link" v-bind:class="{ 'is-static': !formIsValid }" @click="saveChanges">Save changes</button>
-          <button v-if="isNew" id="button-job-create" class="button is-success" v-bind:class="{ 'is-static': !formIsValid }" @click="createJob">Create job</button>
+          <button v-if="!isNew" id="button-job-save-changes" class="button is-link" v-bind:class="{ 'is-static': !formIsValid }" @click="save">Save changes</button>
+          <button v-if="isNew" id="button-job-create" class="button is-success" v-bind:class="{ 'is-static': !formIsValid }" @click="create">Create job</button>
           <button @click="modalClose" id="button-job-cancel" class="button">Cancel</button>
       </footer>
     </div>
@@ -59,6 +61,7 @@
 import JobGeneralTab from './JobGeneralTab.vue'
 import StepList from '../StepList/StepList.vue'
 import ScheduleList from '../ScheduleList/ScheduleList.vue'
+import nanoid from 'nanoid';
 
 import config from '../config.js';
 import utils from '../utils.js';
@@ -88,6 +91,7 @@ export default {
       }
       else {
         dialogRecord = await axios.get(`${this.apiUrl}/${this.id}`);
+        dialogRecord.data.job.schedules.forEach(elem => elem.id = nanoid());
         this.modalShow(dialogRecord.data);
       }
     } catch (error) {
@@ -113,8 +117,9 @@ export default {
     tabClick: function(tabName) {
       this.activeTab = tabName;
     },
-    async saveChanges() {
+    async save() {
       try {            
+        this.jobRecord.job.schedules.forEach(elem => delete elem.id);
         const response = await axios.patch(`${config.apiUrl}/jobs/${this.jobRecord.id}`, this.jobRecord.job);        
         if(response.status === 200)
           this.modalClose();
@@ -122,8 +127,9 @@ export default {
         EventBus.$emit('app-error', utils.parceApiError(error));
       }
     },
-    async createJob() {      
+    async create() {      
       try {             
+        this.jobRecord.job.schedules.forEach(elem => delete elem.id);
         const response = await axios.post(`${config.apiUrl}/jobs`, this.jobRecord.job);        
         if(response.status === 201)
           this.modalClose();
@@ -146,13 +152,16 @@ export default {
       return this.job.schedules !== undefined ? this.job.schedules : [];
     },    
     formIsValid() {
-      return this.generalTabIsValid && this.stepListTabIsValid;      
+      return this.generalTabIsValid && this.stepListTabIsValid && this.scheduleListTabIsValid;      
     },
     generalTabIsValid() {
       return validate(this.jobRecord.job, constraints('en')) === undefined;
     },
     stepListTabIsValid() {
       return this.stepList.length > 0;
+    },
+    scheduleListTabIsValid() {
+      return this.scheduleList.length > 0;
     }
   },
   components: {

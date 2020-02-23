@@ -33,6 +33,7 @@
         <a @click="modalEditShow(props.rowData)">{{ props.rowData.name }}</a>
       </template>    
     </vuetable>
+    <p id="schedule-list-empty-error" v-if="this.scheduleList.length === 0" class="help is-danger">{{ messages.scheduleListShouldNotBeEmpty['en'] }}</p>
     <schedule ref="schedule" v-on:schedule-modal-save="save($event)" v-on:schedule-modal-new="create($event)"></schedule>
   </div>
 </template>
@@ -46,25 +47,28 @@ import fields_definition from './schedulelist-fields-defintion.js'
 import schedule_template from '../Schedule/schedule-template.js'
 import scheduleSummary from '../Schedule/schedule-summary.js'
 
+import messages from '../translation/messages.js'
 import config from '../config.js';
 import utils from '../utils.js';
+import nanoid from 'nanoid';
 
 export default {
   data () {
     return {
       clickedRow: null,
       css: vue_css,
-      fields: fields_definition.concat({name: 'name', dataClass: 'default-cursor', title: 'Summary', callback: this.getDescription })
+      messages: messages,
+      fields: fields_definition.concat({name: 'id', dataClass: 'default-cursor', title: 'Summary', callback: this.getDescription })
     }
   },
   props: ['scheduleList'],
   methods: {
     onCellClicked (data, field, event) {
-      this.clickedRow = data.name;      
+      this.clickedRow = data.id;      
     },
-    getDescription(name) {
+    getDescription(id) {
       if(this.scheduleList) {
-        let cellSchedule = this.scheduleList.find((elem) => elem.name === name);
+        let cellSchedule = this.scheduleList.find((elem) => elem.id === id);
         return cellSchedule === undefined ? undefined : scheduleSummary(cellSchedule);
       } else {
         return undefined;
@@ -78,17 +82,18 @@ export default {
       //Break reactivity for modal edit
       this.$refs.schedule.modalShow(JSON.parse(JSON.stringify(schedule_template.newSchedule)), true);         
     },    
-    save (schedule){
-      //TODO ID for schedule
-      this.$set(this.scheduleList, 0, schedule);
+    save(schedule){
+      let index = this.scheduleList.findIndex(elem => elem.id === schedule.id);
+      if(index > 0) {
+        this.$set(this.scheduleList, index, schedule);
+      }
     },
     create(newSchedule) {
-      let index = this.clickedRow === null ? this.scheduleList.length : this.clickedRow;          
-      this.scheduleList.splice(index, 0, newSchedule);
-      utils.reorderElements(this.scheduleList);
+      newSchedule.id = nanoid();
+      this.scheduleList.push(newSchedule);
     },    
     onRowClass (dataItem, index) {
-      return (dataItem.name == this.clickedRow) ? 'is-selected' : ''
+      return (dataItem.id == this.clickedRow) ? 'is-selected' : ''
     },    
     deleteSelected: function() {
       let recordIndex = this.scheduleList.findIndex((elem) => elem.name === this.clickedRow);

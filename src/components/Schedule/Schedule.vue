@@ -15,6 +15,13 @@
               placeholder="Schedule name">
           </div>
         </div>  
+        <div class="field">
+          <div class="control">
+            <label class="checkbox">
+              <input type="checkbox" v-model="schedule.enabled"> Enabled
+            </label>
+          </div>
+        </div>         
         <p id="schedule-name-error" class="help is-danger">{{ fieldIsValid('name', schedule, constraints('en')[this.scheduleType]) }}</p>
         <div class="field">
           <label class="label">Schedule type*</label>
@@ -104,7 +111,7 @@
             <p class="control">
               <input id="schedule-eachnday"  type="text"                
                 v-bind:class="{ 'is-danger': fieldIsValid('eachNDay', schedule, constraints('en')['daily']) !== '' }"
-                maxlength="3" @keypress="isNumber($event)" v-model="schedule.eachNDay" class="input">
+                maxlength="3" @keypress="isNumber($event)" v-model.number="schedule.eachNDay" class="input">
             </p>
             <p class="control">
               <a class="button is-static">
@@ -127,7 +134,7 @@
                 <p class="control">
                   <input id="schedule-eachnweek"  type="text"                
                     v-bind:class="{ 'is-danger': fieldIsValid('eachNWeek', schedule, constraints('en')['weekly']) !== '' }"
-                    maxlength="3" @keypress="isNumber($event)" v-model="schedule.eachNWeek" class="input">
+                    maxlength="3" @keypress="isNumber($event)" v-model.number="schedule.eachNWeek" class="input">
                 </p>
                 <p class="control">
                   <a class="button is-static">
@@ -235,11 +242,11 @@
               <p class="control">
                 <input id="schedule-interval-value" maxlength="3" @keypress="isNumber($event)" type="text"
                   v-bind:class="{ 'is-danger': fieldIsValid('intervalValue', schedule.dailyFrequency.occursEvery, constraints('en')['intervalValue']) !== '' }" 
-                  v-model="schedule.dailyFrequency.occursEvery.intervalValue" class="input">
+                  v-model.number="schedule.dailyFrequency.occursEvery.intervalValue" class="input">
               </p>                  
               <p class="control">
                 <span class="select">
-                  <select v-model.number="schedule.dailyFrequency.occursEvery.intervalType">
+                  <select v-model="schedule.dailyFrequency.occursEvery.intervalType">
                     <option v-bind:value="`minute`">minute(s)</option>
                     <option v-bind:value="`hour`">hour(s)</option>
                   </select>
@@ -317,13 +324,11 @@ export default {
           this.$set(this, 'scheduleType', 'monthly');
           this.$set(this.schedule, 'day', this.schedule.day.join(','));
         }      
-        if(Object.prototype.hasOwnProperty.call(schedule, 'endDateTime')) {
-          this.$set(this, 'endless', false);      
-        }      
+        
+        this.$set(this, 'endless', !Object.prototype.hasOwnProperty.call(schedule, 'endDateTime'));      
+
         if(Object.prototype.hasOwnProperty.call(schedule, 'dailyFrequency')) {
-          if(Object.prototype.hasOwnProperty.call(schedule.dailyFrequency, 'occursEvery')) {
-            this.$set(this, 'every', true);
-          }      
+            this.$set(this, 'every', Object.prototype.hasOwnProperty.call(schedule.dailyFrequency, 'occursEvery'));
         }
       }
     },
@@ -358,6 +363,7 @@ export default {
       }
 
       result.name = this.schedule.name;
+      result.id = this.schedule.id;
       result.enabled = this.schedule.enabled;
 
       if(this.scheduleType !== 'onetime') {
@@ -486,7 +492,7 @@ export default {
 <style lang="scss" >
   #schedule-modal-content {
     width: 800px;
-    height: 780px;    
+    height: 850px;    
   }
   [class*="is-info"] {
     border: 1px solid #fff !important 

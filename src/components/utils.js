@@ -1,4 +1,5 @@
-let config = require('./config.js');
+const dayjs = require('dayjs');
+const config = require('./config.js');
 let Vue = require('vue/dist/vue.js');
 module.exports.EventBus = new Vue();
 
@@ -171,7 +172,7 @@ module.exports.helpers = {
     return `<a>${v}</a>`;
   },
   formatDateTime: /*istanbul ignore next*/ function (v) {
-    return formatDateTime(v, config.tableDateTimeFormat, 'en');
+    return dayjs(v).isValid() ? dayjs(v).format('YYYY-MM-DD HH:mm:ss') : '';
   },
   retryAttempts: function (v) {
     if(v.interval) {
