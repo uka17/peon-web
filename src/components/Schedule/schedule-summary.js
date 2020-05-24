@@ -1,4 +1,4 @@
-let formatDateTime = require('../utils.js').formatDateTime;
+let formatDateTime = require('../utils.js').helpers.formatDateTime;
 let reference = require('./week-month-reference')['en'];
 
 function scheduleSumary(schedule) {

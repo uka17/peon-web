@@ -10,7 +10,7 @@
     <div class="field">
       <div class="control">
         <label class="checkbox">
-          <input type="checkbox" v-model="job.enabled"> Enabled
+          <input id="job-dialog-enabled" type="checkbox" v-model="job.enabled"> Enabled
         </label>
       </div>
     </div>    

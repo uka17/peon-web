@@ -29,7 +29,7 @@
                   <span>Schedules</span><span v-if="!scheduleListTabIsValid" class="icon has-text-danger"><i class="mdi mdi-alert-circle-outline"></i></span>
                 </a>
               </li>
-              <li v-bind:class="{ 'is-active': this.activeTab == 'notifications' }">
+              <li v-if="false" v-bind:class="{ 'is-active': this.activeTab == 'notifications' }">
                 <a id="notifications-tab" @click="tabClick('notifications')"> <span>Notifications</span></a>
               </li>
             </ul>

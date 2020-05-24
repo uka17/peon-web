@@ -4,20 +4,9 @@ var chai  = require('chai');
 chai.use(require('chai-datetime'));
 let assert  = chai.assert;
 let util = require('../../src/components/utils');
-let config = require('../../src/components/config');
 let testData = require('../test_data');
 
 describe('util', function() {
-  it('1.1 formatDateTime. Success', (done) => {
-    assert.equal(util.formatDateTime('2019-05-26T12:55:20.042693', config.tableDateTimeFormat, 'en'), '05/26/2019, 12:55:20');
-    done();
-  });
-
-  it('1.2 formatDateTime. Empty value', (done) => {
-    assert.equal(util.formatDateTime(null, config.tableDateTimeFormat, 'en'), '');
-    done();
-  });
-
   it('1.3.1 moveListElement. Type mismatch `direction`', (done) => {
     assert.throws(() => { util.moveListElement([], 1, 'a'); }, 'direction should be boolean');
     done();

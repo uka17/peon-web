@@ -10,14 +10,14 @@
         <div class="field">
           <label class="label">Name*</label>
           <div class="control">
-            <input v-model="step.name" class="input" type="text" v-bind:class="{ 'is-danger': fieldIsValid('name') !== '' }" placeholder="Step name">
+            <input v-model="step.name" id="step-dialog-name" class="input" type="text" v-bind:class="{ 'is-danger': fieldIsValid('name') !== '' }" placeholder="Step name">
           </div>
           <p id="step-dialog-name-error" class="help is-danger">{{ fieldIsValid('name') }}</p>
         </div>
         <div class="field">
           <div class="control">
             <label class="checkbox">
-              <input type="checkbox" v-model="step.enabled"> Enabled
+              <input type="checkbox" id="step-dialog-enabled" v-model="step.enabled"> Enabled
             </label>
           </div>
         </div>
@@ -25,7 +25,7 @@
           <label class="label">Connection*</label>
           <div class="control">
             <div class="select">
-              <select>
+              <select id="step-dialog-connection">
                 <option>Connection 1</option>
                 <option>Connection 2</option>
               </select>
@@ -92,9 +92,9 @@
         </div>              
       </section>
       <footer class="modal-card-foot buttons is-right">
-          <button v-if="!isNew" class="button is-link" @click="save" v-bind:class="{ 'is-static': !formIsValid }" title="Save step changes">Save changes</button>
-          <button v-if="isNew" class="button is-success" @click="create" v-bind:class="{ 'is-static': !formIsValid }" title="Create step">Create step</button>
-          <button @click="modalClose" class="button">Cancel</button>
+          <button v-if="!isNew" id="step-dialog-save" class="button is-link" @click="save" v-bind:class="{ 'is-static': !formIsValid }" title="Save step changes">Save changes</button>
+          <button v-if="isNew" id="step-dialog-create" class="button is-success" @click="create" v-bind:class="{ 'is-static': !formIsValid }" title="Create step">Create step</button>
+          <button @click="modalClose" id="step-dialog-cancel" class="button">Cancel</button>
       </footer>
     </div>
   </div>

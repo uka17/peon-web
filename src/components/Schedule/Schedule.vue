@@ -18,7 +18,7 @@
         <div class="field">
           <div class="control">
             <label class="checkbox">
-              <input type="checkbox" v-model="schedule.enabled"> Enabled
+              <input type="checkbox" v-model="schedule.enabled" id="schedule-dialog-enabled"> Enabled
             </label>
           </div>
         </div>         
@@ -27,7 +27,7 @@
           <label class="label">Schedule type*</label>
           <div class="control">
             <div class="select">
-              <select v-model="scheduleType">
+              <select v-model="scheduleType" id="schedule-dialog-type">
                 <option value="onetime">One time</option>
                 <option value="daily">Daily</option>
                 <option value="weekly">Weekly</option>
@@ -45,7 +45,7 @@
                 v-model="oneTime" placeholder="Execution date and time"                
                 :pickTime="true"
                 :inputAttributes="{readonly: true, class: `input ${ fieldIsValid('oneTime', schedule, constraints('en')['onetime']) !== '' ? 'is-danger' : ''}`}"
-                :format="config.dateTimeFormat"
+                :format="config.dateTimeFormatSec"
                 :isDateDisabled="dateIsInPast"
                 >
             </date-time-pick>             
@@ -68,7 +68,7 @@
                 v-model="startDateTime" placeholder="Valid from"                
                 :inputAttributes="{readonly: true, class: `input ${ fieldIsValid('startDateTime', schedule, constraints('en')['startEndDateTime']) !== '' ? 'is-danger' : ''}`}"
                 :pickTime="true"
-                :format="config.dateTimeFormat"
+                :format="config.dateTimeFormatSec"
                 >
               </date-time-pick>                  
             </p>
@@ -83,7 +83,7 @@
                 :inputAttributes="{readonly: true, class: `input ${ fieldIsValid('endDateTime', schedule, constraints('en')['startEndDateTime']) !== '' ? 'is-danger' : ''}`}"
                 v-model="endDateTime" placeholder="Valid till"                
                 :pickTime="true"
-                :format="config.dateTimeFormat"
+                :format="config.dateTimeFormatSec"
                 >
               </date-time-pick>              
             </p>
@@ -149,6 +149,7 @@
                   <div class="buttons has-addons">                
                     <button v-for="(value, index) in reference.weekDayList" class="button"
                       v-bind:key="index" 
+                      v-bind:id="value.toLowerCase()" 
                       v-bind:class="{ 'is-info': weekDyaIsToggled(index), 'is-danger is-outlined': fieldIsValid('dayOfWeek', schedule, constraints('en')['weekly']) !== '' }"
                       @click="toggleWeekDay(index)">
                         {{ value.substring(0, 3) }}
@@ -168,6 +169,7 @@
               <div class="buttons has-addons">                
                 <button v-for="(value, index) in reference.monthList" class="button"
                   v-bind:key="index" 
+                  v-bind:id="value.toLowerCase()"
                   v-bind:class="{ 'is-info': monthIsToggled(index), 'is-danger is-outlined': fieldIsValid('month', schedule, constraints('en')['monthly']) !== ''}" 
                   @click="toggleMonth(index)">
                     {{ value.substring(0, 3) }}
@@ -261,8 +263,8 @@
         <!-- Daily frequency END-->                                          
       </section>      
       <footer class="modal-card-foot buttons is-right">
-          <button v-if="!isNew" class="button is-link" @click="save" v-bind:class="{ 'is-static': !formIsValid() }" title="Save schedule changes">Save changes</button>
-          <button v-if="isNew" class="button is-success" @click="create" v-bind:class="{ 'is-static': !formIsValid() }" title="Create schedule">Create schedule</button>
+          <button v-if="!isNew" id="schedule-dialog-save" class="button is-link" @click="save" v-bind:class="{ 'is-static': !formIsValid() }" title="Save schedule changes">Save changes</button>
+          <button v-if="isNew"  id="schedule-dialog-create" class="button is-success" @click="create" v-bind:class="{ 'is-static': !formIsValid() }" title="Create schedule">Create schedule</button>
           <button @click="modalClose" class="button">Cancel</button>
       </footer>
     </div>
@@ -433,7 +435,7 @@ export default {
     },
     getDateTime(val) {
       let dateTime = Date.parse(val);
-      return !isNaN(dateTime) ? dayjs(dateTime).format(config.dateTimeFormat) : '';
+      return !isNaN(dateTime) ? dayjs(dateTime).format(config.dateTimeFormatSec) : '';
     },
     fieldIsValid(field, source, constraints) {
       const result = validate(source, constraints);

@@ -88,6 +88,7 @@ export default {
     },
     modalEditShow(step) {
       //Break reactivity for modal edit
+      this.clickedRow = step.order;      
       this.$refs.stepDialog.modalShow(JSON.parse(JSON.stringify(step)), this.stepList);
     },
     modalNewShow() {

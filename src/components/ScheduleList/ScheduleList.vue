@@ -3,7 +3,7 @@
     <div class="columns">   
       <div class="column">
        <p class="control">
-          <button class="button is-success" title="Create new step" @click="modalNewShow()">
+          <button class="button is-success" title="Create new schedule" @click="modalNewShow()">
             <span class="icon is-small">
               <i class="mdi mdi-shape-square-plus"></i>
             </span>
@@ -76,6 +76,7 @@ export default {
     },
     modalEditShow(schedule) {
       //Break reactivity for modal edit
+      this.clickedRow = schedule.id;      
       this.$refs.schedule.modalShow(JSON.parse(JSON.stringify(schedule)));
     },
     modalNewShow() {
@@ -84,7 +85,7 @@ export default {
     },    
     save(schedule){
       let index = this.scheduleList.findIndex(elem => elem.id === schedule.id);
-      if(index > 0) {
+      if(index > -1) {
         this.$set(this.scheduleList, index, schedule);
       }
     },
@@ -96,7 +97,7 @@ export default {
       return (dataItem.id == this.clickedRow) ? 'is-selected' : ''
     },    
     deleteSelected: function() {
-      let recordIndex = this.scheduleList.findIndex((elem) => elem.name === this.clickedRow);
+      let recordIndex = this.scheduleList.findIndex((elem) => elem.id === this.clickedRow);
       if(recordIndex !== -1) {        
         this.scheduleList.splice(recordIndex, 1);
         this.clickedRow = null;
