@@ -5,7 +5,7 @@
       "enabled": true,
       "steps": [
          {
-            "name": "Test step 1. Good one",
+            "name": "Test step 1 good one",
             "enabled": true,
             "order": 1,
             "connection": 203,
@@ -18,7 +18,7 @@
             "onFailure": "quitWithFailure"
          },
          {
-            "name": "Test step 2. Corrupted one",
+            "name": "Test step 2 corrupted one",
             "enabled": true,
             "order": 2,
             "connection": 203,

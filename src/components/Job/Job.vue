@@ -3,7 +3,7 @@
     <div class="modal-background"></div>
     <div class="modal-card" id="job-modal-content">
       <header class="modal-card-head">
-        <p v-if="jobRecord.job" class="modal-card-title">Job properties: {{job.name}}</p>
+        <p v-if="jobRecord.job" class="modal-card-title">Job properties</p>
         <button class="delete" aria-label="close" @click="modalClose"></button>
       </header>
       <section class="modal-card-body">
