@@ -1,8 +1,12 @@
+const config = require("./config.json");
+let testJob = require("./test-data.json").job;
+
+
 module.exports = {
-  'create job with 2 steps and find it in job list' : function (browser) {
-    const jobName = `f${(+new Date).toString(16)}`;
+  'Click to New opens proper modal window' : function (browser) {
+    testJob.name += `f${(+new Date).toString(16)}`;
     browser
-      .url('http://localhost:9000/')
+      .url(config.endpoint)
       //open new job dialog
       .waitForElementVisible('a[href="#/jobs"]')
       .click('a[href="#/jobs"]')
@@ -10,10 +14,12 @@ module.exports = {
       .click('a[href="#/jobs/create"]')
       .waitForElementVisible('#job-general')
       .assert.containsText('#job-dialog-name-error', 'must')
+      .assert.elementPresent("button[qa-data='job-creation-cancel']")
+      .assert.elementPresent("button[qa-data='job-create']")
       .assert.cssClassPresent('#button-job-create', 'button is-success is-static')
-      .assert.cssClassPresent('#button-job-cancel', 'button')
-      .setValue('#job-dialog-name', jobName)
-      .setValue('#job-dialog-description', `Description for job ${jobName}`)
+      .assert.cssClassPresent('#button-job-cancel', 'button')      
+      .setValue('#job-dialog-name', testJob.name)
+      .setValue('#job-dialog-description', `Description for job ${testJob.name}`)
       .assert.cssClassPresent('#button-job-create', 'button is-success')
       //switch to 'step' tab
       .click('#steps-tab')
