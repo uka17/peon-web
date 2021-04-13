@@ -4,7 +4,7 @@
     <div class="modal-card" id="job-modal-content">
       <header class="modal-card-head">
         <p v-if="jobRecord.job" class="modal-card-title">Job properties</p>
-        <button class="delete" aria-label="close" @click="modalClose"></button>
+        <button qa-data="modal-close" class="delete" aria-label="close" @click="modalClose"></button>
       </header>
       <section class="modal-card-body">
         <div class="has-text-centered" v-if="!jobRecord.job">

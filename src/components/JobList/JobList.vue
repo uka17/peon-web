@@ -4,7 +4,7 @@
     <div class="columns">   
       <div class="column">
         <p class="control">
-          <router-link id="new-job" class="button is-success" title="Create new job" :to="'/jobs/create'">
+          <router-link id="new-job" class="button is-success" qa-data="job-list-create" title="Create new job" :to="'/jobs/create'">
             <span class="icon is-small">
               <i class="mdi mdi-shape-square-plus"></i>
             </span>
@@ -14,7 +14,7 @@
       </div>
       <div class="column">
         <p class="control">
-          <button class="button is-danger is-pulled-right" :disabled="selectedRow === null" title="Delete selected job" @click="modalDeleteShow()">
+          <button qa-data="job-list-delete-modal-show" class="button is-danger is-pulled-right" :disabled="selectedRow === null" title="Delete selected job" @click="modalDeleteShow()">
             <span class="icon is-small">
               <i class="mdi mdi-trash-can-outline"></i>
             </span>
@@ -22,8 +22,8 @@
         </p>          
       </div>
     </div>
-    <filter-bar></filter-bar>
-    <vuetable ref="jobList"
+    <filter-bar qa-data="job-list-filter"></filter-bar>
+    <vuetable qa-data="job-list-table" ref="jobList"
       :api-url="apiUrl"
       :fields="fields"
       data-path="data"
@@ -36,16 +36,16 @@
       :append-params="moreParams"      
     >
       <template slot="job-name" slot-scope="props">
-        <router-link :to="`/jobs/${props.rowData.id}`">{{ props.rowData.name }}</router-link>
+        <router-link :qa-data="`${props.rowData.name}`" :to="`/jobs/${props.rowData.id}`">{{ props.rowData.name }}</router-link>
       </template>     
     </vuetable>
     <div class="columns">
-      <div class="column is-paddingless">
-        <vuetable-pagination-info ref="jobListPaginationInfo"
+      <div qa-data="job-list-delete-modal-show" class="column is-paddingless">
+        <vuetable-pagination-info qa-data="job-list-pagination-info" ref="jobListPaginationInfo"
         ></vuetable-pagination-info>
       </div>
       <div class="column">
-        <vuetable-pagination ref="jobListPagination"
+        <vuetable-pagination qa-data="job-list-pagination" ref="jobListPagination"
           @vuetable-pagination:change-page="onChangePage"
           :css="css.pagination"
         ></vuetable-pagination>
@@ -66,7 +66,7 @@
                       <input class="input" v-model="jobNameToDelete" type="text" placeholder="Job name">
                     </div>
                     <div class="control">
-                      <a class="button is-danger" :disabled="deleteLocked" @click="executeJobDeletion">
+                      <a class="button is-danger" qa-data="job-list-delete" :disabled="deleteLocked" @click="executeJobDeletion">
                         Delete
                       </a>
                     </div>

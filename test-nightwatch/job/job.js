@@ -1,8 +1,6 @@
 const config = require(".././config.json");
 let testJob = JSON.parse(JSON.stringify(require(".././test-data.json").job));
 
-//module.exports = {
-
 describe('Job test set', function() {
 
   before(function(browser) {
@@ -43,7 +41,7 @@ describe('Job test set', function() {
       .assert.elementPresent("input[qa-data='job-enabled']")
   });
 
-  test.only('Tab General and Steps change control states based on entered values', function (browser) {
+  test('Tab General and Steps change control states based on entered values', function (browser) {
     testJob.name += `f${(+new Date).toString(16)}`;
     browser
       .url(config.endpoint)
@@ -76,7 +74,7 @@ describe('Job test set', function() {
       .setValue('[qa-data="step-name"]', testJob.steps[0].name)
       .assert.not.valueContains('#step-dialog-name-error', "must be")
       .click('.CodeMirror-code')
-      .keys(['t', 'e', 's', 't']) 
+      .keys(["script"]) 
       .assert.not.valueContains('#step-dialog-command-error', "can not be")
       .click('button[qa-data="step-create"]')
       //now job can be saved
