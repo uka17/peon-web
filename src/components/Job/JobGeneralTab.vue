@@ -10,14 +10,14 @@
     <div class="field">
       <div class="control">
         <label class="checkbox">
-          <input qa-data="job-enabled" type="checkbox" v-model="job.enabled"> Enabled
+          <input qa-data="job-dialog-enabled" type="checkbox" v-model="job.enabled"> Enabled
         </label>
       </div>
     </div>    
     <div class="field">
       <label class="label">Description</label>
       <div class="control">
-        <textarea class="textarea" id="job-dialog-description" placeholder="Job description"  v-model="job.description"></textarea>
+        <textarea class="textarea" id="job-dialog-description" qa-data="job-dialog-description" placeholder="Job description"  v-model="job.description"></textarea>
       </div>
     </div>
     <div class="columns">
