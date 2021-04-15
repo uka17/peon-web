@@ -1,28 +1,61 @@
 const config = require("../config.json");
 const testJobTemplate = JSON.parse(JSON.stringify(require("../test-data.json").job));
 
+const verifyJobDialogStaticUI = (browser) => {
+  browser
+    //tabs check
+    .assert.elementPresent("li.is-active #general-tab")
+    .assert.elementPresent("#steps-tab")
+    .assert.elementPresent("#schedules-tab")
+    .assert.elementPresent("#notifications-tab")
+    //buttons check
+    .assert.elementPresent("button[qa-data='job-modal-close']")
+    .assert.elementPresent("button[qa-data='job-cancel']")
+    .assert.cssClassPresent('#button-job-cancel', 'button')
+    //text fields and controls check
+    .assert.elementPresent("input[qa-data='job-dialog-name']")
+    .assert.elementPresent('input[qa-data="job-dialog-enabled"]')
+    .assert.elementPresent("textarea[qa-data='job-dialog-description']")
+    //verify steps controls
+    .click("#steps-tab")
+    .assert.elementPresent("button[qa-data='move-up-selected-step']")
+    .assert.elementPresent("button[qa-data='move-down-selected-step']")
+    .assert.elementPresent("button[qa-data='delete-selected-step']")
+    .assert.elementPresent("button[qa-data='create-new-step']")
+    //verify schedule controls
+    .click("#schedules-tab")
+    .assert.elementPresent("button[qa-data='create-new-schedule']")
+    .assert.elementPresent("button[qa-data='delete-schedule']")
+    .assert.elementPresent("table[qa-data='schedule-list']")
+}
+
+function createTemplateJob(browser) {
+  browser  
+    //create new job for all tests where job is needed
+    .url(config.endpoint)
+    .waitForElementVisible('a[href="#/jobs"]')
+    .click('a[href="#/jobs"]')      
+    .waitForElementVisible('a[href="#/jobs"]')
+    .click('a[href="#/jobs"]')
+    .waitForElementVisible('a[href="#/jobs/create"]')
+    .click('a[href="#/jobs/create"]')
+    .waitForElementVisible('#job-general')
+    .setValue('#job-dialog-name', testJobTemplate.name)
+    .setValue('#job-dialog-description', testJobTemplate.description)
+    .click('a#steps-tab') 
+    .click('button[qa-data="create-new-step"')
+    .setValue('[qa-data="step-name"]', testJobTemplate.steps[0].name)
+    .click('.CodeMirror-code')
+    .keys(["script"]) 
+    .click('button[qa-data="step-create"]')
+    .click('button[qa-data="job-create"]')
+    .end()
+}
+
 describe('Job test set', function() {
 
   before(function(browser) {
-    browser  
-      //create new job for all tests where job is needed
-      .url(config.endpoint)
-      .waitForElementVisible('a[href="#/jobs"]')
-      .click('a[href="#/jobs"]')      
-      .waitForElementVisible('a[href="#/jobs"]')
-      .click('a[href="#/jobs"]')
-      .waitForElementVisible('a[href="#/jobs/create"]')
-      .click('a[href="#/jobs/create"]')
-      .waitForElementVisible('#job-general')
-      .setValue('#job-dialog-name', testJobTemplate.name)
-      .setValue('#job-dialog-description', testJobTemplate.description)
-      .click('a#steps-tab') 
-      .click('button[qa-data="create-new-step"')
-      .setValue('[qa-data="step-name"]', testJobTemplate.steps[0].name)
-      .click('.CodeMirror-code')
-      .keys(["script"]) 
-      .click('button[qa-data="step-create"]')
-      .click('button[qa-data="job-create"]')
+    createTemplateJob(browser);
   });
 
   beforeEach(function(browser) {
@@ -49,7 +82,7 @@ describe('Job test set', function() {
       .assert.elementPresent("#schedules-tab")
       .assert.elementPresent("#notifications-tab")
       //buttons check
-      .assert.elementPresent("button[qa-data='job-creation-cancel']")
+      .assert.elementPresent("button[qa-data='job-cancel']")
       .assert.elementPresent("button[qa-data='job-create']")
       .assert.cssClassPresent('#button-job-create', 'button is-success is-static')
       .assert.cssClassPresent('#button-job-cancel', 'button')
@@ -124,7 +157,7 @@ describe('Job test set', function() {
       //open new job dialog      
       .click('a[href="#/jobs/create"]')
       .waitForElementVisible('#job-general')
-      .click('button[qa-data="modal-close"]')
+      .click('button[qa-data="job-modal-close"]')
       //check if Close reloads to proper state
       .assert.elementPresent('a[qa-data="job-list-create"]')
       .assert.elementPresent('div[qa-data="job-list-filter"]')
@@ -133,7 +166,7 @@ describe('Job test set', function() {
       .assert.elementPresent('div[qa-data="job-list-pagination-info"]')
       //check if Cancel reloads to proper state
       .click('a[href="#/jobs/create"]')
-      .click('button[qa-data="job-creation-cancel"]')
+      .click('button[qa-data="job-cancel"]')
       .assert.elementPresent('a[qa-data="job-list-create"]')
       .assert.elementPresent('div[qa-data="job-list-filter"]')
       .assert.elementPresent('table[qa-data="job-list-table"]')
@@ -187,7 +220,7 @@ describe('Job test set', function() {
     browser
       .click(`a[qa-data="${testJobTemplate.name}"]`)
       .waitForElementVisible('#job-general')
-      .click('button[qa-data="modal-close"]')
+      .click('button[qa-data="job-modal-close"]')
       //check if Close reloads to proper state
       .assert.elementPresent('a[qa-data="job-list-create"]')
       .assert.elementPresent('div[qa-data="job-list-filter"]')
@@ -196,12 +229,23 @@ describe('Job test set', function() {
       .assert.elementPresent('div[qa-data="job-list-pagination-info"]')
       //check if Cancel reloads to proper state
       .click(`a[qa-data="${testJobTemplate.name}"]`)
-      .click('button[qa-data="job-creation-cancel"]')
+      .click('button[qa-data="job-cancel"]')
       .assert.elementPresent('a[qa-data="job-list-create"]')
       .assert.elementPresent('div[qa-data="job-list-filter"]')
       .assert.elementPresent('table[qa-data="job-list-table"]')
       .assert.elementPresent('div[qa-data="job-list-pagination"]')
       .assert.elementPresent('div[qa-data="job-list-pagination-info"]')      
+  });  
+
+
+  test('Job click opens proper modal window', function (browser) {
+    browser
+      .click(`a[qa-data="${testJobTemplate.name}"]`)
+      .waitForElementVisible('#job-general')
+      .assert.cssClassPresent('#button-job-save', 'button is-link');
+    
+    verifyJobDialogStaticUI(browser);    
+
   });  
 
   afterEach(function(browser) {

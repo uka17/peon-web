@@ -3,7 +3,7 @@
     <div class="field">
       <label class="label">Name*</label>
       <div class="control">
-        <input v-model="job.name" id="job-dialog-name" class="input" v-bind:class="{ 'is-danger': jobFieldIsValid('name') !== '' }" type="text" placeholder="Job name">
+        <input v-model="job.name" id="job-dialog-name" qa-data="job-dialog-name" class="input" v-bind:class="{ 'is-danger': jobFieldIsValid('name') !== '' }" type="text" placeholder="Job name">
       </div>
       <p id="job-dialog-name-error" class="help is-danger">{{ jobFieldIsValid('name') }}</p>
     </div>
