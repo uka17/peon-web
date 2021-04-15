@@ -144,7 +144,7 @@ module.exports.helpers = {
       return '';   
   },
   info: /*istanbul ignore next*/ function (v) {
-    return `<span data-tooltip="${v}"><i class="mdi mdi-information-outline"></i></span>`;
+    return `<span qa-data="${v}" data-tooltip="${v}"><i class="mdi mdi-information-outline"></i></span>`;
   },
   link: /*istanbul ignore next*/ function (v) {
     return `<a>${v}</a>`;

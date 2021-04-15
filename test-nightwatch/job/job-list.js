@@ -31,14 +31,42 @@ describe('Job list test set', function() {
   });
 
   beforeEach(function(browser) {
-
+    browser
+      .url(config.endpoint)
+      .waitForElementVisible('a[href="#/jobs"]')
+      .click('a[href="#/jobs"]')
+      .waitForElementVisible('a[href="#/jobs/create"]')      
   });
 
   this.tags = ['job-list', 'user-interface'];
-  
+
+  test('All components of job list page are visible and has proper state and style', function (browser) {
+    browser
+      .assert.elementPresent('a[qa-data="job-list-create"]')
+      .assert.elementPresent('div[qa-data="job-list-filter"]')
+      .assert.elementPresent('a[qa-data="job-list-filter-do"]')
+      .assert.elementPresent('input[qa-data="job-list-filter-text"]')
+      .assert.elementPresent('a[qa-data="job-list-filter-reset"]')
+      .assert.elementPresent('table[qa-data="job-list-table"]')
+      .assert.elementPresent('div[qa-data="job-list-pagination"]')
+      .assert.elementPresent('div[qa-data="job-list-pagination"]')
+  }); 
+  test('Line click activates Delete controls and changes line style', function (browser) {
+    browser
+      .getAttribute('button[qa-data="job-list-delete-modal-show"]', 'disabled', function(result) {
+        this.assert.equal(result.value, 'true');
+      })  
+
+      .click(`span[qa-data="${testJobTemplate.description}"]`)
+
+      .assert.cssClassPresent('tr[item-index="0"]', 'is-selected')
+      .getAttribute('button[qa-data="job-list-delete-modal-show"]', 'disabled', function(result) {
+        this.assert.equal(result.value, null);
+      });
+  });     
   
   afterEach(function(browser) {
-    //browser.end();
+    browser.end();
   });
 
   after(function(browser) {

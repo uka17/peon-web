@@ -37,10 +37,10 @@
     >
       <template slot="job-name" slot-scope="props">
         <router-link :qa-data="`${props.rowData.name}`" :to="`/jobs/${props.rowData.id}`">{{ props.rowData.name }}</router-link>
-      </template>     
+      </template>    
     </vuetable>
     <div class="columns">
-      <div qa-data="job-list-delete-modal-show" class="column is-paddingless">
+      <div class="column is-paddingless">
         <vuetable-pagination-info qa-data="job-list-pagination-info" ref="jobListPaginationInfo"
         ></vuetable-pagination-info>
       </div>
