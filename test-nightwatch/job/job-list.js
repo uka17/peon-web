@@ -1,10 +1,9 @@
 const config = require("../config.json");
 const testJobTemplate = JSON.parse(JSON.stringify(require("../test-data.json").job));
 
-function createTemplateJob(browser) {
+function createTestJob(browser, testJob) {
   browser  
     //create new job for all tests where job is needed
-    .url(config.endpoint)
     .waitForElementVisible('a[href="#/jobs"]')
     .click('a[href="#/jobs"]')      
     .waitForElementVisible('a[href="#/jobs"]')
@@ -12,22 +11,23 @@ function createTemplateJob(browser) {
     .waitForElementVisible('a[href="#/jobs/create"]')
     .click('a[href="#/jobs/create"]')
     .waitForElementVisible('#job-general')
-    .setValue('#job-dialog-name', testJobTemplate.name)
-    .setValue('#job-dialog-description', testJobTemplate.description)
+    .setValue('#job-dialog-name', testJob.name)
+    .setValue('#job-dialog-description', testJob.description)
     .click('a#steps-tab') 
     .click('button[qa-data="create-new-step"')
-    .setValue('[qa-data="step-name"]', testJobTemplate.steps[0].name)
+    .setValue('[qa-data="step-name"]', testJob.steps[0].name)
     .click('.CodeMirror-code')
     .keys(["script"]) 
     .click('button[qa-data="step-create"]')
     .click('button[qa-data="job-create"]')
-    .end()
 }
 
 describe('Job list test set', function() {
 
   before(function(browser) {
-    createTemplateJob(browser);
+    browser.url(config.endpoint);
+    createTestJob(browser, testJobTemplate);
+    browser.end();
   });
 
   beforeEach(function(browser) {
@@ -64,7 +64,43 @@ describe('Job list test set', function() {
         this.assert.equal(result.value, null);
       });
   });     
-  
+  test.only('Filter control works properly', function (browser) {
+    let testJob = JSON.parse(JSON.stringify(testJobTemplate));
+    testJob.name += `f${(+new Date).toString(16)}`;
+    testJob.description += `f${(+new Date).toString(16)}`;
+    //create unique test job
+    createTestJob(browser, testJob);          
+    browser
+      //click filter text box
+      .click('input[qa-data="job-list-filter-text"]')
+      //by name
+      .keys([testJob.name])
+      .click('a[qa-data="job-list-filter-do"]')
+      //job in the table...
+      .assert.elementPresent(`a[qa-data="${testJob.name}"]`)
+      //table has 1 row
+      .expect.elements('table[qa-data="job-list-table"] tbody tr').count.to.equal(1);
+
+    browser
+      //clear filter
+      .click('a[qa-data="job-list-filter-reset"]')
+      .getValue('input[qa-data="job-list-filter-text"]', function(result) {
+        this.assert.equal(result.value, '');
+      })
+      //should be more than 1 row
+      .expect.elements('table[qa-data="job-list-table"] tbody tr').count.to.not.equal(1);
+      
+    browser
+      //click filter text box
+      .click('input[qa-data="job-list-filter-text"]')
+      //by description
+      .keys([testJob.description])
+      .click('a[qa-data="job-list-filter-do"]')
+      //job in the table...
+      .assert.elementPresent(`a[qa-data="${testJob.name}"]`)
+      //table has 1 row
+      .expect.elements('table[qa-data="job-list-table"] tbody tr').count.to.equal(1);
+  });     
   afterEach(function(browser) {
     browser.end();
   });

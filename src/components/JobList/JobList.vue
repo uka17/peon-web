@@ -116,8 +116,8 @@ export default {
     }
   },
   created() {
-    EventBus.$on('list-filter-set', v => this.onFilterSet(v));
-    EventBus.$on('list-filter-reset', v => this.onFilterReset());
+    EventBus.$on('job-list-filter-set', v => this.onFilterSet(v));
+    EventBus.$on('job-list-filter-reset', v => this.onFilterReset());
   },  
   methods: {
     onFilterReset() {
@@ -126,8 +126,8 @@ export default {
     },
     onFilterSet(filterText) {
       this.moreParams = {
-          'filter': filterText
-      };
+          'filter': filterText          
+      };            
       Vue.nextTick( () => this.$refs.jobList.refresh());
     },
     onPaginationData (paginationData) {
