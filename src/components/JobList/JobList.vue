@@ -51,7 +51,7 @@
         ></vuetable-pagination>
       </div>
     </div>   
-    <div class="modal" v-bind:class="{ 'is-active': deleteDialogIsVisible }" v-on:keyup.esc="deleteDialogIsVisible = false">
+    <div class="modal" qa-data="job-delete-modal" v-bind:class="{ 'is-active': deleteDialogIsVisible }" v-on:keyup.esc="deleteDialogIsVisible = false">
       <div class="modal-background"></div>
       <div class="modal-content" id="job-delete-modal-content">
         <div class="card">
@@ -60,13 +60,13 @@
               <article class="message is-danger">
                 <div class="message-body">
                   Once you delete a job, there is no going back. <br/>
-                  Please be certain. Type <span><b>{{ selectedJobName }}</b></span> to confirm.<br/><br/>
+                  Please be certain. Type <span qa-data="job-delete-modal-job-name" ><b>{{ selectedJobName }}</b></span> to confirm.<br/><br/>
                   <div class="field has-addons">
                     <div class="control">
-                      <input class="input" v-model="jobNameToDelete" type="text" placeholder="Job name">
+                      <input class="input" qa-data="job-delete-modal-text" v-model="jobNameToDelete" type="text" placeholder="Job name">
                     </div>
                     <div class="control">
-                      <a class="button is-danger" qa-data="job-list-delete" :disabled="deleteLocked" @click="executeJobDeletion">
+                      <a class="button is-danger" qa-data="job-delete-modal-confirm" :disabled="deleteLocked" @click="executeJobDeletion">
                         Delete
                       </a>
                     </div>
@@ -77,7 +77,7 @@
           </div>
         </div>
       </div>
-      <button class="modal-close is-large" aria-label="close" @click="deleteDialogIsVisible = false"></button>
+      <button class="modal-close is-large" qa-data="job-delete-modal-close" aria-label="close" @click="deleteDialogIsVisible = false"></button>
     </div>                
   </div>
 </template>

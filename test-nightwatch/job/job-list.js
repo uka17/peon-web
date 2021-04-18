@@ -33,6 +33,7 @@ describe('Job list test set', function() {
   beforeEach(function(browser) {
     browser
       .url(config.endpoint)
+      .windowMaximize()
       .waitForElementVisible('a[href="#/jobs"]')
       .click('a[href="#/jobs"]')
       .waitForElementVisible('a[href="#/jobs/create"]')      
@@ -64,7 +65,7 @@ describe('Job list test set', function() {
         this.assert.equal(result.value, null);
       });
   });     
-  test.only('Filter control works properly', function (browser) {
+  test('Filter control works properly', function (browser) {
     let testJob = JSON.parse(JSON.stringify(testJobTemplate));
     testJob.name += `f${(+new Date).toString(16)}`;
     testJob.description += `f${(+new Date).toString(16)}`;
@@ -100,7 +101,46 @@ describe('Job list test set', function() {
       .assert.elementPresent(`a[qa-data="${testJob.name}"]`)
       //table has 1 row
       .expect.elements('table[qa-data="job-list-table"] tbody tr').count.to.equal(1);
-  });     
+  });   
+  
+  test.only(`
+    - Delete button click opens proper modal window with proper set of content
+    - Delete button in Delete modal has proper behavior based on entered text
+    - Close button in Delete modal has proper behavior
+    - After clicking Delete button in Delete modal job is being deleted from the list properly
+    `, function (browser) {
+      let testJob = JSON.parse(JSON.stringify(testJobTemplate));
+      testJob.name += `f${(+new Date).toString(16)}`;
+      //create unique test job
+      createTestJob(browser, testJob);   
+      //open delete modal
+      browser
+        .click(`span[qa-data="${testJob.description}"]`)
+        .click('button[qa-data="job-list-delete-modal-show"]')
+        //aseert if from contains all elements and proper text
+        .assert.elementPresent('span[qa-data="job-delete-modal-job-name"]')
+        .assert.elementPresent('input[qa-data="job-delete-modal-text"]')
+        .assert.elementPresent('a[qa-data="job-delete-modal-confirm"]')
+        .assert.elementPresent('button[qa-data="job-delete-modal-close"]')
+        //check if button is disabled
+        .assert.elementPresent('a[qa-data="job-delete-modal-confirm"][disabled="disabled"]')
+        //put name and check if button enabled
+        .click('input[qa-data="job-delete-modal-text"]')
+        .keys([testJob.name])
+        .assert.not.elementPresent('a[qa-data="job-delete-modal-confirm"][disabled="disabled"]')
+        //close with close button
+        .click('button[qa-data="job-delete-modal-close"]')
+        .assert.not.cssClassPresent('div[qa-data="job-delete-modal"]', 'is-active')
+        //open again, confirm and check if job was deleted
+        .click(`span[qa-data="${testJob.description}"]`)
+        .click('button[qa-data="job-list-delete-modal-show"]')
+        .click('input[qa-data="job-delete-modal-text"]')
+        .keys([testJob.name])
+        .click('a[qa-data="job-delete-modal-confirm"]')
+        .assert.not.cssClassPresent('div[qa-data="job-delete-modal"]', 'is-active')
+        .assert.not.elementPresent(`a[qa-data="${testJob.name}"]`)
+  });
+  
   afterEach(function(browser) {
     browser.end();
   });
