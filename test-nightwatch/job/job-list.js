@@ -103,7 +103,7 @@ describe('Job list test set', function() {
       .expect.elements('table[qa-data="job-list-table"] tbody tr').count.to.equal(1);
   });   
   
-  test.only(`
+  test(`
     - Delete button click opens proper modal window with proper set of content
     - Delete button in Delete modal has proper behavior based on entered text
     - Close button in Delete modal has proper behavior
@@ -140,6 +140,30 @@ describe('Job list test set', function() {
         .assert.not.cssClassPresent('div[qa-data="job-delete-modal"]', 'is-active')
         .assert.not.elementPresent(`a[qa-data="${testJob.name}"]`)
   });
+
+  test.only(`Pagination works properly, changes control style, shown records and statistics of records counter`, function (browser) {
+    let testJob = JSON.parse(JSON.stringify(testJobTemplate));
+    testJob.name += `f${(+new Date).toString(16)}`;
+    //create unique test job
+    createTestJob(browser, testJob);       
+    browser
+      //check if pagination is in place
+      .assert.elementPresent('div[qa-data="job-list-pagination-info"]')
+      .assert.elementPresent('div[qa-data="job-list-pagination"]')
+      //check if job is visible
+      .assert.elementPresent(`a[qa-data="${testJob.name}"]`)
+      //go to next page
+      .click('div[qa-data="job-list-pagination"] a[class="btn-nav button"] i[class="mdi mdi-skip-next"]')
+      //check if info was changed and job is not visible
+      .assert.not.elementPresent(`a[qa-data="${testJob.name}"]`)      
+      .expect.element('div[qa-data="job-list-pagination-info"]').text.to.contain('Displaying 11');
+    browser      
+      //go back
+      .click('div[qa-data="job-list-pagination"] a[class="btn-nav button"] i[class="mdi mdi-skip-previous"]')
+      //check if info was changed and job is not visible
+      .assert.elementPresent(`a[qa-data="${testJob.name}"]`)
+      .expect.element('div[qa-data="job-list-pagination-info"]').text.to.contain('Displaying 1')
+});  
   
   afterEach(function(browser) {
     browser.end();
