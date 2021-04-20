@@ -59,8 +59,9 @@ describe('Job test set', function() {
   });
 
   beforeEach(function(browser) {
-    browser
+    browser    
       .url(config.endpoint)
+      .windowMaximize()
       .waitForElementVisible('a[href="#/jobs"]')
       .click('a[href="#/jobs"]')
       .waitForElementVisible('a[href="#/jobs/create"]')      

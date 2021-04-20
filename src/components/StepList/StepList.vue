@@ -43,7 +43,7 @@
       </div>
     </div>
     
-    <vuetable ref="stepList"
+    <vuetable qa-data="step-list" ref="stepList"
       :api-mode="false"
       :data="stepList"
       :fields="fields"

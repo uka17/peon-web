@@ -141,7 +141,7 @@ describe('Job list test set', function() {
         .assert.not.elementPresent(`a[qa-data="${testJob.name}"]`)
   });
 
-  test.only(`Pagination works properly, changes control style, shown records and statistics of records counter`, function (browser) {
+  test(`Pagination works properly, changes control style, shown records and statistics of records counter`, function (browser) {
     let testJob = JSON.parse(JSON.stringify(testJobTemplate));
     testJob.name += `f${(+new Date).toString(16)}`;
     //create unique test job

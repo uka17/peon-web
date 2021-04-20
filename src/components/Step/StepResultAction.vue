@@ -2,7 +2,7 @@
   <div class="field has-addons">
     <p class="control">
       <span class="select">
-        <select v-model="stepResultAction">
+        <select qa-data="step-result-action" v-model="stepResultAction">
           <option value="gotoNextStep">Go to next step</option>
           <option value="quitWithSuccess">Quit with success</option>
           <option value="quitWithFailure">Quit with failure</option>
@@ -13,7 +13,7 @@
     <template v-if="stepResultAction== 'gotoStep'">       
       <p class="control">
         <span class="select">
-          <select v-model="stepNumber">
+          <select qa-data="step-result-action-goto-step" v-model="stepNumber">
             <option v-for="option in stepList" v-bind:value="option.order">
               {{ `${option.order} (${truncateString(option.name, 10)})` }}
             </option>
