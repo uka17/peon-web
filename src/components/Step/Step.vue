@@ -34,7 +34,7 @@
         </div>           
         <div class="field">
           <label class="label">Command*</label>
-          <div class="control">
+          <div class="control" v-bind:class="{ 'is-danger': fieldIsValid('name') !== '' }" >
             <textarea qa-data="step-command" class="textarea" placeholder="Job description" v-bind:class="{ 'is-danger': fieldIsValid('command') !== '' }" v-model="step.command" id="command-code"></textarea>
           </div>
           <p id="step-dialog-command-error" class="help is-danger">{{ fieldIsValid('command') }}</p>
@@ -49,10 +49,10 @@
                 v-bind:class="{ 'is-danger': fieldIsValid('retryAttempts.number') !== '' }" >
             </p>
             <p class="control">
-              <a class="button is-static" v-if="retryAttempts.number !== 0">
+              <a qa-data="per-each-label" class="button is-static" v-if="retryAttempts.number !== 0">
                 per each
               </a>
-              <a class="button is-static" v-if="retryAttempts.number === 0">
+              <a qa-data="retries-label" class="button is-static" v-if="retryAttempts.number === 0">
                 retries
               </a>                
             </p>
@@ -64,7 +64,7 @@
                 v-bind:class="{ 'is-danger': fieldIsValid('retryAttempts.interval') !== '' }"
               > 
             </p>
-            <p class="control" v-if="retryAttempts.number !== 0">
+            <p qa-data="minutes-label" class="control" v-if="retryAttempts.number !== 0">
               <a class="button is-static">
                 minute(s)          
               </a>

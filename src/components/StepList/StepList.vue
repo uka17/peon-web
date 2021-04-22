@@ -52,7 +52,7 @@
       :css="css.table"
     >
       <template slot="step-name" slot-scope="props">
-        <a @click="modalEditShow(props.rowData)">{{ props.rowData.name }}</a>
+        <a :qa-data="`${props.rowData.name}`" @click="modalEditShow(props.rowData)">{{ props.rowData.name }}</a>
       </template>    
     </vuetable>
     <p id="step-list-empty-error" v-if="this.stepList.length === 0" class="help is-danger">{{ messages.stepListShouldNotBeEmpty['en'] }}</p>

@@ -24,8 +24,8 @@
             "connection": 203,
             "command": "select \"fnLog_I2nsert\"(1, 'Tomatoes!', 'test')",
             "retryAttempts": {
-               "number": 1,
-               "interval": 1
+               "number": 7,
+               "interval": 15
             },
             "onSucceed": "quitWithSuccess",
             "onFailure": "quitWithFailure"

@@ -1,28 +1,8 @@
 const config = require("../config.json");
 const testJobTemplate = JSON.parse(JSON.stringify(require("../test-data.json").job));
+const createTestJob = require('../helpers').createTestJob;
 
-function createTestJob(browser, testJob) {
-  browser  
-    //create new job for all tests where job is needed
-    .waitForElementVisible('a[href="#/jobs"]')
-    .click('a[href="#/jobs"]')      
-    .waitForElementVisible('a[href="#/jobs"]')
-    .click('a[href="#/jobs"]')
-    .waitForElementVisible('a[href="#/jobs/create"]')
-    .click('a[href="#/jobs/create"]')
-    .waitForElementVisible('#job-general')
-    .setValue('#job-dialog-name', testJob.name)
-    .setValue('#job-dialog-description', testJob.description)
-    .click('a#steps-tab') 
-    .click('button[qa-data="create-new-step"')
-    .setValue('[qa-data="step-name"]', testJob.steps[0].name)
-    .click('.CodeMirror-code')
-    .keys(["script"]) 
-    .click('button[qa-data="step-create"]')
-    .click('button[qa-data="job-create"]')
-}
-
-describe('Job list test set', function() {
+describe('job-list', function() {
 
   before(function(browser) {
     browser.url(config.endpoint);
@@ -41,7 +21,7 @@ describe('Job list test set', function() {
 
   this.tags = ['job-list', 'user-interface'];
 
-  test('All components of job list page are visible and has proper state and style', function (browser) {
+  test('job-list. All components of job list page are visible and has proper state and style', function (browser) {
     browser
       .assert.elementPresent('a[qa-data="job-list-create"]')
       .assert.elementPresent('div[qa-data="job-list-filter"]')
@@ -52,7 +32,7 @@ describe('Job list test set', function() {
       .assert.elementPresent('div[qa-data="job-list-pagination"]')
       .assert.elementPresent('div[qa-data="job-list-pagination"]')
   }); 
-  test('Line click activates Delete controls and changes line style', function (browser) {
+  test('job-list. Line click activates Delete controls and changes line style', function (browser) {
     browser
       .getAttribute('button[qa-data="job-list-delete-modal-show"]', 'disabled', function(result) {
         this.assert.equal(result.value, 'true');
@@ -65,7 +45,7 @@ describe('Job list test set', function() {
         this.assert.equal(result.value, null);
       });
   });     
-  test('Filter control works properly', function (browser) {
+  test('job-list. Filter control works properly', function (browser) {
     let testJob = JSON.parse(JSON.stringify(testJobTemplate));
     testJob.name += `f${(+new Date).toString(16)}`;
     testJob.description += `f${(+new Date).toString(16)}`;
@@ -103,7 +83,7 @@ describe('Job list test set', function() {
       .expect.elements('table[qa-data="job-list-table"] tbody tr').count.to.equal(1);
   });   
   
-  test(`
+  test(`job-list. 
     - Delete button click opens proper modal window with proper set of content
     - Delete button in Delete modal has proper behavior based on entered text
     - Close button in Delete modal has proper behavior
@@ -141,7 +121,7 @@ describe('Job list test set', function() {
         .assert.not.elementPresent(`a[qa-data="${testJob.name}"]`)
   });
 
-  test(`Pagination works properly, changes control style, shown records and statistics of records counter`, function (browser) {
+  test(`job-list. Pagination works properly, changes control style, shown records and statistics of records counter`, function (browser) {
     let testJob = JSON.parse(JSON.stringify(testJobTemplate));
     testJob.name += `f${(+new Date).toString(16)}`;
     //create unique test job

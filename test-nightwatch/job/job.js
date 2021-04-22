@@ -1,5 +1,6 @@
 const config = require("../config.json");
 const testJobTemplate = JSON.parse(JSON.stringify(require("../test-data.json").job));
+const createTestJob = require('../helpers').createTestJob;
 
 const verifyJobDialogStaticUI = (browser) => {
   browser
@@ -29,33 +30,12 @@ const verifyJobDialogStaticUI = (browser) => {
     .assert.elementPresent("table[qa-data='schedule-list']")
 }
 
-function createTemplateJob(browser) {
-  browser  
-    //create new job for all tests where job is needed
-    .url(config.endpoint)
-    .waitForElementVisible('a[href="#/jobs"]')
-    .click('a[href="#/jobs"]')      
-    .waitForElementVisible('a[href="#/jobs"]')
-    .click('a[href="#/jobs"]')
-    .waitForElementVisible('a[href="#/jobs/create"]')
-    .click('a[href="#/jobs/create"]')
-    .waitForElementVisible('#job-general')
-    .setValue('#job-dialog-name', testJobTemplate.name)
-    .setValue('#job-dialog-description', testJobTemplate.description)
-    .click('a#steps-tab') 
-    .click('button[qa-data="create-new-step"')
-    .setValue('[qa-data="step-name"]', testJobTemplate.steps[0].name)
-    .click('.CodeMirror-code')
-    .keys(["script"]) 
-    .click('button[qa-data="step-create"]')
-    .click('button[qa-data="job-create"]')
-    .end()
-}
-
-describe('Job test set', function() {
+describe('job', function() {
 
   before(function(browser) {
-    createTemplateJob(browser);
+    browser.url(config.endpoint);
+    createTestJob(browser, testJobTemplate);
+    browser.end();
   });
 
   beforeEach(function(browser) {
@@ -69,7 +49,7 @@ describe('Job test set', function() {
 
   this.tags = ['job', 'user-interface'];
 
-  test('Click to New opens proper modal window', function (browser) {
+  test('job. Click to New opens proper modal window', function (browser) {
     browser
       //open new job dialog
       .click('a[href="#/jobs/create"]')
@@ -93,7 +73,7 @@ describe('Job test set', function() {
       .assert.elementPresent("input[qa-data='job-dialog-enabled']")
   });
 
-  test('Tab General and Steps change control states based on entered values', function (browser) {
+  test('job. Tab General and Steps change control states based on entered values', function (browser) {
     browser      
       //open new job dialog
       .click('a[href="#/jobs/create"]')
@@ -130,7 +110,7 @@ describe('Job test set', function() {
   });
 
 
-  test('Created job is being reflected in job list', function (browser) {
+  test('job. Created job is being reflected in job list', function (browser) {
     let testJob = JSON.parse(JSON.stringify(testJobTemplate));
     testJob.name += `f${(+new Date).toString(16)}`;
     browser
@@ -153,7 +133,7 @@ describe('Job test set', function() {
       .waitForElementVisible(`a[qa-data="${testJob.name}"]`)
   });  
 
-  test('Closing Job modal with Close button or Cancel button after opening New modal reloads page to proper content', function (browser) {
+  test.only('job. Closing Job modal with Close button or Cancel button after opening New modal reloads page to proper content', function (browser) {
     browser
       //open new job dialog      
       .click('a[href="#/jobs/create"]')
@@ -175,7 +155,7 @@ describe('Job test set', function() {
       .assert.elementPresent('div[qa-data="job-list-pagination-info"]')      
   });  
 
-  test('Change in job attributes is being reflected in job list', function (browser) {
+  test('job. Change in job attributes is being reflected in job list', function (browser) {
     let testJob = JSON.parse(JSON.stringify(testJobTemplate));
     testJob.name += `f${(+new Date).toString(16)}`;
     browser
@@ -217,7 +197,7 @@ describe('Job test set', function() {
       .expect.element('input[qa-data="job-dialog-enabled"]').to.not.be.selected
   });
 
-  test('Closing Job modal with close button, Save or Cancel button after opening job reloads page to proper content', function (browser) {
+  test('job. Closing Job modal with close button, Save or Cancel button after opening job reloads page to proper content', function (browser) {
     browser
       .click(`a[qa-data="${testJobTemplate.name}"]`)
       .waitForElementVisible('#job-general')
@@ -239,12 +219,39 @@ describe('Job test set', function() {
   });  
 
 
-  test('Job click opens proper modal window', function (browser) {
+  test('job. Open existing job, putting content inside and click Cancel or Close - job was not changed', function (browser) {
+    browser
+      .click(`a[qa-data="${testJobTemplate.name}"]`)
+      .waitForElementVisible('#job-general')      
+      //change values
+      .setValue('#job-dialog-name', '-changed')
+      .setValue('#job-dialog-description', '-changed')
+      .click('a#steps-tab') 
+      .click('button[qa-data="create-new-step"')
+      .setValue('[qa-data="step-name"]', testJobTemplate.steps[0].name)
+      .click('.CodeMirror-code')
+      .keys(["script"]) 
+      .click('button[qa-data="step-create"]')      
+      //click Cancel    
+      .click('button[qa-data="job-cancel"]')
+      //check if job was not changed
+      .click(`a[qa-data="${testJobTemplate.name}"]`)
+      .getValue('#job-dialog-name', function(result) {
+        this.assert.equal(result.value, testJobTemplate.name);
+      })
+      .getValue('#job-dialog-description', function(result) {
+        this.assert.equal(result.value, testJobTemplate.description);
+      })
+      .click('a#steps-tab')
+      //table has 1 row
+      .expect.elements('table[qa-data="step-list"] tbody tr').count.to.equal(1);
+  });  
+
+  test('job. Job click opens proper modal window', function (browser) {
     browser
       .click(`a[qa-data="${testJobTemplate.name}"]`)
       .waitForElementVisible('#job-general')
       .assert.cssClassPresent('#button-job-save', 'button is-link');
-    
     verifyJobDialogStaticUI(browser);    
 
   });  
