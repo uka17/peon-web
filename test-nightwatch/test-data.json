@@ -29,7 +29,20 @@
             },
             "onSucceed": "quitWithSuccess",
             "onFailure": "quitWithFailure"
-         }
+         },
+         {
+            "name": "Test step 3 normal  one",
+            "enabled": false,
+            "order": 3,
+            "connection": 203,
+            "command": "select \"fnLog_Insert\"(1, 'Tomatoes!', 'test')",
+            "retryAttempts": {
+               "number": 10,
+               "interval": 30
+            },
+            "onSucceed": "quitWithSuccess",
+            "onFailure": "quitWithFailure"
+         }         
       ],
       "schedules": [
          {

@@ -146,6 +146,10 @@ module.exports.helpers = {
   info: /*istanbul ignore next*/ function (v) {
     return `<span qa-data="${v}" data-tooltip="${v}"><i class="mdi mdi-information-outline"></i></span>`;
   },
+  //For qa purpose, in order to be able to click on order cell
+  order: /*istanbul ignore next*/ function (v) {
+    return `<span qa-data="${v}">${v}</span>`;
+  },  
   link: /*istanbul ignore next*/ function (v) {
     return `<a>${v}</a>`;
   },

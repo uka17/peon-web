@@ -1,5 +1,6 @@
 const config = require("../config.json");
-const testJobTemplate = JSON.parse(JSON.stringify(require("../test-data.json").job));
+let testJobTemplate = JSON.parse(JSON.stringify(require("../test-data.json").job));
+testJobTemplate.name += `f${(+new Date).toString(16)}`;
 const createTestJob = require('../helpers').createTestJob;
 
 
@@ -23,109 +24,139 @@ describe('step-list', function() {
   this.tags = ['step-list', 'user-interface'];
 
   test.only(`step-list. 
-    Step list controls have correct state before any step was added     
-    Step creation modal form controls have correct state before and after putting any data 
-    Cancel controls works properly and doesn't create any step 
-    Step creation acts properly: closes form and creates step with proper data
-    Opening existing step shows proper modal window (correct data, correct control state) 
-    Changing data and clicking Close doesn't changes step 
+    Step list controls have correct state before and after any step was added
+    Create 3 steps
+    Click 1st - Move step and delete controls has correct state and step
+    Click last - Move step controls has correct state
+    Click 2nd - Move step controls has correct state
+    Check movement of first, last and middle steps (if steps were moved)
+    Delete step works properly (step is deleted)
     `, function (browser) {
     //Step list controls have correct state before any step was added
     browser
-      .click(`a[qa-data="${testJobTemplate.name}"]`)
-      .click('a#steps-tab') 
-      .assert.elementPresent('button[qa-data="move-up-selected-step"]')
-      .assert.elementPresent('button[qa-data="move-down-selected-step"]')
-      .assert.elementPresent('button[qa-data="create-new-step"]')
-      .assert.elementPresent('button[qa-data="delete-selected-step"]')
-      .assert.elementPresent('button[qa-data="delete-selected-step"]')
-      .expect.elements('table[qa-data="step-list"] tbody tr').count.to.equal(1);
-    //Step creation modal form controls have correct state before and after putting any data 
-    browser
+      .waitForElementVisible('a[href="#/jobs"]')
+      .click('a[href="#/jobs"]')      
+      .waitForElementVisible('a[href="#/jobs/create"]')
+      .click('a[href="#/jobs/create"]')
+      .waitForElementVisible('#job-general')
+      .setValue('#job-dialog-name', testJobTemplate.name)
+      .setValue('#job-dialog-description', testJobTemplate.description)
+      .click('a#steps-tab')
+      .assert.elementPresent("#steps-tab span[class='icon has-text-danger']")
+      .assert.visible('button[qa-data="create-new-step"')
+      .assert.attributeContains('button[qa-data="move-down-selected-step"]', 'disabled', 'true')
+      .assert.attributeContains('button[qa-data="move-up-selected-step"]', 'disabled', 'true')
+      .assert.attributeContains('button[qa-data="delete-selected-step"]', 'disabled', 'true')
+      .assert.visible('.vuetable-empty-result')
+      .assert.containsText('#step-list-empty-error', "Step list should contain at least 1 step")   
       .click('button[qa-data="create-new-step"')
-      .assert.cssClassPresent('input[qa-data="step-name"]', 'input is-danger')  
-      .assert.containsText('#step-dialog-name-error', 'must be')
-      .assert.containsText('#step-dialog-command-error', "not be empty")
-      .assert.cssClassPresent('button[qa-data="step-create"]', 'button is-success is-static')
-    //Add data and check once again
+      //Create step
       .setValue('[qa-data="step-name"]', testJobTemplate.steps[0].name)
       .click('.CodeMirror-code')
-      .keys(["script"]) 
-      .assert.not.cssClassPresent('input[qa-data="step-name"]', 'input is-danger')  
-      .assert.not.containsText('#step-dialog-name-error', "must be")   
-      .assert.not.containsText('#step-dialog-command-error', "must be")
-      .assert.not.cssClassPresent('button[qa-data="step-create"]', 'button is-success is-static')
-    //Check Name for proper input
-      .setValue('[qa-data="step-name"]', "=")
-      .assert.cssClassPresent('input[qa-data="step-name"]', 'input is-danger')  
-      .assert.containsText('#step-dialog-name-error', 'must be')
-      .assert.cssClassPresent('button[qa-data="step-create"]', 'button is-success is-static')
-    //Cancel controls works properly and doesn't create any step
-      .click('button[qa-data="step-cancel"]')
-      .expect.elements('table[qa-data="step-list"] tbody tr').count.to.equal(1);
+      .keys([testJobTemplate.steps[0].command])
+      .setValue('input[qa-data="step-retry-number"]', ['\u0008', '\u0008', '\u0008'])
+      .setValue('input[qa-data="step-retry-number"]', testJobTemplate.steps[0].retryAttempts.number)
+      .setValue('input[qa-data="step-retry-interval"]', ['\u0008', '\u0008', '\u0008'])
+      .setValue('input[qa-data="step-retry-interval"]', testJobTemplate.steps[0].retryAttempts.interval)      
+      .click(`div[qa-data="step-result-action-succeed"] select[qa-data="step-result-action"] option[value="${testJobTemplate.steps[0].onSucceed}"]`)      
+      .click(`div[qa-data="step-result-action-failure"] select[qa-data="step-result-action"] option[value="${testJobTemplate.steps[0].onFailure}"]`)            
+      .click('button[qa-data="step-create"]')
+      //Check if step appeared in table
+      .assert.not.elementPresent('.vuetable-empty-result')
+      .assert.not.elementPresent('#step-list-empty-error')         
+      .expect.elements('table[qa-data="step-list"] tbody tr').count.to.equal(1); 
+      //Create 2 more steps
     browser
-    //Step creation acts properly: closes form and creates step with proper data
+    //2nd
       .click('button[qa-data="create-new-step"')
       .setValue('[qa-data="step-name"]', testJobTemplate.steps[1].name)
       .click('.CodeMirror-code')
       .keys([testJobTemplate.steps[1].command])
-    //Validation              
-    //Here and further browser.clearValue doesn't work properly, thus using this trick
       .setValue('input[qa-data="step-retry-number"]', ['\u0008', '\u0008', '\u0008'])
-      .assert.containsText('#step-dialog-retry-number-error', 'must be greater')
       .setValue('input[qa-data="step-retry-number"]', testJobTemplate.steps[1].retryAttempts.number)
-    //Interval not visible if attempts is zero
-      .assert.elementPresent('a[qa-data="per-each-label"]')
-      .assert.elementPresent('p[qa-data="minutes-label"]')
-      .assert.elementPresent('input[qa-data="step-retry-interval"]')
-      .assert.not.elementPresent('a[qa-data="retries-label"]')
-      .setValue('input[qa-data="step-retry-number"]', ['\u0008', '\u0008', '\u0008'])
-      .setValue('input[qa-data="step-retry-number"]', 0)      
-      .assert.not.elementPresent('a[qa-data="per-each-label"]')
-      .assert.not.elementPresent('p[qa-data="minutes-label"]')
-      .assert.not.elementPresent('input[qa-data="step-retry-interval"]')
-      .assert.elementPresent('a[qa-data="retries-label"]')
-      .assert.not.elementPresent('input[qa-data="step-retry-interval"]')      
-    //"Per each = 12" test
-      .setValue('input[qa-data="step-retry-number"]', ['\u0008', '\u0008', '\u0008'])
-      .setValue('input[qa-data="step-retry-number"]', 12)
-      .assert.containsText('#step-dialog-retry-number-error', 'to zero and less than 11')            
-      .setValue('input[qa-data="step-retry-number"]', ['\u0008', '\u0008', '\u0008'])
-      .setValue('input[qa-data="step-retry-number"]', testJobTemplate.steps[1].retryAttempts.number) 
-    //Validation
-      .setValue('input[qa-data="step-retry-interval"]', ['\u0008', '\u0008', '\u0008'])      
-      .assert.containsText('#step-dialog-retry-interval-error', 'attempt interval must be greater than 0')    
-    //Put value back      
+      .setValue('input[qa-data="step-retry-interval"]', ['\u0008', '\u0008', '\u0008'])
       .setValue('input[qa-data="step-retry-interval"]', testJobTemplate.steps[1].retryAttempts.interval)      
-    //Next controls
       .click(`div[qa-data="step-result-action-succeed"] select[qa-data="step-result-action"] option[value="${testJobTemplate.steps[1].onSucceed}"]`)      
-      .click(`div[qa-data="step-result-action-failure"] select[qa-data="step-result-action"] option[value="${testJobTemplate.steps[1].onFailure}"]`)      
+      .click(`div[qa-data="step-result-action-failure"] select[qa-data="step-result-action"] option[value="${testJobTemplate.steps[1].onFailure}"]`)            
       .click('button[qa-data="step-create"]')
-      .assert.elementPresent(`a[qa-data="${testJobTemplate.steps[1].name}"]`)
-      .expect.elements('table[qa-data="step-list"] tbody tr').count.to.equal(2);   
-    //Opening existing step shows proper modal window (correct data, correct control state)    
-    browser
-      .click(`a[qa-data="${testJobTemplate.steps[1].name}"]`)
-      .assert.valueContains('input[qa-data="step-name"]', testJobTemplate.steps[1].name)
-      .assert.valueContains('input[qa-data="step-retry-number"]', testJobTemplate.steps[1].retryAttempts.number)
-      .assert.valueContains('input[qa-data="step-retry-interval"]', testJobTemplate.steps[1].retryAttempts.interval)      
-      .assert.valueContains('div[qa-data="step-result-action-succeed"] select[qa-data="step-result-action"]', testJobTemplate.steps[1].onSucceed)      
-      .assert.valueContains('div[qa-data="step-result-action-failure"] select[qa-data="step-result-action"]', testJobTemplate.steps[1].onFailure)          
-    //Changing data and clicking Close or Cancel doesn't changes step (Close and Cancel uses one event))
-      .setValue('input[qa-data="step-name"]', '-changed')  
-      .setValue('input[qa-data="step-retry-interval"]', ['\u0008', '\u0008', '\u0008'])          
-      .setValue('input[qa-data="step-retry-number"]', ['\u0008', '\u0008', '\u0008'])    
-      .setValue('input[qa-data="step-retry-interval"]', 1)          
-      .setValue('input[qa-data="step-retry-number"]', 1)    
-      .click(`div[qa-data="step-result-action-succeed"] select[qa-data="step-result-action"] option[value="${testJobTemplate.steps[1].onFailure}"]`)      
-      .click(`div[qa-data="step-result-action-failure"] select[qa-data="step-result-action"] option[value="${testJobTemplate.steps[1].onSucceed}"]`)         
-      .click('button[qa-data="step-modal-close')
-      .click(`a[qa-data="${testJobTemplate.steps[1].name}"]`)
-      .assert.valueContains('input[qa-data="step-name"]', testJobTemplate.steps[1].name)
-      .assert.valueContains('input[qa-data="step-retry-number"]', testJobTemplate.steps[1].retryAttempts.number)
-      .assert.valueContains('input[qa-data="step-retry-interval"]', testJobTemplate.steps[1].retryAttempts.interval)      
-      .assert.valueContains('div[qa-data="step-result-action-succeed"] select[qa-data="step-result-action"]', testJobTemplate.steps[1].onSucceed)      
-      .assert.valueContains('div[qa-data="step-result-action-failure"] select[qa-data="step-result-action"]', testJobTemplate.steps[1].onFailure)       
+    //3rd
+      .click('button[qa-data="create-new-step"')   
+      .setValue('[qa-data="step-name"]', testJobTemplate.steps[2].name)
+      .click('.CodeMirror-code')
+      .keys([testJobTemplate.steps[2].command])
+      .setValue('input[qa-data="step-retry-number"]', ['\u0008', '\u0008', '\u0008'])
+      .setValue('input[qa-data="step-retry-number"]', testJobTemplate.steps[2].retryAttempts.number)
+      .setValue('input[qa-data="step-retry-interval"]', ['\u0008', '\u0008', '\u0008'])
+      .setValue('input[qa-data="step-retry-interval"]', testJobTemplate.steps[2].retryAttempts.interval)      
+      .click(`div[qa-data="step-result-action-succeed"] select[qa-data="step-result-action"] option[value="${testJobTemplate.steps[2].onSucceed}"]`)      
+      .click(`div[qa-data="step-result-action-failure"] select[qa-data="step-result-action"] option[value="${testJobTemplate.steps[2].onFailure}"]`)            
+      .click('button[qa-data="step-create"]') 
+    //Click 1st - Move step and delete controls has correct state and step
+      .click(`span[qa-data="${testJobTemplate.steps[0].order}"]`)
+      .assert.not.attributeContains('button[qa-data="move-down-selected-step"]', 'disabled', 'true')
+      .assert.attributeContains('button[qa-data="move-up-selected-step"]', 'disabled', 'true')
+      .assert.not.attributeContains('button[qa-data="delete-selected-step"]', 'disabled', 'true')
+    //Click last - Move step and delete controls has correct state and step
+      .click(`span[qa-data="${testJobTemplate.steps[2].order}"]`)
+      .assert.attributeContains('button[qa-data="move-down-selected-step"]', 'disabled', 'true')
+      .assert.not.attributeContains('button[qa-data="move-up-selected-step"]', 'disabled', 'true')
+      .assert.not.attributeContains('button[qa-data="delete-selected-step"]', 'disabled', 'true')
+    //Click 2nd - Move step and delete controls has correct state and step
+      .click(`span[qa-data="${testJobTemplate.steps[1].order}"]`)
+      .assert.not.attributeContains('button[qa-data="move-down-selected-step"]', 'disabled', 'true')
+      .assert.not.attributeContains('button[qa-data="move-up-selected-step"]', 'disabled', 'true')
+      .assert.not.attributeContains('button[qa-data="delete-selected-step"]', 'disabled', 'true')        
+    //Check (steps are being moved, controls changes their states) movement of second...
+      .click(`span[qa-data="${testJobTemplate.steps[1].order}"]`)  
+      .click('button[qa-data="move-down-selected-step"]')
+      .assert.attributeContains('button[qa-data="move-down-selected-step"]', 'disabled', 'true')
+      .assert.not.attributeContains('button[qa-data="move-up-selected-step"]', 'disabled', 'true')
+      .assert.not.attributeContains('button[qa-data="delete-selected-step"]', 'disabled', 'true')    
+    //...last... 
+      .click(`span[qa-data="${testJobTemplate.steps[2].order}"]`)  
+      .click('button[qa-data="move-up-selected-step"]')
+      .assert.not.attributeContains('button[qa-data="move-down-selected-step"]', 'disabled', 'true')
+      .assert.not.attributeContains('button[qa-data="move-up-selected-step"]', 'disabled', 'true')
+      .assert.not.attributeContains('button[qa-data="delete-selected-step"]', 'disabled', 'true')  
+    //...first steps...
+      .click(`span[qa-data="${testJobTemplate.steps[0].order}"]`)  
+      .click('button[qa-data="move-down-selected-step"]')
+      .assert.not.attributeContains('button[qa-data="move-down-selected-step"]', 'disabled', 'true')
+      .assert.not.attributeContains('button[qa-data="move-up-selected-step"]', 'disabled', 'true')
+      .assert.not.attributeContains('button[qa-data="delete-selected-step"]', 'disabled', 'true') 
+    //...move first to last and back to its position
+      .click(`span[qa-data="${testJobTemplate.steps[0].order}"]`)  
+      .click('button[qa-data="move-down-selected-step"]')
+      .assert.not.attributeContains('button[qa-data="move-down-selected-step"]', 'disabled', 'true')
+      .assert.not.attributeContains('button[qa-data="move-up-selected-step"]', 'disabled', 'true')
+      .assert.not.attributeContains('button[qa-data="delete-selected-step"]', 'disabled', 'true')         
+      .click('button[qa-data="move-down-selected-step"]')
+      .assert.attributeContains('button[qa-data="move-down-selected-step"]', 'disabled', 'true')
+      .assert.not.attributeContains('button[qa-data="move-up-selected-step"]', 'disabled', 'true')
+      .assert.not.attributeContains('button[qa-data="delete-selected-step"]', 'disabled', 'true')
+      .click('button[qa-data="move-up-selected-step"]')
+      .assert.not.attributeContains('button[qa-data="move-down-selected-step"]', 'disabled', 'true')
+      .assert.not.attributeContains('button[qa-data="move-up-selected-step"]', 'disabled', 'true')
+      .assert.not.attributeContains('button[qa-data="delete-selected-step"]', 'disabled', 'true')  
+      .click('button[qa-data="move-up-selected-step"]')
+      .assert.not.attributeContains('button[qa-data="move-down-selected-step"]', 'disabled', 'true')
+      .assert.attributeContains('button[qa-data="move-up-selected-step"]', 'disabled', 'true')
+      .assert.not.attributeContains('button[qa-data="delete-selected-step"]', 'disabled', 'true')                             
+    //Delete step works properly (controls were changed, step is deleted)                      
+      .click(`span[qa-data="${testJobTemplate.steps[1].order}"]`)  
+      .assert.not.attributeContains('button[qa-data="move-down-selected-step"]', 'disabled', 'true')
+      .assert.not.attributeContains('button[qa-data="move-up-selected-step"]', 'disabled', 'true')
+      .assert.not.attributeContains('button[qa-data="delete-selected-step"]', 'disabled', 'true')        
+      .click('button[qa-data="delete-selected-step"]')
+      .assert.attributeContains('button[qa-data="move-down-selected-step"]', 'disabled', 'true')
+      .assert.attributeContains('button[qa-data="move-up-selected-step"]', 'disabled', 'true')
+      .assert.attributeContains('button[qa-data="delete-selected-step"]', 'disabled', 'true')
+      .click('button[qa-data="job-create"]')
+    //Check if step was deleted
+      .click(`a[qa-data="${testJobTemplate.name}"]`)
+      .click('a#steps-tab')
+      .expect.elements('table[qa-data="step-list"] tbody tr').count.to.equal(2); 
+
   });   
   
   afterEach(function(browser) {
