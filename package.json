@@ -18,6 +18,7 @@
   "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.13.10",
+    "@livelybone/vue-datepicker": "^4.0.3",
     "@mdi/font": "^4.9.95",
     "axios": "^0.21.1",
     "babel-loader": "^8.2.2",

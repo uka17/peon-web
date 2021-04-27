@@ -1,9 +1,9 @@
 <template>
   <div class="modal" v-bind:class="{ 'is-active': modalIsActive }" v-on:keyup.esc="modalClose()">
     <div class="modal-background"></div>
-    <div class="modal-card">
+    <div id="schedule-modal-content" class="modal-card">
       <header class="modal-card-head">
-        <p class="modal-card-title">Schedule properties: {{schedule.name}}</p>
+        <p class="modal-card-title">Schedule: {{schedule.name}}</p>
         <button class="delete" aria-label="close" @click="modalClose"></button>
       </header>
       <section class="modal-card-body">
@@ -29,13 +29,7 @@
         </div> 
         <div>
           <section v-bind:class="{ 'is-hidden': this.scheduleType != 'onetime' }">
-            <div class="field">
-              <label class="label">Date and time*</label>
-              <div class="control">
-                <input v-model="schedule.oneTime" class="input" type="text" v-bind:class="{ 'is-danger': fieldIsValid('name') !== '' }" placeholder="Schedule name">
-              </div>
-              <p id="schedule-dialog-onetime-error" class="help is-danger">{{ fieldIsValid('oneTime') }}</p>
-            </div>  
+            <schedule-one-time v-bind:schedule="schedule"></schedule-one-time>            
           </section>
           <section v-bind:class="{ 'is-hidden': this.scheduleType != 'daily' }">
             DAILY
@@ -62,6 +56,7 @@
 import validate from 'validate.js';
 import constraints from './schedule-validation.js';
 import utils from '../utils.js';
+import ScheduleOneTime from './ScheduleOneTime.vue';
 
 
 export default {
@@ -123,10 +118,13 @@ export default {
   },
   components: {
     //'schedule-result-action': ScheduleResultAction
+    'schedule-one-time': ScheduleOneTime
   }
 }
 </script>
 
 <style lang="scss" >
-
+  #schedule-modal-content {
+    height: 750px;    
+  }
 </style>

@@ -36,7 +36,7 @@
       :append-params="moreParams"      
     >
       <template slot="job-name" slot-scope="props">
-        <router-link :qa-data="`${props.rowData.name}`" :to="`/jobs/${props.rowData.id}`">{{ props.rowData.name }}</router-link>
+          <router-link :qa-data="`${props.rowData.name}`" :to="`/jobs/${props.rowData.id}`">{{ props.rowData.name }}</router-link>
       </template>    
     </vuetable>
     <div class="columns">

@@ -3,7 +3,7 @@
     <div class="modal-background"></div>
     <div class="modal-card">
       <header class="modal-card-head">
-        <p class="modal-card-title">Step properties: {{step.name}}</p>
+        <p class="modal-card-title">Step: {{step.name}}</p>
         <button class="delete" qa-data="step-modal-close" aria-label="close" @click="modalClose"></button>
       </header>
       <section class="modal-card-body">
