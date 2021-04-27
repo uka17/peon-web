@@ -1,15 +1,15 @@
 <template>
   <div class="field has-addons">
     <div class="control">
-      <input class="input" id="filter-text" type="text" v-model="filterText" @keyup.enter="doFilter" placeholder="Job name or description">
+      <input class="input" qa-data="job-list-filter-text" type="text" v-model="filterText" @keyup.enter="doFilter" placeholder="Job name or description">
     </div>
     <div class="control">
-      <a class="button is-info" id="filter-apply" @click="doFilter">
+      <a qa-data="job-list-filter-do" class="button is-info" @click="doFilter">
         Filter
       </a>
     </div>
     <div class="control">
-      <a class="button" id="filter-reset" @click="resetFilter">
+      <a qa-data="job-list-filter-reset" class="button" @click="resetFilter">
         Reset
       </a>
     </div>  

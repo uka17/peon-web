@@ -3,8 +3,8 @@
     <div class="modal-background"></div>
     <div class="modal-card" id="job-modal-content">
       <header class="modal-card-head">
-        <p v-if="jobRecord.job" class="modal-card-title">Job properties: {{job.name}}</p>
-        <button class="delete" aria-label="close" @click="modalClose"></button>
+        <p v-if="jobRecord.job" class="modal-card-title">Job properties</p>
+        <button qa-data="job-modal-close" class="delete" aria-label="close" @click="modalClose"></button>
       </header>
       <section class="modal-card-body">
         <div class="has-text-centered" v-if="!jobRecord.job">
@@ -49,9 +49,9 @@
         </div>    
       </section>
       <footer class="modal-card-foot buttons is-right" v-if="jobRecord.job">
-          <button v-if="!isNew" id="button-job-save-changes" class="button is-link" v-bind:class="{ 'is-static': !formIsValid }" @click="save">Save changes</button>
-          <button v-if="isNew" id="button-job-create" class="button is-success" v-bind:class="{ 'is-static': !formIsValid }" @click="create">Create job</button>
-          <button @click="modalClose" id="button-job-cancel" class="button">Cancel</button>
+          <button v-if="!isNew" id="button-job-save"  qa-data="job-save" class="button is-link" v-bind:class="{ 'is-static': !formIsValid }" @click="save">Save changes</button>
+          <button v-if="isNew" id="button-job-create"  qa-data="job-create" class="button is-success" v-bind:class="{ 'is-static': !formIsValid }" @click="create">Create job</button>
+          <button @click="modalClose" id="button-job-cancel" qa-data="job-cancel" class="button">Cancel</button>
       </footer>
     </div>
   </div>

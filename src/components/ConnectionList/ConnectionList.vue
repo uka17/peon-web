@@ -1,10 +1,10 @@
 <template>
   <div>
-    <h1 class="title">Job list</h1>
+    <h1 class="title">Connection list</h1>
     <div class="columns">   
       <div class="column">
         <p class="control">
-          <router-link id="new-job" class="button is-success" qa-data="job-list-create" title="Create new job" :to="'/jobs/create'">
+          <router-link id="new-connection" class="button is-success" title="Create new connection" :to="'/connections/create'">
             <span class="icon is-small">
               <i class="mdi mdi-shape-square-plus"></i>
             </span>
@@ -14,7 +14,7 @@
       </div>
       <div class="column">
         <p class="control">
-          <button qa-data="job-list-delete-modal-show" class="button is-danger is-pulled-right" :disabled="selectedRow === null" title="Delete selected job" @click="modalDeleteShow()">
+          <button class="button is-danger is-pulled-right" :disabled="selectedRow === null" title="Delete selected connection" @click="modalDeleteShow()">
             <span class="icon is-small">
               <i class="mdi mdi-trash-can-outline"></i>
             </span>
@@ -22,8 +22,8 @@
         </p>          
       </div>
     </div>
-    <filter-bar qa-data="job-list-filter"></filter-bar>
-    <vuetable qa-data="job-list-table" ref="jobList"
+    <filter-bar></filter-bar>
+    <vuetable ref="connectionList"
       :api-url="apiUrl"
       :fields="fields"
       data-path="data"
@@ -35,38 +35,41 @@
       :css="css.table"
       :append-params="moreParams"      
     >
-      <template slot="job-name" slot-scope="props">
-          <router-link :qa-data="`${props.rowData.name}`" :to="`/jobs/${props.rowData.id}`">{{ props.rowData.name }}</router-link>
-      </template>    
+      <template slot="connection-name" slot-scope="props">
+        <router-link :to="`/connections/${props.rowData.id}`">{{ props.rowData.name }}</router-link>
+      </template>     
+      <template slot="connection-summary" slot-scope="props">
+        <span>{{ `${props.rowData.login}@${props.rowData.host}:${props.rowData.port}` }}</span>
+      </template>         
     </vuetable>
     <div class="columns">
       <div class="column is-paddingless">
-        <vuetable-pagination-info qa-data="job-list-pagination-info" ref="jobListPaginationInfo"
+        <vuetable-pagination-info ref="connectionListPaginationInfo"
         ></vuetable-pagination-info>
       </div>
       <div class="column">
-        <vuetable-pagination qa-data="job-list-pagination" ref="jobListPagination"
+        <vuetable-pagination ref="connectionListPagination"
           @vuetable-pagination:change-page="onChangePage"
           :css="css.pagination"
         ></vuetable-pagination>
       </div>
     </div>   
-    <div class="modal" qa-data="job-delete-modal" v-bind:class="{ 'is-active': deleteDialogIsVisible }" v-on:keyup.esc="deleteDialogIsVisible = false">
+    <div class="modal" v-bind:class="{ 'is-active': deleteDialogIsVisible }" v-on:keyup.esc="deleteDialogIsVisible = false">
       <div class="modal-background"></div>
-      <div class="modal-content" id="job-delete-modal-content">
+      <div class="modal-content" id="connection-delete-modal-content">
         <div class="card">
           <div class="card-content">
             <div class="content">
               <article class="message is-danger">
                 <div class="message-body">
-                  Once you delete a job, there is no going back. <br/>
-                  Please be certain. Type <span qa-data="job-delete-modal-job-name" ><b>{{ selectedJobName }}</b></span> to confirm.<br/><br/>
+                  Once you delete a connection, there is no going back. <br/>
+                  Please be certain. Type <span><b>{{ selectedConnectionName }}</b></span> to confirm.<br/><br/>
                   <div class="field has-addons">
                     <div class="control">
-                      <input class="input" qa-data="job-delete-modal-text" v-model="jobNameToDelete" type="text" placeholder="Job name">
+                      <input class="input" v-model="connectionNameToDelete" type="text" placeholder="Connection name">
                     </div>
                     <div class="control">
-                      <a class="button is-danger" qa-data="job-delete-modal-confirm" :disabled="deleteLocked" @click="executeJobDeletion">
+                      <a class="button is-danger" :disabled="deleteLocked" @click="executeConnectionDeletion">
                         Delete
                       </a>
                     </div>
@@ -77,7 +80,7 @@
           </div>
         </div>
       </div>
-      <button class="modal-close is-large" qa-data="job-delete-modal-close" aria-label="close" @click="deleteDialogIsVisible = false"></button>
+      <button class="modal-close is-large" aria-label="close" @click="deleteDialogIsVisible = false"></button>
     </div>                
   </div>
 </template>
@@ -87,10 +90,10 @@ import Vue from 'vue'
 import Vuetable from 'vuetable-2'
 import VuetablePagination from '../../../node_modules/vuetable-2/src/components/VuetablePagination.vue'
 import VuetablePaginationInfo from '../../../node_modules/vuetable-2/src/components/VuetablePaginationInfo.vue'
-import FilterBar from './JobListFilterBar.vue'
+import FilterBar from './ConnectionListFilterBar.vue'
 
 import vue_css from '../table-style.js'
-import fields_definition from './joblist-fields-defintion.js'
+import fields_definition from './connectionlist-fields-defintion.js'
 import { EventBus } from '../../components/utils.js';
 
 import config from '../config.js';
@@ -101,12 +104,12 @@ export default {
     return {
       moreParams: {},
       selectedRow: null,
-      selectedJobName: null,
+      selectedConnectionName: null,
       deleteDialogIsVisible: false,
-      jobNameToDelete: null,
+      connectionNameToDelete: null,
       css: vue_css,
       fields: fields_definition,
-      apiUrl: `${config.apiUrl}/jobs`,
+      apiUrl: `${config.apiUrl}/connections`,
       sortOrder: [
         {
           field: 'created_on',
@@ -116,34 +119,34 @@ export default {
     }
   },
   created() {
-    EventBus.$on('job-list-filter-set', v => this.onFilterSet(v));
-    EventBus.$on('job-list-filter-reset', v => this.onFilterReset());
+    EventBus.$on('connection-list-filter-set', v => this.onFilterSet(v));
+    EventBus.$on('connection-list-filter-reset', v => this.onFilterReset());
   },  
   methods: {
     onFilterReset() {
       this.moreParams = {};
-      Vue.nextTick( () => this.$refs.jobList.refresh());
+      Vue.nextTick( () => this.$refs.connectionList.refresh());
     },
     onFilterSet(filterText) {
       this.moreParams = {
-          'filter': filterText          
-      };            
-      Vue.nextTick( () => this.$refs.jobList.refresh());
+          'filter': filterText
+      };
+      Vue.nextTick( () => this.$refs.connectionList.refresh());
     },
     onPaginationData (paginationData) {
-      this.$refs.jobListPagination.setPaginationData(paginationData)
-      this.$refs.jobListPaginationInfo.setPaginationData(paginationData)
+      this.$refs.connectionListPagination.setPaginationData(paginationData)
+      this.$refs.connectionListPaginationInfo.setPaginationData(paginationData)
     },
     onChangePage (page) {
-      this.$refs.jobList.changePage(page)
+      this.$refs.connectionList.changePage(page)
     },
     async onCellClicked (data, field, event) {
       console.log(data.id);
       this.selectedRow = data.id;   
-      this.selectedJobName = data.name;        
+      this.selectedConnectionName = data.name;        
     },
-    refreshJobList() {
-      this.$refs.jobList.refresh();
+    refresh() {
+      this.$refs.connectionList.refresh();
     },
     onRowClass (dataItem, index) {
       return (dataItem.id == this.selectedRow) ? 'is-selected' : ''
@@ -151,14 +154,14 @@ export default {
     modalDeleteShow: function() {
       if(this.selectedRow !== null) {
         this.deleteDialogIsVisible = true;
-        this.jobNameToDelete = '';
+        this.connectionNameToDelete = '';
       }
     },
-    executeJobDeletion: async function() {      
+    executeConnectionDeletion: async function() {      
       try {        
         const response = await axios.delete(`${this.apiUrl}/${this.selectedRow}`);
         this.selectedRow = null;
-        this.refreshJobList();
+        this.refresh();
         this.deleteDialogIsVisible = false;
       } catch (error) {
         EventBus.$emit('app-error', utils.parceApiError(error));
@@ -167,7 +170,7 @@ export default {
   },
   computed: {
     deleteLocked: function() {
-      return !(this.selectedJobName === this.jobNameToDelete);
+      return !(this.selectedConnectionName === this.connectionNameToDelete);
     }
   },
   components: {
@@ -179,7 +182,7 @@ export default {
 }
 </script>
 <style lang="scss" >
-  #job-delete-modal-content {
+  #connection-delete-modal-content {
     width: 430px;    
   }
 </style>

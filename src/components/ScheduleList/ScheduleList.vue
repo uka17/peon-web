@@ -3,7 +3,7 @@
     <div class="columns">   
       <div class="column">
        <p class="control">
-          <button class="button is-success" title="Create new schedule" @click="modalNewShow()">
+          <button qa-data="create-new-schedule" class="button is-success" title="Create new step" @click="modalNewShow()">
             <span class="icon is-small">
               <i class="mdi mdi-shape-square-plus"></i>
             </span>
@@ -13,7 +13,7 @@
       </div>
       <div class="column">
         <p class="control">
-	      <button class="button is-danger is-pulled-right" :disabled="clickedRow === null" title="Delete selected schedule" @click="deleteSelected()">
+	      <button qa-data="delete-schedule" class="button is-danger is-pulled-right" :disabled="clickedRow === null" title="Delete selected schedule" @click="deleteSelected()">
             <span class="icon is-small">
               <i class="mdi mdi-trash-can-outline"></i>
             </span>
@@ -21,7 +21,7 @@
         </p>          
       </div>
     </div>
-    <vuetable ref="scheduleList"
+    <vuetable qa-data="schedule-list" ref="scheduleList"
       :api-mode="false"
       :data="scheduleList"
       :fields="fields"

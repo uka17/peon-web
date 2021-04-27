@@ -5,14 +5,14 @@
         <div class="field is-grouped">
           <div class="field has-addons">
             <p class="control">
-              <button class="button" :disabled="clickedRow === null || clickedRow == 1" title="Move step up" @click="moveUpSelected()">
+              <button qa-data="move-up-selected-step" class="button" :disabled="clickedRow === null || clickedRow == 1" title="Move step up" @click="moveUpSelected()">
                 <span class="icon is-small">
                   <i class="mdi mdi-arrow-up-bold"></i>
                 </span>
               </button>
             </p>
             <p class="control">
-              <button class="button" :disabled="clickedRow === null || clickedRow == stepList.length" title="Move step down" @click="moveDownSelected()">
+              <button qa-data="move-down-selected-step" class="button" :disabled="clickedRow === null || clickedRow == stepList.length" title="Move step down" @click="moveDownSelected()">
                 <span class="icon is-small">
                   <i class="mdi mdi-arrow-down-bold"></i>
                 </span>
@@ -22,7 +22,7 @@
           <span>&nbsp;</span>
           <div class="field has-addons">      
             <p class="control">
-              <button class="button is-success" title="Create new step" @click="modalNewShow()">
+              <button qa-data="create-new-step" class="button is-success" title="Create new step" @click="modalNewShow()">
                 <span class="icon is-small">
                   <i class="mdi mdi-shape-square-plus"></i>
                 </span>
@@ -34,7 +34,7 @@
       </div>
       <div class="column">
         <p class="control">
-          <button class="button is-danger is-pulled-right" :disabled="clickedRow === null" title="Delete selected step" @click="deleteSelected()">
+          <button qa-data="delete-selected-step" class="button is-danger is-pulled-right" :disabled="clickedRow === null" title="Delete selected step" @click="deleteSelected()">
             <span class="icon is-small">
               <i class="mdi mdi-trash-can-outline"></i>
             </span>
@@ -43,7 +43,7 @@
       </div>
     </div>
     
-    <vuetable ref="stepList"
+    <vuetable qa-data="step-list" ref="stepList"
       :api-mode="false"
       :data="stepList"
       :fields="fields"
@@ -52,8 +52,8 @@
       :css="css.table"
     >
       <template slot="step-name" slot-scope="props">
-        <a @click="modalEditShow(props.rowData)">{{ props.rowData.name }}</a>
-      </template>    
+        <a :qa-data="`${props.rowData.name}`" @click="modalEditShow(props.rowData)">{{ props.rowData.name }}</a>
+      </template>
     </vuetable>
     <p id="step-list-empty-error" v-if="this.stepList.length === 0" class="help is-danger">{{ messages.stepListShouldNotBeEmpty['en'] }}</p>
     <step ref="stepDialog" v-on:step-modal-save="save($event)" v-on:step-modal-new="create($event)"></step>

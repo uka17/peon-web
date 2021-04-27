@@ -3,21 +3,21 @@
     <div class="field">
       <label class="label">Name*</label>
       <div class="control">
-        <input v-model="job.name" id="job-dialog-name" class="input" v-bind:class="{ 'is-danger': jobFieldIsValid('name') !== '' }" type="text" placeholder="Job name">
+        <input v-model="job.name" id="job-dialog-name" qa-data="job-dialog-name" class="input" v-bind:class="{ 'is-danger': jobFieldIsValid('name') !== '' }" type="text" placeholder="Job name">
       </div>
       <p id="job-dialog-name-error" class="help is-danger">{{ jobFieldIsValid('name') }}</p>
     </div>
     <div class="field">
       <div class="control">
         <label class="checkbox">
-          <input id="job-dialog-enabled" type="checkbox" v-model="job.enabled"> Enabled
+          <input qa-data="job-dialog-enabled" type="checkbox" v-model="job.enabled"> Enabled
         </label>
       </div>
     </div>    
     <div class="field">
       <label class="label">Description</label>
       <div class="control">
-        <textarea class="textarea" id="job-dialog-description" placeholder="Job description"  v-model="job.description"></textarea>
+        <textarea class="textarea" id="job-dialog-description" qa-data="job-dialog-description" placeholder="Job description"  v-model="job.description"></textarea>
       </div>
     </div>
     <div class="columns">

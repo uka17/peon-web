@@ -1,9 +1,9 @@
 <template>
   <div class="modal" v-bind:class="{ 'is-active': modalIsActive }" v-on:keyup.esc="modalClose()">
     <div class="modal-background"></div>
-    <div class="modal-card" id="schedule-modal-content">
+    <div id="schedule-modal-content" class="modal-card">
       <header class="modal-card-head">
-        <p class="modal-card-title">Schedule properties: {{schedule.name}}</p>
+        <p class="modal-card-title">Schedule: {{schedule.name}}</p>
         <button class="delete" aria-label="close" @click="modalClose"></button>
       </header>
       <section class="modal-card-body">

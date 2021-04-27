@@ -3,21 +3,21 @@
     <div class="modal-background"></div>
     <div class="modal-card">
       <header class="modal-card-head">
-        <p class="modal-card-title">Step properties: {{step.name}}</p>
-        <button class="delete" aria-label="close" @click="modalClose"></button>
+        <p class="modal-card-title">Step: {{step.name}}</p>
+        <button class="delete" qa-data="step-modal-close" aria-label="close" @click="modalClose"></button>
       </header>
       <section class="modal-card-body">
         <div class="field">
           <label class="label">Name*</label>
           <div class="control">
-            <input v-model="step.name" id="step-dialog-name" class="input" type="text" v-bind:class="{ 'is-danger': fieldIsValid('name') !== '' }" placeholder="Step name">
+            <input qa-data="step-name" v-model="step.name" class="input" type="text" v-bind:class="{ 'is-danger': fieldIsValid('name') !== '' }" placeholder="Step name">
           </div>
           <p id="step-dialog-name-error" class="help is-danger">{{ fieldIsValid('name') }}</p>
         </div>
         <div class="field">
           <div class="control">
             <label class="checkbox">
-              <input type="checkbox" id="step-dialog-enabled" v-model="step.enabled"> Enabled
+              <input qa-data="step-enabled" type="checkbox" v-model="step.enabled"> Enabled
             </label>
           </div>
         </div>
@@ -34,8 +34,8 @@
         </div>           
         <div class="field">
           <label class="label">Command*</label>
-          <div class="control">
-            <textarea class="textarea" placeholder="Job description" v-bind:class="{ 'is-danger': fieldIsValid('command') !== '' }" v-model="step.command" id="command-code"></textarea>
+          <div class="control" v-bind:class="{ 'is-danger': fieldIsValid('name') !== '' }" >
+            <textarea qa-data="step-command" class="textarea" placeholder="Job description" v-bind:class="{ 'is-danger': fieldIsValid('command') !== '' }" v-model="step.command" id="command-code"></textarea>
           </div>
           <p id="step-dialog-command-error" class="help is-danger">{{ fieldIsValid('command') }}</p>
         </div>
@@ -43,26 +43,28 @@
           <div class="field has-addons">
             <p class="control">
               <input 
+                qa-data="step-retry-number"
                 id="retry-number" class="input" maxlength="2" @keypress="isNumber($event)" type="text"
                 v-model.number="retryAttempts.number" 
                 v-bind:class="{ 'is-danger': fieldIsValid('retryAttempts.number') !== '' }" >
             </p>
             <p class="control">
-              <a class="button is-static" v-if="retryAttempts.number !== 0">
+              <a qa-data="per-each-label" class="button is-static" v-if="retryAttempts.number !== 0">
                 per each
               </a>
-              <a class="button is-static" v-if="retryAttempts.number === 0">
+              <a qa-data="retries-label" class="button is-static" v-if="retryAttempts.number === 0">
                 retries
               </a>                
             </p>
             <p class="control" v-if="retryAttempts.number !== 0">
               <input 
+                qa-data="step-retry-interval"
                 id="retry-interval" class="input" maxlength="3" @keypress="isNumber($event)" type="text"
                 v-model.number="retryAttempts.interval"                   
                 v-bind:class="{ 'is-danger': fieldIsValid('retryAttempts.interval') !== '' }"
               > 
             </p>
-            <p class="control" v-if="retryAttempts.number !== 0">
+            <p qa-data="minutes-label" class="control" v-if="retryAttempts.number !== 0">
               <a class="button is-static">
                 minute(s)          
               </a>
@@ -72,7 +74,7 @@
           <p id="step-dialog-retry-interval-error" class="help is-danger">{{ fieldIsValid('retryAttempts.interval') }}</p>                            
         <div class="field">
           <label class="label">On succeed</label>
-          <div class="control">
+          <div qa-data="step-result-action-succeed" class="control">
             <step-result-action 
               v-on:step-result-action-update="onSucceedActionUpdate($event)"               
               v-bind:stepList="stepList"
@@ -82,7 +84,7 @@
         </div>     
         <div class="field">
           <label class="label">On failure</label>
-          <div class="control">
+          <div qa-data="step-result-action-failure" class="control">
             <step-result-action 
               v-on:step-result-action-update="onFailureActionUpdate($event)" 
               v-bind:stepList="stepList"
@@ -92,9 +94,9 @@
         </div>              
       </section>
       <footer class="modal-card-foot buttons is-right">
-          <button v-if="!isNew" id="step-dialog-save" class="button is-link" @click="save" v-bind:class="{ 'is-static': !formIsValid }" title="Save step changes">Save changes</button>
-          <button v-if="isNew" id="step-dialog-create" class="button is-success" @click="create" v-bind:class="{ 'is-static': !formIsValid }" title="Create step">Create step</button>
-          <button @click="modalClose" id="step-dialog-cancel" class="button">Cancel</button>
+          <button qa-data="step-save" v-if="!isNew" class="button is-link" @click="save" v-bind:class="{ 'is-static': !formIsValid }" title="Save step changes">Save changes</button>
+          <button qa-data="step-create" v-if="isNew" class="button is-success" @click="create" v-bind:class="{ 'is-static': !formIsValid }" title="Create step">Create step</button>
+          <button qa-data="step-cancel" @click="modalClose" class="button">Cancel</button>
       </footer>
     </div>
   </div>
