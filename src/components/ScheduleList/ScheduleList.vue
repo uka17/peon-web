@@ -50,7 +50,7 @@ import scheduleSummary from '../Schedule/schedule-summary.js'
 import messages from '../translation/messages.js'
 import config from '../config.js';
 import utils from '../utils.js';
-import nanoid from 'nanoid';
+import { nanoid } from 'nanoid';
 
 export default {
   data () {

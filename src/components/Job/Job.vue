@@ -61,7 +61,7 @@
 import JobGeneralTab from './JobGeneralTab.vue'
 import StepList from '../StepList/StepList.vue'
 import ScheduleList from '../ScheduleList/ScheduleList.vue'
-import nanoid from 'nanoid';
+import { nanoid } from 'nanoid';
 
 import config from '../config.js';
 import utils from '../utils.js';
