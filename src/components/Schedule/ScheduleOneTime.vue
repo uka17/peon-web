@@ -2,8 +2,7 @@
   <div class="field">
     <label class="label">Date and time*</label>
     <div class="control">
-      <input v-model="schedule.oneTime" class="input" type="text" v-bind:class="{ 'is-danger': fieldIsValid('name') !== '' }" placeholder="Execution date and time">
-        <date-time-picker :value="schedule.oneTime" 
+        <date-time-picker :value="this.oneTime" 
           :dayStr="weekDays" 
           :monthStr="monthStr" 
           :btnStr="btnStr" 
@@ -13,7 +12,6 @@
           @input="chooseDateTime">          
             </date-time-picker>
     </div>
-    <p id="schedule-dialog-onetime-error" class="help is-danger">{{ fieldIsValid('oneTime') }}</p>
   </div>  
 </template>
 
@@ -25,7 +23,7 @@ import validate from 'validate.js';
 import constraints from './schedule-validation.js';
 import translation from '../translation/controls.js';
 import utils from '../utils.js';
-
+import dayjs from 'dayjs'
 
 export default {
   data() {
@@ -53,7 +51,10 @@ export default {
     }    
   },
   computed: {
-
+    'oneTime': function() {
+      console.log("time: ", this.schedule.oneTime)
+      return this.schedule.oneTime !== undefined ? dayjs(this.schedule.oneTime).format('YYYY-MM-DD') : dayjs().format('YYYY-MM-DD');
+    },
   },
   components: {
     //'schedule-result-action': ScheduleResultAction
