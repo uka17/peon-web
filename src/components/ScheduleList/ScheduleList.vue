@@ -3,7 +3,7 @@
     <div class="columns">   
       <div class="column">
        <p class="control">
-          <button qa-data="create-new-schedule" class="button is-success" title="Create new step" @click="modalNewShow()">
+          <button qa-data="create-new-schedule" class="button is-success" title="Create new schedule" @click="modalNewShow()">
             <span class="icon is-small">
               <i class="mdi mdi-shape-square-plus"></i>
             </span>

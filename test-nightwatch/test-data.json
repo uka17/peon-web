@@ -46,6 +46,12 @@
       ],
       "schedules": [
          {
+            "name": "One time",
+            "enabled": true,
+            "oneTime": "2030-01-20T11:00:00.000Z"
+         },
+         {
+            "name": "Weekly based",
             "enabled": true,
             "startDateTime": "2018-01-31T20:55:23.071Z",
             "eachNWeek": 1,

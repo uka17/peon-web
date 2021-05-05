@@ -61,25 +61,27 @@ describe('job', function() {
       .assert.elementPresent("#steps-tab")
       .assert.elementPresent("#steps-tab span[class='icon has-text-danger']")
       .assert.elementPresent("#schedules-tab")
+      .assert.elementPresent("#schedules-tab span[class='icon has-text-danger']")
       .assert.elementPresent("#notifications-tab")
       //buttons check
       .assert.elementPresent("button[qa-data='job-cancel']")
       .assert.elementPresent("button[qa-data='job-create']")
       .assert.cssClassPresent('#button-job-create', 'button is-success is-static')
       .assert.cssClassPresent('#button-job-cancel', 'button')
-      .assert.cssClassPresent('#button-job-create', 'button is-success')
       //text fields and controls check
       .assert.cssClassPresent('#job-dialog-name', 'input is-danger')
       .assert.elementPresent("input[qa-data='job-dialog-enabled']")
   });
 
-  test('job. Tab General and Steps change control states based on entered values', function (browser) {
+  test.only('job. Tab General, Steps and Schedules change control states based on entered values', function (browser) {
     browser      
       //open new job dialog
       .click('a[href="#/jobs/create"]')
       .waitForElementVisible('#job-general')
       //check initial state (warnings are in place)
       .assert.elementPresent("#general-tab span[class='icon has-text-danger']")
+      .assert.elementPresent("#schedules-tab span[class='icon has-text-danger']")
+      .assert.elementPresent("#steps-tab span[class='icon has-text-danger']")
       .assert.elementPresent("button[qa-data='job-create']")
       .assert.cssClassPresent('#button-job-create', 'button is-success is-static')      
       .assert.containsText('#job-dialog-name-error', 'must')
@@ -88,6 +90,7 @@ describe('job', function() {
       .assert.not.elementPresent("#general-tab span[class='icon has-text-danger']")
       .assert.not.valueContains('#job-dialog-name-error', "must be")
       .assert.cssClassPresent('#button-job-create', 'button is-success is-static')      
+      //steps tab
       .click('a#steps-tab')
       //check initial state (warnings are in place)
       .assert.elementPresent("#steps-tab span[class='icon has-text-danger']")
@@ -104,9 +107,17 @@ describe('job', function() {
       .keys(["script"]) 
       .assert.not.valueContains('#step-dialog-command-error', "can not be")
       .click('button[qa-data="step-create"]')
-      //now job can be saved
+      //steps warning was removed from tab
       .assert.not.elementPresent("#steps-tab span[class='icon has-text-danger']")
-      .assert.cssClassPresent('#button-job-create', 'button is-success')
+      //schedules tab
+      .click('a#schedules-tab')
+      //check initial state (warnings are in place)
+      .assert.elementPresent("#steps-tab span[class='icon has-text-danger']")
+      .assert.visible('button[qa-data="create-new-schedule"')
+      .assert.visible('table[qa-data="schedule-list"] .vuetable-empty-result')      
+      .click('button[qa-data="create-new-schedule"')      
+      //now job can be saved
+      //.assert.cssClassPresent('#button-job-create', 'button is-success')
   });
 
 

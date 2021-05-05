@@ -38,20 +38,61 @@
         </div>
         <!-- Onetime --> 
         <div class="field" v-bind:class="{ 'is-hidden': scheduleType !== 'onetime' }">
-          <schedule-one-time 
-            v-on:schedule-one-time-update="scheduleOneTimeChange($event.value)" 
-            v-model="schedule.oneTime">
-          </schedule-one-time>          
+          <label class="label">Date and time*</label>
+          <div class="control"> 
+            <schedule-one-time v-model="oneTime"></schedule-one-time>
+            <input type="hidden" v-model="oneTime" qa-data="schedule-onetime">
+            <date-time-pick                 
+                id="schedule-onetime"                
+                v-model="oneTime" placeholder="Execution date and time"                
+                :pickTime="true"
+                :inputAttributes="{readonly: false, class: `input ${ fieldIsValid('oneTime', schedule, constraints('en')['onetime']) !== '' ? 'is-danger' : ''}`}"
+                :format="config.dateTimeFormatSec"
+                :isDateDisabled="dateIsInPast"
+                >
+            </date-time-pick>
+            <date-picker v-model="oneTime" type="datetime"></date-picker>   
+          </div>
+          <p id="schedule-onetime-error" class="help is-danger">{{ fieldIsValid('oneTime', schedule, constraints('en')['onetime']) }}</p>
         </div>  
         <!-- Onetime END --> 
         <!-- Duration --> 
         <div class="field" v-bind:class="{ 'is-hidden': scheduleType === 'onetime' }">
-          <schedule-duration 
-            v-on:schedule-duration-start-update="scheduleDurationStartUpdate($event.value)" 
-            v-on:schedule-duration-end-update="scheduleDurationEndUpdate($event.value)"
-            v-bind:start-date-time="schedule.startDateTime"
-            v-bind:end-date-time="schedule.endDateTime">
-            </schedule-duration>
+          <label class="label">Duration*</label>                 
+          <div class="field has-addons">
+            <p class="control">
+              <a class="button is-static">
+                Start date
+              </a>           
+            </p>              
+            <p class="control">
+              <date-time-pick 
+                id="schedule-duaration-start"
+                v-model="startDateTime" placeholder="Valid from"                
+                :inputAttributes="{readonly: true, class: `input ${ fieldIsValid('startDateTime', schedule, constraints('en')['startEndDateTime']) !== '' ? 'is-danger' : ''}`}"
+                :pickTime="true"
+                :format="config.dateTimeFormatSec"
+                >
+              </date-time-pick>                  
+            </p>
+            <p v-if="!endless" class="control">
+              <a class="button is-static">
+                End date
+              </a>           
+            </p>  
+            <p v-if="!endless" class="control">              
+              <date-time-pick 
+                id="schedule-duaration-end"
+                :inputAttributes="{readonly: true, class: `input ${ fieldIsValid('endDateTime', schedule, constraints('en')['startEndDateTime']) !== '' ? 'is-danger' : ''}`}"
+                v-model="endDateTime" placeholder="Valid till"                
+                :pickTime="true"
+                :format="config.dateTimeFormatSec"
+                >
+              </date-time-pick>              
+            </p>
+          </div> 
+          <p id="schedule-start-date-time-error" class="help is-danger">{{ fieldIsValid('startDateTime', schedule, constraints('en')['startEndDateTime']) }}</p>          
+          <p v-if="!this.endless" id="schedule-end-date-time-error" class="help is-danger">{{ fieldIsValid('endDateTime', schedule, constraints('en')['startEndDateTime']) }}</p>
         </div>  
         <div class="field" v-bind:class="{ 'is-hidden': scheduleType === 'onetime' }">
           <div class="control">
@@ -242,12 +283,11 @@ import utils from '../utils.js';
 import config from '../config.js';
 import weekMonthReference from './week-month-reference.js';
 import DatePick from 'vue-date-pick';
-import 'vue-date-pick/dist/vueDatePick.css';
 import DatePicker from 'vue2-datepicker';
+import 'vue-date-pick/dist/vueDatePick.css';
 import 'vue2-datepicker/index.css';
 
-import ScheduleOneTime from './ScheduleOneTime.vue'
-import ScheduleDuration from './ScheduleDuration.vue'
+import OneTime from './ScheduleOneTime'
 
 import dayjs from 'dayjs';
 
@@ -424,23 +464,16 @@ export default {
         }
       }
       return result;
-    },
-    scheduleOneTimeChange(value) {
-      this.schedule.oneTime = dayjs(value).isValid() ? dayjs(value).toISOString() : '';      
-    },
-    scheduleDurationStartUpdate(value) {
-      this.schedule.startDateTime = dayjs(value).isValid() ? dayjs(value).toISOString() : '';      
-    },
-    scheduleDurationEndUpdate(value) {
-      this.schedule.endDateTime = dayjs(value).isValid() ? dayjs(value).toISOString() : '';      
-    }                
+    }        
   },
   computed: {
     oneTime: {
       get: function() {
+        console.log('get', this.schedule.oneTime);
         return this.getDateTime(this.schedule.oneTime);
       },
       set: function(val) {
+        console.log('set', val === '' ? '' : dayjs(val).toISOString());
         this.schedule.oneTime = val === '' ? '' : dayjs(val).toISOString();
       }
     },
@@ -464,8 +497,7 @@ export default {
   components: {
     'date-time-pick': DatePick,
     'date-picker': DatePicker,
-    'schedule-one-time': ScheduleOneTime,
-    'schedule-duration': ScheduleDuration
+    'schedule-one-time': OneTime
   }
 }
 </script>
