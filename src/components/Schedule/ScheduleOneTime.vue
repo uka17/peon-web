@@ -2,8 +2,10 @@
   <div class="field">
     <label class="label">Date and time*</label>
     <div class="control">
+      <div v-bind:class="{ 'custom-warning': fieldIsValid('oneTime', { 'oneTime': oneTime }, constraints) !== '' }" >
         <date-time-picker v-model="oneTime" type="datetime">   
-            </date-time-picker>
+        </date-time-picker>
+      </div>
     </div>
     <p id="schedule-onetime-error" class="help is-danger">{{ fieldIsValid('oneTime', { 'oneTime': oneTime }, constraints) }}</p>                  
   </div>  
@@ -25,6 +27,12 @@ export default {
        constraints: {'oneTime': constraints('en')['onetime'].oneTime }     
     }
   },
+  methods: {
+    dateIsInPast(date) {
+      const currentDate = dayjs().subtract(1, 'day').valueOf();
+      return date < currentDate;
+    },
+  },
   props: ['value'],
   watch: {
     oneTime: function() {
@@ -38,5 +46,6 @@ export default {
 </script>
 
 <style lang="scss" >
+  @import './schedule.css';
 
 </style>

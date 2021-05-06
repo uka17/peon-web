@@ -469,11 +469,9 @@ export default {
   computed: {
     oneTime: {
       get: function() {
-        console.log('get', this.schedule.oneTime);
         return this.getDateTime(this.schedule.oneTime);
       },
       set: function(val) {
-        console.log('set', val === '' ? '' : dayjs(val).toISOString());
         this.schedule.oneTime = val === '' ? '' : dayjs(val).toISOString();
       }
     },

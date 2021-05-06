@@ -1,5 +1,4 @@
 const dayjs = require('dayjs');
-console.log(dayjs().format('YYYY-M-D'));
 module.exports = {
   'create job with 2 steps and find it in job list' : function (browser) {
     const jobName = `f${(+new Date).toString(16)}`;

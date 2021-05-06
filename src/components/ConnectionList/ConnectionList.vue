@@ -141,7 +141,6 @@ export default {
       this.$refs.connectionList.changePage(page)
     },
     async onCellClicked (data, field, event) {
-      console.log(data.id);
       this.selectedRow = data.id;   
       this.selectedConnectionName = data.name;        
     },

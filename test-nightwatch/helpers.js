@@ -9,7 +9,6 @@ function formatDateTime(val) {
 module.exports = {
   '@disabled': true,
   createTestJob: function createTestJob(browser, testJob) {
-    console.log(formatDateTime(testJob.schedules[0].oneTime));
     browser  
       //create new job for all tests where job is needed
       .waitForElementVisible('a[href="#/jobs"]')

@@ -1,0 +1,16 @@
+.mx-input-wrapper input {
+  height: 40px !important   
+}
+
+.custom-warning, .custom-warning-inline {
+  border: 1px solid #f14668;
+  display: inline-block;
+  margin-left: 1px;
+}
+.custom-warning {
+  border-radius: 4px;
+}
+p.control .mx-input-wrapper input {
+  height: 40px !important;   
+  border-radius: 0px !important;   
+}

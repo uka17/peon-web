@@ -1,5 +1,5 @@
 <template>
-  <div class="field">
+  <div>
     <label class="label">Duration*</label>                 
     <div class="field has-addons">
       <p class="control">
@@ -7,22 +7,31 @@
           Start date
         </a>           
       </p>              
-      <p class="control">
-        <date-time-picker v-model="startDateTimeValue" type="datetime">   
-            </date-time-picker>               
-      </p>
-      <p id="schedule-start-date-time-error" class="help is-danger">{{ fieldIsValid('startDateTime', startDateTimeValue, constraints('en')['startEndDateTime']) }}</p>                
+      <div v-bind:class="{ 'custom-warning-inline': fieldIsValid('startDateTime', { 'startDateTime': startDateTimeValue }, startDateTimeConstraints) !== '' }" >
+        <p class="control">        
+          <date-time-picker v-model="startDateTimeValue" type="datetime">   
+            </date-time-picker>                       
+        </p>
+      </div>          
       <p v-if="!endlessValue" class="control">
         <a class="button is-static">
           End date
         </a>           
       </p>  
-      <p v-if="!endlessValue" class="control">              
-        <date-time-picker v-model="endDateTimeValue" type="datetime">   
+      <div v-if="!endlessValue" v-bind:class="{ 'custom-warning-inline': fieldIsValid('endDateTime', { 'endDateTime': endDateTimeValue }, endDateTimeConstraints) !== '' }" >        
+        <p class="control">          
+          <date-time-picker v-model="endDateTimeValue" type="datetime">   
             </date-time-picker>           
-      </p>
-      <p v-if="!this.endlessValue" id="schedule-end-date-time-error" class="help is-danger">{{ fieldIsValid('endDateTime', endDateTimeValue, constraints('en')['startEndDateTime']) }}</p>      
-    </div> 
+        </p>
+      </div>
+    </div>
+    <p id="schedule-start-date-time-error" class="help is-danger">{{ fieldIsValid('startDateTime', { 'startDateTime': startDateTimeValue }, startDateTimeConstraints) }}</p>
+    <p v-if="!this.endlessValue" id="schedule-end-date-time-error" class="help is-danger">{{ fieldIsValid('endDateTime', { 'endDateTime': endDateTimeValue }, endDateTimeConstraints) }}</p>      
+    <div class="control">
+      <label class="checkbox">
+        <input type="checkbox" v-model="endlessValue"> Endless schedule duration
+      </label>
+    </div>
   </div>  
 </template>
 
@@ -41,17 +50,21 @@ export default {
        endDateTimeValue: this.endDateTime,
        endlessValue: this.endless,
        fieldIsValid,
-       constraints     
+       startDateTimeConstraints: {'startDateTime': constraints('en')['startEndDateTime'].startDateTime },
+       endDateTimeConstraints: {'endDateTime': constraints('en')['startEndDateTime'].endDateTime }   
     }
   },
   props: ['startDateTime', 'endDateTime', 'endless'],
   watch: {
-    startDateTime: function() {
-      this.$emit('schedule-duration-start-update', { value: this._startDateTime });
+    startDateTimeValue: function() {
+      this.$emit('schedule-duration-start-update', { value: this.startDateTimeValue });
     },
-    endDateTime: function() {
-      this.$emit('schedule-duration-end-update', { value: this._endDateTime });
-    }    
+    endDateTimeValue: function() {
+      this.$emit('schedule-duration-end-update', { value: this.endDateTimeValue });
+    }, 
+    endlessValue: function() {
+      this.$emit('schedule-endless-update', { value: this.endlessValue });
+    }        
   },
   components: {
     'date-time-picker': DatePicker
@@ -60,5 +73,5 @@ export default {
 </script>
 
 <style lang="scss" >
-
+  @import './schedule.css';
 </style>

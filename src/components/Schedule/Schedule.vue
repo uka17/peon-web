@@ -14,6 +14,7 @@
               v-bind:class="{ 'is-danger': fieldIsValid('name', schedule, constraints('en')[this.scheduleType]) !== '' }" 
               placeholder="Schedule name">
           </div>
+          <p id="schedule-name-error" class="help is-danger">{{ fieldIsValid('name', schedule, constraints('en')[this.scheduleType]) }}</p>
         </div>  
         <div class="field">
           <div class="control">
@@ -22,7 +23,6 @@
             </label>
           </div>
         </div>         
-        <p id="schedule-name-error" class="help is-danger">{{ fieldIsValid('name', schedule, constraints('en')[this.scheduleType]) }}</p>
         <div class="field">
           <label class="label">Schedule type*</label>
           <div class="control">
@@ -49,178 +49,50 @@
           <schedule-duration 
             v-on:schedule-duration-start-update="scheduleDurationStartUpdate($event.value)" 
             v-on:schedule-duration-end-update="scheduleDurationEndUpdate($event.value)"
+            v-on:schedule-endless-update="scheduleEndlessUpdate($event.value)"
             v-bind:start-date-time="schedule.startDateTime"
-            v-bind:end-date-time="schedule.endDateTime">
+            v-bind:end-date-time="schedule.endDateTime"
+            v-bind:endless="endless">
             </schedule-duration>
-        </div>  
-        <div class="field" v-bind:class="{ 'is-hidden': scheduleType === 'onetime' }">
-          <div class="control">
-            <label class="checkbox">
-              <input type="checkbox" v-model="endless"> Endless schedule duration
-            </label>
-          </div>
-        </div>                              
+        </div>                            
         <!-- Duration END--> 
-        <!-- Daily --> 
+        <!-- Each N day --> 
         <div class="field" v-bind:class="{ 'is-hidden': scheduleType !== 'daily' }">
-          <label class="label">Daily*</label>
-          <div class="field has-addons">
-            <p class="control">
-              <a class="button is-static">
-                Each
-              </a>           
-            </p>              
-            <p class="control">
-              <input id="schedule-eachnday"  type="text"                
-                v-bind:class="{ 'is-danger': fieldIsValid('eachNDay', schedule, constraints('en')['daily']) !== '' }"
-                maxlength="3" @keypress="isNumber($event)" v-model.number="schedule.eachNDay" class="input">
-            </p>
-            <p class="control">
-              <a class="button is-static">
-                days
-              </a>           
-            </p>  
-          </div>
-          <p id="schedule-eachnday-error" class="help is-danger">{{ fieldIsValid('eachNDay', schedule, constraints('en')['daily']) }}</p>
+          <schedule-daily
+            v-bind:each-n-day="schedule.eachNDay"
+            v-on:schedule-each-n-day-update="scheduleEachNDayUpdate($event.value)">
+          </schedule-daily>
         </div>
+        <!-- Each N day END--> 
+        <!-- Weekly --> 
         <div class="field" v-bind:class="{ 'is-hidden': scheduleType !== 'weekly' }">
-          <label class="label">Weekly*</label>
-          <div class="columns">
-            <div class="column is-narrow">
-              <div class="field has-addons">
-                <p class="control">
-                  <a class="button is-static">
-                    Each
-                  </a>           
-                </p>              
-                <p class="control">
-                  <input id="schedule-eachnweek"  type="text"                
-                    v-bind:class="{ 'is-danger': fieldIsValid('eachNWeek', schedule, constraints('en')['weekly']) !== '' }"
-                    maxlength="3" @keypress="isNumber($event)" v-model.number="schedule.eachNWeek" class="input">
-                </p>
-                <p class="control">
-                  <a class="button is-static">
-                    weeks
-                  </a>           
-                </p>  
-              </div>
-            </div>
-            <div class="column">
-              <div class="field"> 
-                <div class="control">
-                  <div class="buttons has-addons">                
-                    <button v-for="(value, index) in reference.weekDayList" class="button"
-                      v-bind:key="index" 
-                      v-bind:id="value.toLowerCase()" 
-                      v-bind:class="{ 'is-info': weekDyaIsToggled(index), 'is-danger is-outlined': fieldIsValid('dayOfWeek', schedule, constraints('en')['weekly']) !== '' }"
-                      @click="toggleWeekDay(index)">
-                        {{ value.substring(0, 3) }}
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>            
-          </div>                       
-          <p id="schedule-eachnweek-error" class="help is-danger">{{ fieldIsValid('eachNWeek', schedule, constraints('en')['weekly']) }}</p>                           
-          <p id="schedule-weekdays-error" class="help is-danger">{{ fieldIsValid('dayOfWeek', schedule, constraints('en')['weekly']) }}</p>
+          <schedule-weekly          
+            v-bind:each-n-week="schedule.eachNWeek"
+            v-bind:day-of-week="schedule.dayOfWeek"
+            v-on:schedule-each-n-week-update="scheduleEachNWeekUpdate($event.value)"
+            v-on:schedule-day-of-week-update="scheduleDayOfWeekUpdate($event.value)">
+          </schedule-weekly>
         </div>
+        <!-- Weekly END -->
+        <!-- Monthly -->
         <div class="field" v-bind:class="{ 'is-hidden': scheduleType !== 'monthly' }">
-          <div class="field">
-            <label class="label">Months*</label>
-            <div class="control">
-              <div class="buttons has-addons">                
-                <button v-for="(value, index) in reference.monthList" class="button"
-                  v-bind:key="index" 
-                  v-bind:id="value.toLowerCase()"
-                  v-bind:class="{ 'is-info': monthIsToggled(index), 'is-danger is-outlined': fieldIsValid('month', schedule, constraints('en')['monthly']) !== ''}" 
-                  @click="toggleMonth(index)">
-                    {{ value.substring(0, 3) }}
-                </button>
-              </div>
-            </div>     
-            <p id="schedule-months-error" class="help is-danger">{{ fieldIsValid('month', schedule, constraints('en')['monthly']) }}</p>
-          </div>         
-          <div class="field">
-            <label class="label">Month days*</label>
-            <div class="control">
-              <input v-model="schedule.day" class="input" type="text" 
-                v-bind:class="{ 'is-danger': fieldIsValid('day', schedule, constraints('en')['monthly']) !== '' }" 
-                placeholder="Month days comma separated list (e.g. 1,13,29)">
-            </div>
-            <p id="schedule-monthdays-error" class="help is-danger">{{ fieldIsValid('day', schedule, constraints('en')['monthly']) }}</p>
-          </div>            
+          <schedule-monthly
+            v-bind:day="schedule.day"
+            v-bind:month="schedule.month"
+            v-on:schedule-month-update="scheduleMonthUpdate($event.value)"
+            v-on:schedule-month-day-update="scheduleMonthDayUpdate($event.value)"
+            >
+          </schedule-monthly>
         </div>
-        <!-- Schedule types END--> 
+        <!-- Monthly END-->
         <!-- Daily frequency --> 
         <div v-bind:class="{ 'is-hidden': scheduleType === 'onetime' }">
-          <label class="label">Daily frequency*</label>
-          <div class="field">            
-            <div class="control">
-              <label class="radio">
-                <input type="radio" name="once" v-bind:value="false" v-model="every">
-                Once
-              </label>
-              <label class="radio">
-                <input type="radio" name="every" v-bind:value="true" v-model="every">
-                Periodicaly
-              </label>
-            </div>            
-          </div>
-          <div class="field" v-bind:class="{ 'is-hidden': every}">
-            <label class="label">Time*</label>
-            <div class="control">     
-              <input id="schedule-occurs-once-at" maxlength="8" type="text"
-              v-bind:class="{ 'is-danger': fieldIsValid('occursOnceAt', schedule.dailyFrequency, constraints('en')['occursOnceAt']) !== '' }"
-              v-model="schedule.dailyFrequency.occursOnceAt" class="input">   
-            </div>
-            <p id="schedule-occursonceat-error" class="help is-danger">{{ fieldIsValid('occursOnceAt', schedule.dailyFrequency, constraints('en')['occursOnceAt']) }}</p>
-          </div>   
-          <div v-bind:class="{ 'is-hidden': !every}">
-            <label class="label">Periodicity*</label>
-            <div class="field has-addons">
-              <p class="control">
-                <a class="button is-static">
-                  Starting
-                </a>           
-              </p>              
-              <p class="control">
-                <input id="schedule-occurs-every-start" maxlength="8" type="text"
-                  v-bind:class="{ 'is-danger': fieldIsValid('start', schedule.dailyFrequency, constraints('en')['every']) !== '' }"
-                  v-model="schedule.dailyFrequency.start" class="input">
-              </p>
-              <p class="control">
-                <a class="button is-static">
-                  till
-                </a>           
-              </p>  
-              <p class="control">              
-                <input id="schedule-occurs-every-end" maxlength="8" type="text"
-                  v-bind:class="{ 'is-danger': fieldIsValid('end', schedule.dailyFrequency, constraints('en')['every']) !== '' }"
-                  v-model="schedule.dailyFrequency.end" class="input">
-              </p>
-              <p class="control">
-                <a class="button is-static">
-                  every
-                </a>           
-              </p>
-              <p class="control">
-                <input id="schedule-interval-value" maxlength="3" @keypress="isNumber($event)" type="text"
-                  v-bind:class="{ 'is-danger': fieldIsValid('intervalValue', schedule.dailyFrequency.occursEvery, constraints('en')['intervalValue']) !== '' }" 
-                  v-model.number="schedule.dailyFrequency.occursEvery.intervalValue" class="input">
-              </p>                  
-              <p class="control">
-                <span class="select">
-                  <select v-model="schedule.dailyFrequency.occursEvery.intervalType">
-                    <option v-bind:value="`minute`">minute(s)</option>
-                    <option v-bind:value="`hour`">hour(s)</option>
-                  </select>
-                </span>
-              </p>                    
-            </div>
-            <p id="schedule-occurs-every-start-error" class="help is-danger">{{ fieldIsValid('start', schedule.dailyFrequency, constraints('en')['every']) }}</p>
-            <p id="schedule-occurs-every-end-error" class="help is-danger">{{ fieldIsValid('end', schedule.dailyFrequency, constraints('en')['every']) }}</p>
-            <p id="schedule-every-error" class="help is-danger">{{ fieldIsValid('intervalValue', schedule.dailyFrequency.occursEvery, constraints('en')['intervalValue']) }}</p>
-          </div>  
+          <schedule-daily-frequency
+            v-bind:daily-frequency="schedule.dailyFrequency"
+            v-bind:every="every"
+            v-on:schedule-daily-frequency-update="scheduleDailyFrequencyUpdate($event.value)"
+            v-on:schedule-daily-frequency-every-update="scheduleDailyFrequencyEveryUpdate($event.value)">
+          </schedule-daily-frequency>
         </div>        
         <!-- Daily frequency END-->                                          
       </section>      
@@ -240,14 +112,14 @@ import constraints from './schedule-validation.js';
 import scheduleTemplate from './schedule-template.js';
 import utils from '../utils.js';
 import config from '../config.js';
-import weekMonthReference from './week-month-reference.js';
-import DatePick from 'vue-date-pick';
-import 'vue-date-pick/dist/vueDatePick.css';
-import DatePicker from 'vue2-datepicker';
-import 'vue2-datepicker/index.css';
+import { fieldIsValid } from './schedule-helpers.js';
 
 import ScheduleOneTime from './ScheduleOneTime.vue'
 import ScheduleDuration from './ScheduleDuration.vue'
+import ScheduleDaily from './ScheduleDaily.vue'
+import ScheduleWeekly from './ScheduleWeekly.vue'
+import ScheduleDailyFrequency from './ScheduleDailyFrequency.vue'
+import ScheduleMonthly from './ScheduleMonthly.vue'
 
 import dayjs from 'dayjs';
 
@@ -260,10 +132,10 @@ export default {
       isNew: undefined,
       scheduleType: 'onetime',
       endless: true,
-      every: false,
-      reference: weekMonthReference['en'],
+      every: true,
       config: config,
-      constraints
+      constraints,
+      fieldIsValid
     }
   },
   methods: {
@@ -365,57 +237,13 @@ export default {
     modalClose: function() {
       this.$set(this, 'modalIsActive', false);
     },
-    isNumber: utils.isNumber,
-    toggleWeekDay(weekDay) {
-      let index = this.schedule.dayOfWeek.indexOf(weekDay);
-      if(index > -1) {
-        this.schedule.dayOfWeek.splice(index, 1);
-      } else {
-        this.schedule.dayOfWeek.push(weekDay);
-      }
-    },
-    weekDyaIsToggled(weekDay) {
-      if(this.schedule.dayOfWeek) {
-        return this.schedule.dayOfWeek.indexOf(weekDay) > -1
-      } else {
-        return false;
-      }
-    },
-    toggleMonth(month) {
-      let index = this.schedule.month.indexOf(month);
-      if(index > -1) {
-        this.schedule.month.splice(index, 1);
-      } else {
-        this.schedule.month.push(month);
-      }
-    },
-    monthIsToggled(month) {
-      if(this.schedule.month) {
-        return this.schedule.month.indexOf(month) > -1
-      } else {
-        return false;
-      }
-    },
-    dateIsInPast(date) {
-      const currentDate = dayjs().subtract(1, 'day').valueOf();
-      return date < currentDate;
-    },
-    getDateTime(val) {
-      let dateTime = Date.parse(val);
-      return !isNaN(dateTime) ? dayjs(dateTime).format(config.dateTimeFormatSec) : '';
-    },
-    fieldIsValid(field, source, constraints) {
-      const result = validate(source, constraints);
-      if(result && result.hasOwnProperty(field))
-        return result[field][0];
-      else
-        return '';
-    },
     formIsValid() {
       let result = validate(this.schedule, constraints('en')[this.scheduleType]) === undefined; 
       if(this.scheduleType !== 'onetime') {
         if(this.every) {
-          result = result && validate(this.schedule.dailyFrequency.occursEvery, constraints('en')['intervalValue']) === undefined; 
+          result = result 
+            && validate(this.schedule.dailyFrequency.occursEvery, constraints('en')['intervalValue']) === undefined
+            && validate(this.schedule.dailyFrequency, constraints('en')['every']) === undefined; 
         } else {
           result = result && validate(this.schedule.dailyFrequency, constraints('en')['occursOnceAt']) === undefined; 
         }
@@ -433,39 +261,42 @@ export default {
     },
     scheduleDurationEndUpdate(value) {
       this.schedule.endDateTime = dayjs(value).isValid() ? dayjs(value).toISOString() : '';      
-    }                
+    },
+    scheduleEndlessUpdate(value) {
+      this.endless = value;      
+    },
+    scheduleEachNDayUpdate(value) {
+      this.schedule.eachNDay = value;
+    },
+    scheduleEachNWeekUpdate(value) {
+      this.schedule.eachNWeek = value;
+    },
+    scheduleDayOfWeekUpdate(value) {
+      this.schedule.dayOfWeek = value;
+    },
+    scheduleDailyFrequencyUpdate(value) {
+      this.schedule.dailyFrequency = value;
+    },
+    scheduleMonthUpdate(value) {
+      this.schedule.month = value;
+    },
+    scheduleMonthDayUpdate(value) {
+      this.schedule.day = value;   
+    },
+    scheduleDailyFrequencyEveryUpdate(value) {
+      this.every = value;
+    }
   },
   computed: {
-    oneTime: {
-      get: function() {
-        return this.getDateTime(this.schedule.oneTime);
-      },
-      set: function(val) {
-        this.schedule.oneTime = val === '' ? '' : dayjs(val).toISOString();
-      }
-    },
-    startDateTime: {
-      get: function() {
-        return this.getDateTime(this.schedule.startDateTime);
-      },
-      set: function(val) {
-        this.schedule.startDateTime = val === '' ? '' : dayjs(val).toISOString();
-      }
-    },
-    endDateTime: {
-      get: function() {
-        return this.getDateTime(this.schedule.endDateTime);
-      },
-      set: function(val) {
-        this.schedule.endDateTime = val === '' ? '' : dayjs(val).toISOString();
-      }
-    }        
+     
   },
   components: {
-    'date-time-pick': DatePick,
-    'date-picker': DatePicker,
     'schedule-one-time': ScheduleOneTime,
-    'schedule-duration': ScheduleDuration
+    'schedule-duration': ScheduleDuration,
+    'schedule-daily': ScheduleDaily,
+    'schedule-weekly': ScheduleWeekly,
+    'schedule-daily-frequency': ScheduleDailyFrequency,
+    'schedule-monthly': ScheduleMonthly
   }
 }
 </script>

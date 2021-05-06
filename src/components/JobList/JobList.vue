@@ -138,7 +138,6 @@ export default {
       this.$refs.jobList.changePage(page)
     },
     async onCellClicked (data, field, event) {
-      console.log(data.id);
       this.selectedRow = data.id;   
       this.selectedJobName = data.name;        
     },
