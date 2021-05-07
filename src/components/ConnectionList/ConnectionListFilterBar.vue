@@ -37,9 +37,7 @@ export default {
 }
 </script>
 <style lang="scss" >
-  .vuetable-th-slot-schedule-name {
-    width: 50px;
-  }
+
   #connection-list-filter {
 	width: 280px;
   }

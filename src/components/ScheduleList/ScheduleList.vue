@@ -21,7 +21,7 @@
         </p>          
       </div>
     </div>
-    <vuetable qa-data="schedule-list" ref="scheduleList"
+    <vuetable qa-data="schedule-list" id="schedule-list" ref="scheduleList"
       :api-mode="false"
       :data="scheduleList"
       :fields="fields"
@@ -48,8 +48,6 @@ import schedule_template from '../Schedule/schedule-template.js'
 import scheduleSummary from '../Schedule/schedule-summary.js'
 
 import messages from '../translation/messages.js'
-import config from '../config.js';
-import utils from '../utils.js';
 import { nanoid } from 'nanoid';
 
 export default {
@@ -58,7 +56,7 @@ export default {
       clickedRow: null,
       css: vue_css,
       messages: messages,
-      fields: fields_definition.concat({name: 'id', dataClass: 'default-cursor', title: 'Summary', callback: this.getDescription })
+      fields: fields_definition.concat({name: 'id', dataClass: 'default-cursor summary-label', title: 'Summary', callback: this.getDescription })
     }
   },
   props: ['scheduleList'],
@@ -111,8 +109,10 @@ export default {
 }
 </script>
 <style lang="scss" >
-  .vuetable-th-slot-schedule-name {
-    width: 50px;
+  table#schedule-list .vuetable-th-slot-schedule-name {
+    width: 150px;
   }
-
+  table#schedule-list .summary-label {
+    font-size: 10pt;
+  }
 </style>

@@ -29,20 +29,24 @@ import { fieldIsValid } from './schedule-helpers.js';
 import utils from '../utils.js';
 
 export default {
+  props: ['eachNDay'],
   data() {
     return {   
-       eachNDayValue: this.eachNDay,
        fieldIsValid,
        dailyConstraints: {'eachNDay': constraints('en')['daily'].eachNDay },
        isNumber: utils.isNumber,
     }
   },
-  props: ['eachNDay'],
-  watch: {
-    eachNDayValue: function() {
-      this.$emit('schedule-each-n-day-update', { value: this.eachNDayValue });
-    }     
-  }
+  computed: {
+    eachNDayValue: {
+      get() {
+        return this.eachNDay;
+      },
+      set(newValue) {
+        this.$emit('schedule-each-n-day-update', { value: newValue });
+      }
+    }
+  },
 }
 </script>
 

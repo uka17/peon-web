@@ -81,7 +81,6 @@ export default {
   data() {
     return {   
        fieldIsValid,
-       everyValue: this.every,
        occursOnceAtConstraints: constraints('en')['occursOnceAt'],
        everyConstraints: constraints('en')['every'],
        intervalValueConstraints: constraints('en')['intervalValue'],
@@ -92,10 +91,17 @@ export default {
   watch: {
     eachNDayValue: function() {
       this.$emit('schedule-daily-frequency-update', { value: this.dailyFrequency });
-    },
-    everyValue: function() {
-      this.$emit('schedule-daily-frequency-every-update', { value: this.everyValue });
-    }            
+    }        
+  },
+  computed: {
+    everyValue: {
+      get() {
+        return this.every;
+      },
+      set(newValue) {
+        this.$emit('schedule-daily-frequency-every-update', { value: newValue });
+      }
+    }  
   }
 }
 </script>

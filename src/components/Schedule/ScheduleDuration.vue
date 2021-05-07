@@ -9,7 +9,7 @@
       </p>              
       <div v-bind:class="{ 'custom-warning-inline': fieldIsValid('startDateTime', { 'startDateTime': startDateTimeValue }, startDateTimeConstraints) !== '' }" >
         <p class="control">        
-          <date-time-picker v-model="startDateTimeValue" type="datetime">   
+          <date-time-picker v-model="startDateTimeValue" type="datetime" value-type="format" format="YYYY-MM-DD HH:mm:ss">   
             </date-time-picker>                       
         </p>
       </div>          
@@ -20,7 +20,7 @@
       </p>  
       <div v-if="!endlessValue" v-bind:class="{ 'custom-warning-inline': fieldIsValid('endDateTime', { 'endDateTime': endDateTimeValue }, endDateTimeConstraints) !== '' }" >        
         <p class="control">          
-          <date-time-picker v-model="endDateTimeValue" type="datetime">   
+          <date-time-picker v-model="endDateTimeValue" type="datetime" value-type="format" format="YYYY-MM-DD HH:mm:ss">   
             </date-time-picker>           
         </p>
       </div>
@@ -40,31 +40,45 @@
 import constraints from './schedule-validation.js';
 import { fieldIsValid } from './schedule-helpers.js';
 import DatePicker from 'vue2-datepicker';
+import config from '../config.js';
+import dayjs from 'dayjs';
 
 import 'vue2-datepicker/index.css';
 
 export default {
   data() {
     return {   
-       startDateTimeValue: this.startDateTime,
-       endDateTimeValue: this.endDateTime,
-       endlessValue: this.endless,
        fieldIsValid,
        startDateTimeConstraints: {'startDateTime': constraints('en')['startEndDateTime'].startDateTime },
        endDateTimeConstraints: {'endDateTime': constraints('en')['startEndDateTime'].endDateTime }   
     }
   },
   props: ['startDateTime', 'endDateTime', 'endless'],
-  watch: {
-    startDateTimeValue: function() {
-      this.$emit('schedule-duration-start-update', { value: this.startDateTimeValue });
+  computed: {
+    startDateTimeValue: {
+      get() {
+        return dayjs(this.startDateTime).isValid() ? dayjs(this.startDateTime).format(config.dateTimeFormatSec) : '';
+      },
+      set(newValue) {
+        this.$emit('schedule-duration-start-update', { value: newValue });
+      }
     },
-    endDateTimeValue: function() {
-      this.$emit('schedule-duration-end-update', { value: this.endDateTimeValue });
-    }, 
-    endlessValue: function() {
-      this.$emit('schedule-endless-update', { value: this.endlessValue });
-    }        
+    endDateTimeValue: {
+      get() {
+        return dayjs(this.endDateTime).isValid() ? dayjs(this.endDateTime).format(config.dateTimeFormatSec) : '';
+      },
+      set(newValue) {
+        this.$emit('schedule-duration-end-update', { value: newValue });
+      }
+    },
+    endlessValue: {
+      get() {
+        return this.endless;
+      },
+      set(newValue) {
+        this.$emit('schedule-endless-update', { value: newValue });
+      }
+    }            
   },
   components: {
     'date-time-picker': DatePicker

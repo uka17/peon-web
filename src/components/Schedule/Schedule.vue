@@ -39,8 +39,8 @@
         <!-- Onetime --> 
         <div class="field" v-bind:class="{ 'is-hidden': scheduleType !== 'onetime' }">
           <schedule-one-time 
-            v-on:schedule-one-time-update="scheduleOneTimeChange($event.value)" 
-            v-model="schedule.oneTime">
+            v-on:schedule-one-time-update="scheduleOneTimeUpdate($event.value)" 
+            v-bind:one-time="schedule.oneTime">
           </schedule-one-time>          
         </div>  
         <!-- Onetime END --> 
@@ -56,14 +56,14 @@
             </schedule-duration>
         </div>                            
         <!-- Duration END--> 
-        <!-- Each N day --> 
+        <!-- Daily --> 
         <div class="field" v-bind:class="{ 'is-hidden': scheduleType !== 'daily' }">
           <schedule-daily
-            v-bind:each-n-day="schedule.eachNDay"
+            v-bind:each-n-day="this.schedule.eachNDay"
             v-on:schedule-each-n-day-update="scheduleEachNDayUpdate($event.value)">
           </schedule-daily>
         </div>
-        <!-- Each N day END--> 
+        <!-- Daily END--> 
         <!-- Weekly --> 
         <div class="field" v-bind:class="{ 'is-hidden': scheduleType !== 'weekly' }">
           <schedule-weekly          
@@ -253,8 +253,9 @@ export default {
       }
       return result;
     },
-    scheduleOneTimeChange(value) {
+    scheduleOneTimeUpdate(value) {
       this.schedule.oneTime = dayjs(value).isValid() ? dayjs(value).toISOString() : '';      
+      console.log(this.schedule.oneTime);
     },
     scheduleDurationStartUpdate(value) {
       this.schedule.startDateTime = dayjs(value).isValid() ? dayjs(value).toISOString() : '';      

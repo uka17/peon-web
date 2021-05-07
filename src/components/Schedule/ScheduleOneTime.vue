@@ -2,12 +2,12 @@
   <div class="field">
     <label class="label">Date and time*</label>
     <div class="control">
-      <div v-bind:class="{ 'custom-warning': fieldIsValid('oneTime', { 'oneTime': oneTime }, constraints) !== '' }" >
-        <date-time-picker v-model="oneTime" type="datetime">   
+      <div v-bind:class="{ 'custom-warning': fieldIsValid('oneTime', { 'oneTime': oneTimeValue }, constraints) !== '' }" >
+        <date-time-picker v-model="oneTimeValue" type="datetime" value-type="format" format="YYYY-MM-DD HH:mm:ss">   
         </date-time-picker>
       </div>
     </div>
-    <p id="schedule-onetime-error" class="help is-danger">{{ fieldIsValid('oneTime', { 'oneTime': oneTime }, constraints) }}</p>                  
+    <p id="schedule-onetime-error" class="help is-danger">{{ fieldIsValid('oneTime', { 'oneTime': oneTimeValue }, constraints) }}</p>                  
   </div>  
 </template>
 
@@ -16,15 +16,16 @@
 import constraints from './schedule-validation.js';
 import { fieldIsValid } from './schedule-helpers.js';
 import DatePicker from 'vue2-datepicker';
+import config from '../config.js';
+import dayjs from 'dayjs';
 
 import 'vue2-datepicker/index.css';
 
 export default {
   data() {
     return {   
-       oneTime: this.value,
-       fieldIsValid,
-       constraints: {'oneTime': constraints('en')['onetime'].oneTime }     
+      fieldIsValid,
+      constraints: {'oneTime': constraints('en')['onetime'].oneTime }     
     }
   },
   methods: {
@@ -33,12 +34,17 @@ export default {
       return date < currentDate;
     },
   },
-  props: ['value'],
-  watch: {
-    oneTime: function() {
-      this.$emit('schedule-one-time-update', { value: this.oneTime });
+  computed: {
+    oneTimeValue: {
+      get() {        
+        return dayjs(this.oneTime).isValid() ? dayjs(this.oneTime).format(config.dateTimeFormatSec) : '';
+      },
+      set(newValue) {
+        this.$emit('schedule-one-time-update', { value: newValue });
+      }
     }
   },
+  props: ['oneTime'],
   components: {
     'date-time-picker': DatePicker
   }

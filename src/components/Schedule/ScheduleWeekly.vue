@@ -52,7 +52,6 @@ import weekMonthReference from './week-month-reference.js';
 export default {
   data() {
     return {   
-       eachNWeekValue: this.eachNWeek,
        dayOfWeekValue: this.dayOfWeek,
        fieldIsValid,
        eachNWeekConstraints: {'eachNWeek': constraints('en')['weekly'].eachNWeek },
@@ -80,13 +79,20 @@ export default {
     }
   },
   watch: {
-    eachNWeekValue: function() {
-      this.$emit('schedule-each-n-week-update', { value: this.eachNWeekValue });
-    },
     dayOfWeek: function() {
       this.$emit('schedule-day-of-week-update', { value: this.dayOfWeek });
     }             
   },
+  computed: {
+    eachNWeekValue: {
+      get() {
+        return this.eachNWeek;
+      },
+      set(newValue) {
+        this.$emit('schedule-each-n-week-update', { value: newValue });
+      }
+    }       
+  },  
   components: {
   }
 }

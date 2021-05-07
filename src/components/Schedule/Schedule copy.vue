@@ -508,12 +508,6 @@ export default {
   [class*="is-info"] {
     border: 1px solid #fff !important 
   }
-  #schedule-onetime, #schedule-duaration-start, #schedule-duaration-end {
-    width: 190px !important 
-  }
-  #schedule-occurs-once-at, #schedule-occurs-every-start, #schedule-occurs-every-end {
-    width: 95px
-  }
   #schedule-interval-value, #schedule-eachnday, #schedule-eachnweek {
     width: 60px
   }

@@ -37,7 +37,6 @@ import weekMonthReference from './week-month-reference.js';
 export default {
   data() {
     return {   
-      dayValue: this.day,
       fieldIsValid,
       monthConstraints: { 'month': constraints('en')['monthly'].month },
       dayConstraints: { 'day': constraints('en')['monthly'].day },       
@@ -66,11 +65,18 @@ export default {
   watch: {
     month: function() {
       this.$emit('schedule-month-update', { value: this.month });
-    },
-    dayValue: function() {
-      this.$emit('schedule-month-day-update', { value: this.dayValue });
-    }             
+    }         
   },
+  computed: {
+    dayValue: {
+      get() {
+        return this.day;
+      },
+      set(newValue) {
+        this.$emit('schedule-month-day-update', { value: newValue });
+      }
+    }     
+  },  
   components: {
   }
 }
