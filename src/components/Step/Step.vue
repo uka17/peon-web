@@ -32,9 +32,9 @@
             </div>
           </div>
         </div>           
-        <div class="field">
+        <div class="field" v-bind:class="{ 'is-danger': fieldIsValid('name') !== '' }" >
           <label class="label">Command*</label>
-          <div class="control" v-bind:class="{ 'is-danger': fieldIsValid('name') !== '' }" >
+          <div class="control" v-bind:class="{ 'step-command-custom-warning': fieldIsValid('command') !== '' }">
             <textarea qa-data="step-command" class="textarea" placeholder="Job description" v-bind:class="{ 'is-danger': fieldIsValid('command') !== '' }" v-model="step.command" id="command-code"></textarea>
           </div>
           <p id="step-dialog-command-error" class="help is-danger">{{ fieldIsValid('command') }}</p>
@@ -201,5 +201,9 @@ export default {
   #retry-number, #retry-interval {
     width: 50px;
     text-align: center;
+  }
+  .step-command-custom-warning {
+    border: 1px solid #f14668;
+    border-radius: 4px;
   }
 </style>
