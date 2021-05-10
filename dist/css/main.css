@@ -26,3 +26,8 @@ th#_last_run_result {
 td[class*="default-cursor"] {
   cursor: default;
 }
+
+table.mx-table-date td {
+  text-align: center !important;
+  vertical-align: middle !important;
+}
