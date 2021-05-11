@@ -72,8 +72,8 @@ export default {
       get() {
         return this.day;
       },
-      set(newValue) {
-        this.$emit('schedule-month-day-update', { value: newValue });
+      set(newValue) {        
+        this.$emit('schedule-month-day-update', { value: newValue.replace(/\s/g, '') });
       }
     }     
   },  

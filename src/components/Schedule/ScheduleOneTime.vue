@@ -2,7 +2,7 @@
   <div class="field">
     <label class="label">Date and time*</label>
     <div class="control">
-      <div v-bind:class="{ 'custom-warning': fieldIsValid('oneTime', { 'oneTime': oneTimeValue }, constraints) !== '' }" >
+      <div qa-data="schedule-onetime" v-bind:class="{ 'custom-warning': fieldIsValid('oneTime', { 'oneTime': oneTimeValue }, constraints) !== '' }" >
         <date-time-picker 
           v-model="oneTimeValue" 
           type="datetime" 
@@ -12,7 +12,7 @@
         </date-time-picker>
       </div>
     </div>
-    <p id="schedule-onetime-error" class="help is-danger">{{ fieldIsValid('oneTime', { 'oneTime': oneTimeValue }, constraints) }}</p>                  
+    <p id="schedule-onetime-error" qa-data="schedule-onetime-error" class="help is-danger">{{ fieldIsValid('oneTime', { 'oneTime': oneTimeValue }, constraints) }}</p>                  
   </div>  
 </template>
 

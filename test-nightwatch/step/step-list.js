@@ -1,3 +1,4 @@
+const dayjs = require("dayjs")
 const config = require("../config.json");
 let testJobTemplate = JSON.parse(JSON.stringify(require("../test-data.json").job));
 testJobTemplate.name += `f${(+new Date).toString(16)}`;
@@ -41,7 +42,16 @@ describe('step-list', function() {
       .waitForElementVisible('#job-general')
       .setValue('#job-dialog-name', testJobTemplate.name)
       .setValue('#job-dialog-description', testJobTemplate.description)
+      //schedules
+      .click('a#schedules-tab') 
+      .click('button[qa-data="create-new-schedule"')     
+      .setValue('[qa-data="schedule-name"]', testJobTemplate.schedules[0].name)
+      .setValue('div[qa-data="schedule-onetime"] input', dayjs(testJobTemplate.schedules[0].oneTime).format('YYYY-MM-DD HH:mm:ss'))      
+      .click('[qa-data="schedule-name"]')
+      .click('button[qa-data="schedule-create"]')   
+      //starting work with steps      
       .click('a#steps-tab')
+      //Check step initial layout
       .assert.elementPresent("#steps-tab span[class='icon has-text-danger']")
       .assert.visible('button[qa-data="create-new-step"')
       .assert.attributeContains('button[qa-data="move-down-selected-step"]', 'disabled', 'true')
@@ -62,7 +72,7 @@ describe('step-list', function() {
       .click(`div[qa-data="step-result-action-failure"] select[qa-data="step-result-action"] option[value="${testJobTemplate.steps[0].onFailure}"]`)            
       .click('button[qa-data="step-create"]')
       //Check if step appeared in table
-      .assert.not.elementPresent('.vuetable-empty-result')
+      .assert.not.elementPresent('table[qa-data="step-list"].vuetable-empty-result')
       .assert.not.elementPresent('#step-list-empty-error')         
       .expect.elements('table[qa-data="step-list"] tbody tr').count.to.equal(1); 
       //Create 2 more steps

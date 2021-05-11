@@ -32,9 +32,9 @@ module.exports = {
       .click('a#schedules-tab') 
       .click('button[qa-data="create-new-schedule"')
       .setValue('[qa-data="schedule-name"]', testJob.schedules[0].name)
-      .setValue('div#schedule-onetime input', formatDateTime(testJob.schedules[0].oneTime))      
-      //.click('button[qa-data="schedule-create"]')
-      .pause()
+      .setValue('div[qa-data="schedule-onetime"] input', dayjs(testJob.schedules[0].oneTime).format('YYYY-MM-DD HH:mm:ss'))      
+      .click('[qa-data="schedule-name"]')
+      .click('button[qa-data="schedule-create"]')
       //save job
       .click('button[qa-data="job-create"]')
     }

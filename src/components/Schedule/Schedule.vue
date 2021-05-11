@@ -14,12 +14,12 @@
               v-bind:class="{ 'is-danger': fieldIsValid('name', schedule, constraints('en')[this.scheduleType]) !== '' }" 
               placeholder="Schedule name">
           </div>
-          <p id="schedule-name-error" class="help is-danger">{{ fieldIsValid('name', schedule, constraints('en')[this.scheduleType]) }}</p>
+          <p id="schedule-name-error" qa-data="schedule-name-error" class="help is-danger">{{ fieldIsValid('name', schedule, constraints('en')[this.scheduleType]) }}</p>
         </div>  
         <div class="field">
           <div class="control">
             <label class="checkbox">
-              <input type="checkbox" v-model="schedule.enabled" id="schedule-dialog-enabled"> Enabled
+              <input type="checkbox" qa-data="schedule-enabled" v-model="schedule.enabled" id="schedule-dialog-enabled"> Enabled
             </label>
           </div>
         </div>         
@@ -27,7 +27,7 @@
           <label class="label">Schedule type*</label>
           <div class="control">
             <div class="select">
-              <select v-model="scheduleType" id="schedule-dialog-type">
+              <select v-model="scheduleType" id="schedule-dialog-type" qa-data="schedule-type">
                 <option value="onetime">One time</option>
                 <option value="daily">Daily</option>
                 <option value="weekly">Weekly</option>
@@ -255,7 +255,6 @@ export default {
     },
     scheduleOneTimeUpdate(value) {
       this.schedule.oneTime = dayjs(value).isValid() ? dayjs(value).toISOString() : '';      
-      console.log(this.schedule.oneTime);
     },
     scheduleDurationStartUpdate(value) {
       this.schedule.startDateTime = dayjs(value).isValid() ? dayjs(value).toISOString() : '';      

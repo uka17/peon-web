@@ -1,3 +1,4 @@
+const dayjs = require("dayjs");
 const config = require("../config.json");
 const testJobTemplate = JSON.parse(JSON.stringify(require("../test-data.json").job));
 const createTestJob = require('../helpers').createTestJob;
@@ -73,7 +74,7 @@ describe('job', function() {
       .assert.elementPresent("input[qa-data='job-dialog-enabled']")
   });
 
-  test.only('job. Tab General, Steps and Schedules change control states based on entered values', function (browser) {
+  test('job. Tab General, Steps and Schedules change control states based on entered values', function (browser) {
     browser      
       //open new job dialog
       .click('a[href="#/jobs/create"]')
@@ -112,12 +113,18 @@ describe('job', function() {
       //schedules tab
       .click('a#schedules-tab')
       //check initial state (warnings are in place)
-      .assert.elementPresent("#steps-tab span[class='icon has-text-danger']")
+      .assert.elementPresent("#schedules-tab span[class='icon has-text-danger']")
       .assert.visible('button[qa-data="create-new-schedule"')
       .assert.visible('table[qa-data="schedule-list"] .vuetable-empty-result')      
-      .click('button[qa-data="create-new-schedule"')      
+      .click('button[qa-data="create-new-schedule"')     
+      .setValue('[qa-data="schedule-name"]', testJobTemplate.schedules[0].name)
+      .setValue('div[qa-data="schedule-onetime"] input', dayjs(testJobTemplate.schedules[0].oneTime).format('YYYY-MM-DD HH:mm:ss'))      
+      .click('[qa-data="schedule-name"]')
+      .click('button[qa-data="schedule-create"]')       
+      //schedules warning was removed from tab
+      .assert.not.elementPresent("#schedules-tab span[class='icon has-text-danger']")
       //now job can be saved
-      //.assert.cssClassPresent('#button-job-create', 'button is-success')
+      .assert.cssClassPresent('#button-job-create', 'button is-success')
   });
 
 
@@ -137,14 +144,21 @@ describe('job', function() {
       .setValue('[qa-data="step-name"]', testJob.steps[0].name)
       .click('.CodeMirror-code')
       .keys(["script"]) 
-      //create job
       .click('button[qa-data="step-create"]')
+      //enter values for schedule tab
+      .click('a#schedules-tab') 
+      .click('button[qa-data="create-new-schedule"')     
+      .setValue('[qa-data="schedule-name"]', testJobTemplate.schedules[0].name)
+      .setValue('div[qa-data="schedule-onetime"] input', dayjs(testJobTemplate.schedules[0].oneTime).format('YYYY-MM-DD HH:mm:ss'))      
+      .click('[qa-data="schedule-name"]')
+      .click('button[qa-data="schedule-create"]')      
+      //create job
       .click('button[qa-data="job-create"]')
       //check if job is exists in job list
       .waitForElementVisible(`a[qa-data="${testJob.name}"]`)
   });  
 
-  test.only('job. Closing Job modal with Close button or Cancel button after opening New modal reloads page to proper content', function (browser) {
+  test('job. Closing Job modal with Close button or Cancel button after opening New modal reloads page to proper content', function (browser) {
     browser
       //open new job dialog      
       .click('a[href="#/jobs/create"]')
@@ -166,26 +180,16 @@ describe('job', function() {
       .assert.elementPresent('div[qa-data="job-list-pagination-info"]')      
   });  
 
-  test('job. Change in job attributes is being reflected in job list', function (browser) {
+  test.only('job. Change in job attributes is being reflected in job list', function (browser) {
     let testJob = JSON.parse(JSON.stringify(testJobTemplate));
     testJob.name += `f${(+new Date).toString(16)}`;
+    //create new job as Template one should stay untouched
+    createTestJob(browser, testJob);
     browser
-      //create new job as common one should stay untouched
       .url(config.endpoint)
       .waitForElementVisible('a[href="#/jobs"]')
       .click('a[href="#/jobs"]')
       .waitForElementVisible('a[href="#/jobs/create"]')
-      .click('a[href="#/jobs/create"]')
-      .waitForElementVisible('#job-general')
-      .setValue('#job-dialog-name', testJob.name)
-      .setValue('#job-dialog-description', testJob.description)
-      .click('a#steps-tab') 
-      .click('button[qa-data="create-new-step"')
-      .setValue('[qa-data="step-name"]', testJob.steps[0].name)
-      .click('.CodeMirror-code')
-      .keys(["script"]) 
-      .click('button[qa-data="step-create"]')
-      .click('button[qa-data="job-create"]')
       //check if job is exists in job list
       .waitForElementVisible(`a[qa-data="${testJob.name}"]`)
       //change job content 
@@ -237,12 +241,20 @@ describe('job', function() {
       //change values
       .setValue('#job-dialog-name', '-changed')
       .setValue('#job-dialog-description', '-changed')
+      //steps
       .click('a#steps-tab') 
       .click('button[qa-data="create-new-step"')
       .setValue('[qa-data="step-name"]', testJobTemplate.steps[0].name)
       .click('.CodeMirror-code')
       .keys(["script"]) 
       .click('button[qa-data="step-create"]')      
+      //schedules
+      .click('a#schedules-tab') 
+      .click('button[qa-data="create-new-schedule"')     
+      .setValue('[qa-data="schedule-name"]', testJobTemplate.schedules[0].name)
+      .setValue('div[qa-data="schedule-onetime"] input', dayjs(testJobTemplate.schedules[0].oneTime).format('YYYY-MM-DD HH:mm:ss'))      
+      .click('[qa-data="schedule-name"]')
+      .click('button[qa-data="schedule-create"]')             
       //click Cancel    
       .click('button[qa-data="job-cancel"]')
       //check if job was not changed
@@ -254,8 +266,10 @@ describe('job', function() {
         this.assert.equal(result.value, testJobTemplate.description);
       })
       .click('a#steps-tab')
-      //table has 1 row
+      //tables has 1 row
       .expect.elements('table[qa-data="step-list"] tbody tr').count.to.equal(1);
+    browser
+      .expect.elements('table[qa-data="schedule-list"] tbody tr').count.to.equal(1);
   });  
 
   test('job. Job click opens proper modal window', function (browser) {
