@@ -3,7 +3,12 @@
     <label class="label">Date and time*</label>
     <div class="control">
       <div v-bind:class="{ 'custom-warning': fieldIsValid('oneTime', { 'oneTime': oneTimeValue }, constraints) !== '' }" >
-        <date-time-picker v-model="oneTimeValue" type="datetime" value-type="format" format="YYYY-MM-DD HH:mm:ss">   
+        <date-time-picker 
+          v-model="oneTimeValue" 
+          type="datetime" 
+          value-type="format" 
+          format="YYYY-MM-DD HH:mm:ss" 
+          :disabled-date="dateIsInPast">   
         </date-time-picker>
       </div>
     </div>
@@ -32,7 +37,7 @@ export default {
     dateIsInPast(date) {
       const currentDate = dayjs().subtract(1, 'day').valueOf();
       return date < currentDate;
-    },
+    }
   },
   computed: {
     oneTimeValue: {

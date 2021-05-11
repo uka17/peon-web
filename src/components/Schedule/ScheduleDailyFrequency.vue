@@ -13,12 +13,16 @@
         </label>
       </div>            
     </div>
-    <div class="field" v-bind:class="{ 'is-hidden': everyValue}">
+    <div class="field" v-bind:class="{ 'is-hidden': everyValue }" >
       <label class="label">Time*</label>
-      <div class="control">     
-        <input id="schedule-occurs-once-at" maxlength="8" type="text"
-        v-bind:class="{ 'is-danger': fieldIsValid('occursOnceAt', dailyFrequency, occursOnceAtConstraints) !== '' }"
-        v-model="dailyFrequency.occursOnceAt" class="input">   
+      <div class="control" v-bind:class="{ 'custom-warning': fieldIsValid('occursOnceAt', dailyFrequency, occursOnceAtConstraints) !== ''}"> 
+        <date-time-picker
+          v-model="dailyFrequency.occursOnceAt"
+          format="HH:mm:ss"
+          value-type="format"
+          type="time"
+          placeholder="HH:mm:ss">
+        </date-time-picker>
       </div>
       <p id="schedule-occursonceat-error" class="help is-danger">{{ fieldIsValid('occursOnceAt', dailyFrequency, occursOnceAtConstraints)  }}</p>
     </div>   
@@ -30,21 +34,35 @@
             Starting
           </a>           
         </p>              
-        <p class="control">
-          <input id="schedule-occurs-every-start" maxlength="8" type="text"
-            v-bind:class="{ 'is-danger': fieldIsValid('start', dailyFrequency, everyConstraints) !== '' }"
-            v-model="dailyFrequency.start" class="input">
-        </p>
+        <div v-bind:class="{ 'custom-warning-inline': fieldIsValid('start', dailyFrequency, everyConstraints) !== '' }">
+          <p class="control date-time-picker">          
+            <date-time-picker
+              v-model="dailyFrequency.start"
+              format="HH:mm:ss"
+              value-type="format"
+              type="time"
+              placeholder="HH:mm:ss"
+              :disabled-time="startIsEarlierThanEnd">
+            </date-time-picker>          
+          </p>
+        </div>
         <p class="control">
           <a class="button is-static">
             till
           </a>           
         </p>  
-        <p class="control">              
-          <input id="schedule-occurs-every-end" maxlength="8" type="text"
-            v-bind:class="{ 'is-danger': fieldIsValid('end', dailyFrequency, everyConstraints) !== '' }"
-            v-model="dailyFrequency.end" class="input">
-        </p>
+        <div v-bind:class="{ 'custom-warning-inline': fieldIsValid('end', dailyFrequency, everyConstraints) !== '' }">        
+          <p class="control date-time-picker">              
+            <date-time-picker
+              v-model="dailyFrequency.end"
+              format="HH:mm:ss"
+              value-type="format"
+              type="time"
+              placeholder="HH:mm:ss"
+              :disabled-time="endIsLaterThanStart">
+            </date-time-picker>   
+          </p>
+        </div>
         <p class="control">
           <a class="button is-static">
             every
@@ -73,9 +91,11 @@
 
 <script>
 
+import DatePicker from 'vue2-datepicker';
 import constraints from './schedule-validation.js';
 import { fieldIsValid } from './schedule-helpers.js';
 import utils from '../utils.js';
+import dayjs from 'dayjs';
 
 export default {
   data() {
@@ -86,6 +106,18 @@ export default {
        intervalValueConstraints: constraints('en')['intervalValue'],
        isNumber: utils.isNumber,
     }
+  },
+  methods: {
+    startIsEarlierThanEnd(time) {  
+      let endDateTime = this.dailyFrequency.end === '' ? '00:00:00' : this.dailyFrequency.end;
+      let endDateTimeSplit = endDateTime.split(':');
+      return time > new Date(new Date().setHours(endDateTimeSplit[0], endDateTimeSplit[1], endDateTimeSplit[2], 0))
+    },
+    endIsLaterThanStart(time) {
+      let startDateTime = this.dailyFrequency.end === '' ? '00:00:00' : this.dailyFrequency.start;
+      let startDateTimeSplit = startDateTime.split(':');
+      return time < new Date(new Date().setHours(startDateTimeSplit[0], startDateTimeSplit[1], startDateTimeSplit[2], 0));
+    },
   },
   props: ['dailyFrequency', 'every'],
   watch: {
@@ -102,6 +134,9 @@ export default {
         this.$emit('schedule-daily-frequency-every-update', { value: newValue });
       }
     }  
+  },
+  components: {
+    'date-time-picker': DatePicker
   }
 }
 </script>

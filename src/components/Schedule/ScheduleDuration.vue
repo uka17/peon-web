@@ -9,7 +9,12 @@
       </p>              
       <div v-bind:class="{ 'custom-warning-inline': fieldIsValid('startDateTime', { 'startDateTime': startDateTimeValue }, startDateTimeConstraints) !== '' }" >
         <p class="control">        
-          <date-time-picker v-model="startDateTimeValue" type="datetime" value-type="format" format="YYYY-MM-DD HH:mm:ss">   
+          <date-time-picker 
+            v-model="startDateTimeValue" 
+            type="datetime" 
+            value-type="format" 
+            format="YYYY-MM-DD HH:mm:ss"
+            :disabled-date="startIsEarlierThanEnd">   
             </date-time-picker>                       
         </p>
       </div>          
@@ -20,7 +25,12 @@
       </p>  
       <div v-if="!endlessValue" v-bind:class="{ 'custom-warning-inline': fieldIsValid('endDateTime', { 'endDateTime': endDateTimeValue }, endDateTimeConstraints) !== '' }" >        
         <p class="control">          
-          <date-time-picker v-model="endDateTimeValue" type="datetime" value-type="format" format="YYYY-MM-DD HH:mm:ss">   
+          <date-time-picker 
+            v-model="endDateTimeValue" 
+            type="datetime" 
+            value-type="format" 
+            format="YYYY-MM-DD HH:mm:ss"
+            :disabled-date="endIsLaterThanStart">   
             </date-time-picker>           
         </p>
       </div>
@@ -52,6 +62,14 @@ export default {
        startDateTimeConstraints: {'startDateTime': constraints('en')['startEndDateTime'].startDateTime },
        endDateTimeConstraints: {'endDateTime': constraints('en')['startEndDateTime'].endDateTime }   
     }
+  },
+  methods: {
+    startIsEarlierThanEnd(date) {    
+      return date < dayjs(this.endDateTime) && this.endDateTime !== '';
+    },
+    endIsLaterThanStart(date) {
+      return date < dayjs(this.startDateTime).add(-1, 'day');
+    },
   },
   props: ['startDateTime', 'endDateTime', 'endless'],
   computed: {
