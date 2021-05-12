@@ -48,7 +48,7 @@ describe('job', function() {
       .waitForElementVisible('a[href="#/jobs/create"]')      
   });
 
-  this.tags = ['job', 'user-interface'];
+  this.tags = ['job', 'form', 'user-interface'];
 
   test('job. Click to New opens proper modal window', function (browser) {
     browser

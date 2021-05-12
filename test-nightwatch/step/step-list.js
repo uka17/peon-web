@@ -22,7 +22,7 @@ describe('step-list', function() {
       .waitForElementVisible('a[href="#/jobs/create"]')      
   });
 
-  this.tags = ['step-list', 'user-interface'];
+  this.tags = ['step', 'list', 'user-interface'];
 
   test(`step-list. 
     Step list controls have correct state before and after any step was added
@@ -57,7 +57,7 @@ describe('step-list', function() {
       .assert.attributeContains('button[qa-data="move-down-selected-step"]', 'disabled', 'true')
       .assert.attributeContains('button[qa-data="move-up-selected-step"]', 'disabled', 'true')
       .assert.attributeContains('button[qa-data="delete-selected-step"]', 'disabled', 'true')
-      .assert.visible('.vuetable-empty-result')
+      .assert.visible('table[qa-data="step-list"].vuetable-empty-result')
       .assert.containsText('#step-list-empty-error', "Step list should contain at least 1 step")   
       .click('button[qa-data="create-new-step"')
       //Create step

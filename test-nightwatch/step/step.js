@@ -20,7 +20,7 @@ describe('step', function() {
       .waitForElementVisible('a[href="#/jobs/create"]')      
   });
 
-  this.tags = ['step', 'user-interface'];
+  this.tags = ['step', 'from', 'user-interface'];
 
   test(`step. 
     Step creation modal form controls have correct state before and after putting any data 
@@ -35,7 +35,7 @@ describe('step', function() {
     //Step creation modal form controls have correct state before and after putting any data 
     browser
       .click('button[qa-data="create-new-step"')
-      .assert.cssClassPresent('input[qa-data="step-name"]', 'input is-danger')  
+      .assert.cssClassPresent('input[qa-data="step-name"]', 'input is-danger')
       .assert.containsText('#step-dialog-name-error', 'must be')
       .assert.containsText('#step-dialog-command-error', "not be empty")
       .assert.cssClassPresent('button[qa-data="step-create"]', 'button is-success is-static')

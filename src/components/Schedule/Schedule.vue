@@ -27,7 +27,7 @@
           <label class="label">Schedule type*</label>
           <div class="control">
             <div class="select">
-              <select v-model="scheduleType" id="schedule-dialog-type" qa-data="schedule-type">
+              <select v-model="scheduleType" id="schedule-dialog-type" qa-data="schedule-dialog-type">
                 <option value="onetime">One time</option>
                 <option value="daily">Daily</option>
                 <option value="weekly">Weekly</option>

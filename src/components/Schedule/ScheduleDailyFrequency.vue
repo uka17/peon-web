@@ -4,18 +4,18 @@
     <div class="field">            
       <div class="control">
         <label class="radio">
-          <input type="radio" name="once" v-bind:value="false" v-model="everyValue">
+          <input type="radio" name="once" qa-data="schedule-daily-once" v-bind:value="false" v-model="everyValue">
           Once
         </label>
         <label class="radio">
-          <input type="radio" name="every" v-bind:value="true" v-model="everyValue">
+          <input type="radio" name="every" qa-data="schedule-daily-periodical" v-bind:value="true" v-model="everyValue">
           Periodicaly
         </label>
       </div>            
     </div>
     <div class="field" v-bind:class="{ 'is-hidden': everyValue }" >
       <label class="label">Time*</label>
-      <div class="control" v-bind:class="{ 'custom-warning': fieldIsValid('occursOnceAt', dailyFrequency, occursOnceAtConstraints) !== ''}"> 
+      <div class="control" qa-data="schedule-daily-frequency-once" v-bind:class="{ 'custom-warning': fieldIsValid('occursOnceAt', dailyFrequency, occursOnceAtConstraints) !== ''}"> 
         <date-time-picker
           v-model="dailyFrequency.occursOnceAt"
           format="HH:mm:ss"
@@ -24,7 +24,7 @@
           placeholder="HH:mm:ss">
         </date-time-picker>
       </div>
-      <p id="schedule-occursonceat-error" class="help is-danger">{{ fieldIsValid('occursOnceAt', dailyFrequency, occursOnceAtConstraints)  }}</p>
+      <p id="schedule-occursonceat-error" qa-data="schedule-daily-frequency-once-error" class="help is-danger">{{ fieldIsValid('occursOnceAt', dailyFrequency, occursOnceAtConstraints)  }}</p>
     </div>   
     <div v-bind:class="{ 'is-hidden': !everyValue}">
       <label class="label">Recurrence*</label>

@@ -8,7 +8,7 @@
         </a>           
       </p>              
       <p class="control">
-        <input id="schedule-eachnday"  type="text"                
+        <input id="schedule-eachnday"  type="text" qa-data="schedule-dialog-eachnday"               
           v-bind:class="{ 'is-danger': fieldIsValid('eachNDay', { 'eachNDay': eachNDayValue }, dailyConstraints) !== '' }"
           maxlength="3" @keypress="isNumber($event)" v-model.number="eachNDayValue" class="input">
       </p>
@@ -18,7 +18,7 @@
         </a>           
       </p>  
     </div>
-    <p id="schedule-eachnday-error" class="help is-danger">{{ fieldIsValid('eachNDay', { 'eachNDay': eachNDayValue }, dailyConstraints) }}</p>
+    <p id="schedule-eachnday-error" qa-data="schedule-dialog-eachnday-error" class="help is-danger">{{ fieldIsValid('eachNDay', { 'eachNDay': eachNDayValue }, dailyConstraints) }}</p>
   </div>
 </template>
 

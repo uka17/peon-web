@@ -46,30 +46,106 @@
       ],
       "schedules": [
          {
-            "name": "One time",
-            "enabled": true,
-            "oneTime": "2030-01-20T11:00:00.000Z"
+           "oneTime": "2022-05-28T00:30:00.000Z",
+           "name": "One time",
+           "enabled": true
          },
          {
-            "name": "Weekly based",
-            "enabled": true,
-            "startDateTime": "2018-01-31T20:55:23.071Z",
-            "eachNWeek": 1,
-            "dayOfWeek": [
-               "mon",
-               "tue",
-               "wed",
-               "thu",
-               "fri"
-            ],
-            "dailyFrequency": {
-               "start": "06:00:00",
-               "occursEvery": {
-                  "intervalValue": 5,
-                  "intervalType": "minute"
-               }
-            }
+           "eachNDay": 3,
+           "name": "Daily once",
+           "enabled": true,
+           "startDateTime": "2022-05-29T21:00:00.000Z",
+           "dailyFrequency": {
+             "occursOnceAt": "06:00:00"
+           }
+         },
+         {
+           "eachNDay": 5,
+           "name": "Daily periodical",
+           "enabled": true,
+           "startDateTime": "2022-05-19T21:00:00.000Z",
+           "dailyFrequency": {
+             "start": "06:00:00",
+             "end": "11:00:00",
+             "occursEvery": {
+               "intervalValue": 15,
+               "intervalType": "minute"
+             }
+           }
+         },
+         {
+           "eachNWeek": 2,
+           "dayOfWeek": [
+             "mon",
+             "wed",
+             "fri"
+           ],
+           "name": "Weekly periodical",
+           "enabled": true,
+           "startDateTime": "2022-05-24T21:00:00.000Z",
+           "dailyFrequency": {
+             "start": "05:00:00",
+             "end": "06:00:00",
+             "occursEvery": {
+               "intervalValue": 10,
+               "intervalType": "minute"
+             }
+           }
+         },
+         {
+           "eachNWeek": 7,
+           "dayOfWeek": [
+             "sun",
+             "tue",
+             "thu"
+           ],
+           "name": "Weekly once",
+           "enabled": true,
+           "startDateTime": "2022-05-25T21:00:00.000Z",
+           "dailyFrequency": {
+             "occursOnceAt": "06:00:00"
+           }
+         },
+         {
+           "month": [
+             "jan",
+             "dec"
+           ],
+           "day": [
+             1,
+             10,
+             20,
+             30
+           ],
+           "name": "Monthly once",
+           "enabled": true,
+           "startDateTime": "2022-05-25T21:00:00.000Z",
+           "dailyFrequency": {
+             "occursOnceAt": "06:00:00"
+           }
+         },
+         {
+           "month": [
+             "jun",
+             "jul",
+             "aug"
+           ],
+           "day": [
+             1,
+             30
+           ],
+           "name": "Monthly periodical",
+           "enabled": true,
+           "startDateTime": "2022-05-26T21:00:00.000Z",
+           "dailyFrequency": {
+             "start": "00:00:00",
+             "end": "06:00:00",
+             "occursEvery": {
+               "intervalValue": 30,
+               "intervalType": "minute"
+             }
+           }
          }
-      ]
+       ]
    }
 }

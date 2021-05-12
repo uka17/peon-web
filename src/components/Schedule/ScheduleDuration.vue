@@ -7,7 +7,7 @@
           Start date
         </a>           
       </p>              
-      <div v-bind:class="{ 'custom-warning-inline': fieldIsValid('startDateTime', { 'startDateTime': startDateTimeValue }, startDateTimeConstraints) !== '' }" >
+      <div qa-data="schedule-dialog-start-date-time" v-bind:class="{ 'custom-warning-inline': fieldIsValid('startDateTime', { 'startDateTime': startDateTimeValue }, startDateTimeConstraints) !== '' }" >
         <p class="control">        
           <date-time-picker 
             v-model="startDateTimeValue" 
@@ -23,7 +23,7 @@
           End date
         </a>           
       </p>  
-      <div v-if="!endlessValue" v-bind:class="{ 'custom-warning-inline': fieldIsValid('endDateTime', { 'endDateTime': endDateTimeValue }, endDateTimeConstraints) !== '' }" >        
+      <div qa-data="schedule-dialog-end-date-time" v-if="!endlessValue" v-bind:class="{ 'custom-warning-inline': fieldIsValid('endDateTime', { 'endDateTime': endDateTimeValue }, endDateTimeConstraints) !== '' }" >        
         <p class="control">          
           <date-time-picker 
             v-model="endDateTimeValue" 
@@ -35,11 +35,11 @@
         </p>
       </div>
     </div>
-    <p id="schedule-start-date-time-error" class="help is-danger">{{ fieldIsValid('startDateTime', { 'startDateTime': startDateTimeValue }, startDateTimeConstraints) }}</p>
-    <p v-if="!this.endlessValue" id="schedule-end-date-time-error" class="help is-danger">{{ fieldIsValid('endDateTime', { 'endDateTime': endDateTimeValue }, endDateTimeConstraints) }}</p>      
+    <p id="schedule-start-date-time-error" qa-data="schedule-start-date-time-error" class="help is-danger">{{ fieldIsValid('startDateTime', { 'startDateTime': startDateTimeValue }, startDateTimeConstraints) }}</p>
+    <p v-if="!this.endlessValue" id="schedule-end-date-time-error" qa-data="schedule-end-date-time-error" class="help is-danger">{{ fieldIsValid('endDateTime', { 'endDateTime': endDateTimeValue }, endDateTimeConstraints) }}</p>      
     <div class="control">
       <label class="checkbox">
-        <input type="checkbox" v-model="endlessValue"> Endless schedule duration
+        <input type="checkbox" v-model="endlessValue" qa-data="schedule-dialog-endless"> Endless schedule duration
       </label>
     </div>
   </div>  

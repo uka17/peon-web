@@ -5,7 +5,7 @@ testJob.name += `f${(+new Date).toString(16)}`;
 const createTestJob = require('../helpers').createTestJob;
 
 
-describe('step', function() {
+describe('schedule-list', function() {
 
   before(function(browser) {
     browser.url(config.endpoint);
@@ -22,9 +22,9 @@ describe('step', function() {
       .waitForElementVisible('a[href="#/jobs/create"]')      
   });
 
-  this.tags = ['schedule-list', 'user-interface'];
+  this.tags = ['schedule', 'form', 'user-interface'];
 
-  test.only(`schedule. 
+  test(`schedule-list. 
     Open exisiting job
     Add new schedule
     Delete schedule
@@ -47,7 +47,18 @@ describe('step', function() {
       .assert.not.attributeContains('button[qa-data="delete-selected-schedule"]', 'disabled', 'true')
       .click('button[qa-data="delete-selected-schedule"]')
       .assert.attributeContains('button[qa-data="delete-selected-schedule"]', 'disabled', 'true')
+      .assert.cssClassPresent('#button-job-save', 'button is-link')
       .expect.elements('table[qa-data="schedule-list"] tbody tr').count.to.equal(1); 
+    //Delete 2 schedule
+    browser
+      .click(`span[qa-data="${testJob.schedules[0].name}"]`)
+      .assert.not.attributeContains('button[qa-data="delete-selected-schedule"]', 'disabled', 'true')
+      .click('button[qa-data="delete-selected-schedule"]')
+      .assert.attributeContains('button[qa-data="delete-selected-schedule"]', 'disabled', 'true')
+      .assert.elementPresent('table[qa-data="schedule-list"] .vuetable-empty-result')
+      .assert.elementPresent('#schedule-list-empty-error')
+    //Job can not be saved
+      .assert.cssClassPresent('#button-job-save', 'button is-link is-static');
   });   
   
   afterEach(function(browser) {

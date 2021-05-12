@@ -19,7 +19,7 @@ describe('job-list', function() {
       .waitForElementVisible('a[href="#/jobs/create"]')      
   });
 
-  this.tags = ['job-list', 'user-interface'];
+  this.tags = ['job', 'list', 'user-interface'];
 
   test('job-list. All components of job list page are visible and has proper state and style', function (browser) {
     browser
