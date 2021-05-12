@@ -180,7 +180,7 @@ describe('job', function() {
       .assert.elementPresent('div[qa-data="job-list-pagination-info"]')      
   });  
 
-  test.only('job. Change in job attributes is being reflected in job list', function (browser) {
+  test('job. Change in job attributes is being reflected in job list', function (browser) {
     let testJob = JSON.parse(JSON.stringify(testJobTemplate));
     testJob.name += `f${(+new Date).toString(16)}`;
     //create new job as Template one should stay untouched

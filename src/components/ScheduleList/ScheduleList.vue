@@ -13,7 +13,7 @@
       </div>
       <div class="column">
         <p class="control">
-	      <button qa-data="delete-schedule" class="button is-danger is-pulled-right" :disabled="clickedRow === null" title="Delete selected schedule" @click="deleteSelected()">
+	      <button qa-data="delete-selected-schedule" class="button is-danger is-pulled-right" :disabled="clickedRow === null" title="Delete selected schedule" @click="deleteSelected()">
             <span class="icon is-small">
               <i class="mdi mdi-trash-can-outline"></i>
             </span>
@@ -67,7 +67,7 @@ export default {
     getDescription(id) {
       if(this.scheduleList) {
         let cellSchedule = this.scheduleList.find((elem) => elem.id === id);
-        return cellSchedule === undefined ? undefined : scheduleSummary(cellSchedule);
+        return cellSchedule === undefined ? undefined : `<span qa-data="${cellSchedule.name}">${scheduleSummary(cellSchedule)}</span>`;
       } else {
         return undefined;
       }
