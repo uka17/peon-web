@@ -3,7 +3,7 @@
     <div class="field">
       <label class="label">Months*</label>
       <div class="control">
-        <div class="buttons has-addons">                
+        <div class="buttons has-addons" qa-data="schedule-months">                
           <button v-for="(value, index) in reference.monthList" class="button"
             v-bind:key="index" 
             v-bind:id="value.toLowerCase()"
@@ -13,16 +13,16 @@
           </button>
         </div>
       </div>     
-      <p id="schedule-months-error" class="help is-danger">{{ fieldIsValid('month', {'month': month}, monthConstraints) }}</p>
+      <p id="schedule-months-error" qa-data="schedule-months-error" class="help is-danger">{{ fieldIsValid('month', {'month': month}, monthConstraints) }}</p>
     </div>         
     <div class="field">
       <label class="label">Month days*</label>
       <div class="control">
-        <input v-model="dayValue" class="input" type="text" 
+        <input v-model="dayValue" class="input" type="text" qa-data="schedule-month-days" 
           v-bind:class="{ 'is-danger': fieldIsValid('day', {'day': dayValue}, dayConstraints) !== '' }" 
           placeholder="Month days comma separated list (e.g. 1,13,29)">
       </div>
-      <p id="schedule-monthdays-error" class="help is-danger">{{ fieldIsValid('day', {'day': dayValue}, dayConstraints) }}</p>
+      <p id="schedule-monthdays-error" qa-data="schedule-monthdays-error" class="help is-danger">{{ fieldIsValid('day', {'day': dayValue}, dayConstraints) }}</p>
     </div>  
   </div>
 </template>

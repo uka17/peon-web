@@ -27,7 +27,7 @@ const verifyJobDialogStaticUI = (browser) => {
     //verify schedule controls
     .click("#schedules-tab")
     .assert.elementPresent("button[qa-data='create-new-schedule']")
-    .assert.elementPresent("button[qa-data='delete-schedule']")
+    .assert.elementPresent("button[qa-data='delete-selected-schedule']")
     .assert.elementPresent("table[qa-data='schedule-list']")
 }
 

@@ -10,7 +10,7 @@
             </a>           
           </p>              
           <p class="control">
-            <input id="schedule-eachnweek"  type="text"                
+            <input id="schedule-eachnweek"  type="text" qa-data="schedule-dialog-eachnweek"   
               v-bind:class="{ 'is-danger': fieldIsValid('eachNWeek', { 'eachNWeek': eachNWeekValue }, eachNWeekConstraints) !== '' }"
               maxlength="3" @keypress="isNumber($event)" v-model.number="eachNWeekValue" class="input">
           </p>
@@ -24,7 +24,7 @@
       <div class="column">
         <div class="field"> 
           <div class="control">
-            <div class="buttons has-addons">                
+            <div class="buttons has-addons" qa-data="schedule-dialog-weekday">                
               <button v-for="(value, index) in reference.weekDayList" class="button"
                 v-bind:key="index" 
                 v-bind:id="value.toLowerCase()" 
@@ -37,8 +37,8 @@
         </div>
       </div>            
     </div>                       
-    <p id="schedule-eachnweek-error" class="help is-danger">{{ fieldIsValid('eachNWeek', { 'eachNWeek': eachNWeekValue }, eachNWeekConstraints) }}</p>                           
-    <p id="schedule-weekdays-error" class="help is-danger">{{ fieldIsValid('dayOfWeek', { 'dayOfWeek': dayOfWeek }, dayOfWeekConstraints) }}</p>
+    <p id="schedule-eachnweek-error" qa-data="schedule-eachnweek-error" class="help is-danger">{{ fieldIsValid('eachNWeek', { 'eachNWeek': eachNWeekValue }, eachNWeekConstraints) }}</p>                           
+    <p id="schedule-weekdays-error" qa-data="schedule-weekdays-error" class="help is-danger">{{ fieldIsValid('dayOfWeek', { 'dayOfWeek': dayOfWeek }, dayOfWeekConstraints) }}</p>
   </div>
 </template>
 
