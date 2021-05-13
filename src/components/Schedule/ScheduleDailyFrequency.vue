@@ -34,7 +34,7 @@
             Starting
           </a>           
         </p>              
-        <div v-bind:class="{ 'custom-warning-inline': fieldIsValid('start', dailyFrequency, everyConstraints) !== '' }">
+        <div qa-data="schedule-daily-frequency-start" v-bind:class="{ 'custom-warning-inline': fieldIsValid('start', dailyFrequency, everyConstraints) !== '' }">
           <p class="control date-time-picker">          
             <date-time-picker
               v-model="dailyFrequency.start"
@@ -42,7 +42,7 @@
               value-type="format"
               type="time"
               placeholder="HH:mm:ss"
-              :disabled-time="startIsEarlierThanEnd">
+              :disabled-time="isLaterThanEnd">
             </date-time-picker>          
           </p>
         </div>
@@ -51,7 +51,7 @@
             till
           </a>           
         </p>  
-        <div v-bind:class="{ 'custom-warning-inline': fieldIsValid('end', dailyFrequency, everyConstraints) !== '' }">        
+        <div qa-data="schedule-daily-frequency-end" v-bind:class="{ 'custom-warning-inline': fieldIsValid('end', dailyFrequency, everyConstraints) !== '' }">        
           <p class="control date-time-picker">              
             <date-time-picker
               v-model="dailyFrequency.end"
@@ -59,7 +59,7 @@
               value-type="format"
               type="time"
               placeholder="HH:mm:ss"
-              :disabled-time="endIsLaterThanStart">
+              :disabled-time="isEarlierThanStart">
             </date-time-picker>   
           </p>
         </div>
@@ -69,7 +69,7 @@
           </a>           
         </p>
         <p class="control">
-          <input id="schedule-interval-value" maxlength="3" @keypress="isNumber($event)" type="text"
+          <input id="schedule-interval-value" qa-data="schedule-daily-frequency-interval" maxlength="3" @keypress="isNumber($event)" type="text"
             v-bind:class="{ 'is-danger': fieldIsValid('intervalValue', dailyFrequency.occursEvery, intervalValueConstraints) !== '' }" 
             v-model.number="dailyFrequency.occursEvery.intervalValue" class="input">
         </p>                  
@@ -82,9 +82,9 @@
           </span>
         </p>                    
       </div>
-      <p id="schedule-occurs-every-start-error" class="help is-danger">{{ fieldIsValid('start', dailyFrequency, everyConstraints) }}</p>
-      <p id="schedule-occurs-every-end-error" class="help is-danger">{{ fieldIsValid('end', dailyFrequency, everyConstraints) }}</p>
-      <p id="schedule-every-error" class="help is-danger">{{ fieldIsValid('intervalValue', dailyFrequency.occursEvery, intervalValueConstraints) }}</p>
+      <p id="schedule-occurs-every-start-error" qa-data="schedule-occurs-every-start-error" class="help is-danger">{{ fieldIsValid('start', dailyFrequency, everyConstraints) }}</p>
+      <p id="schedule-occurs-every-end-error" qa-data="schedule-occurs-every-end-error" class="help is-danger">{{ fieldIsValid('end', dailyFrequency, everyConstraints) }}</p>
+      <p id="schedule-every-error" qa-data="schedule-every-error" class="help is-danger">{{ fieldIsValid('intervalValue', dailyFrequency.occursEvery, intervalValueConstraints) }}</p>
     </div> 
   </div>
 </template>
@@ -108,14 +108,16 @@ export default {
     }
   },
   methods: {
-    startIsEarlierThanEnd(time) {  
-      let endDateTime = this.dailyFrequency.end === '' ? '00:00:00' : this.dailyFrequency.end;
-      let endDateTimeSplit = endDateTime.split(':');
+    isLaterThanEnd(time) {  
+      if(this.dailyFrequency.end === '')
+        return false;
+      let endDateTimeSplit = this.dailyFrequency.end.split(':');
       return time > new Date(new Date().setHours(endDateTimeSplit[0], endDateTimeSplit[1], endDateTimeSplit[2], 0))
     },
-    endIsLaterThanStart(time) {
-      let startDateTime = this.dailyFrequency.end === '' ? '00:00:00' : this.dailyFrequency.start;
-      let startDateTimeSplit = startDateTime.split(':');
+    isEarlierThanStart(time) {
+      if(this.dailyFrequency.start === '')
+        return false;
+      let startDateTimeSplit = this.dailyFrequency.start.split(':');
       return time < new Date(new Date().setHours(startDateTimeSplit[0], startDateTimeSplit[1], startDateTimeSplit[2], 0));
     },
   },

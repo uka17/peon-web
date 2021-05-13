@@ -54,7 +54,8 @@
            "eachNDay": 3,
            "name": "Daily once",
            "enabled": true,
-           "startDateTime": "2022-05-29T21:00:00.000Z",
+           "startDateTime": "2022-05-29T11:30:00.000Z",
+           "endDateTime": "2022-05-29T21:00:00.000Z",
            "dailyFrequency": {
              "occursOnceAt": "06:00:00"
            }

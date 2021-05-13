@@ -54,12 +54,8 @@ describe('schedule', function() {
       .assert.cssClassPresent('button[qa-data="schedule-create"]', 'button is-success')
       .click('button[qa-data="schedule-create"]')
   });   
-
-  test.only(`schedule. Types change behaviour`, function (browser) {
-
-  })
   
-  test.only(`schedule. Daily once validation. Endless schedule`, function (browser) {
+  test(`schedule. Daily once and periodical validation. Endless and end schedule`, function (browser) {
     browser
       .click(`a[qa-data="${testJob.name}"]`)
       .click('a#schedules-tab')
@@ -125,7 +121,50 @@ describe('schedule', function() {
       .assert.not.cssClassPresent('div[qa-data="schedule-daily-frequency-once"]', 'custom-warning')
       .assert.not.containsText('p[qa-data="schedule-daily-frequency-once-error"', 'can not be empty')          
       .assert.not.cssClassPresent('button[qa-data="schedule-save"]', 'button is-success is-static') 
+      //Change to schedule with end
+      .click('input[qa-data="schedule-dialog-endless"]')      
+      //Warning appeared
+      .assert.cssClassPresent('button[qa-data="schedule-save"]', 'button is-static')       
+      .assert.cssClassPresent('div[qa-data="schedule-dialog-end-date-time"]', 'custom-warning-inline')
+      .assert.containsText('p[qa-data="schedule-end-date-time-error"', 'can not be empty')
+      .setValue('div[qa-data="schedule-dialog-end-date-time"] input', dayjs(testJob.schedules[1].endDateTime).format('YYYY-MM-DD HH:mm:ss')) 
+      .click('[qa-data="schedule-name"]')
+      //Warning removed
+      .assert.not.cssClassPresent('div[qa-data="schedule-dialog-end-date-time"]', 'custom-warning-inline')
+      .assert.not.containsText('p[qa-data="schedule-end-date-time-error"', 'can not be empty')      
+      .assert.cssClassPresent('button[qa-data="schedule-save"]', 'button is-link') 
+      .click('button[qa-data="schedule-save"]')
+      .click(`a[qa-data="${testJob.schedules[1].name}"]`)
+      //Change to daily periodical schedule 
+      .click('input[qa-data="schedule-daily-periodical"]')
+      .assert.cssClassPresent('div[qa-data="schedule-daily-frequency-start"]', 'custom-warning-inline')     
+      .assert.containsText('p[qa-data="schedule-occurs-every-start-error"', 'can not be empty')      
+      .assert.cssClassPresent('div[qa-data="schedule-daily-frequency-end"]', 'custom-warning-inline')           
+      .assert.containsText('p[qa-data="schedule-occurs-every-end-error"', 'can not be empty')
+      .assert.cssClassPresent('input[qa-data="schedule-daily-frequency-interval"]', 'input is-danger')
+      .assert.containsText('p[qa-data="schedule-every-error"', 'can not be empty')
+      .assert.cssClassPresent('button[qa-data="schedule-save"]', 'button is-static')
+      //Put data for daily periodical
+      .setValue('div[qa-data="schedule-daily-frequency-start"] input', testJob.schedules[2].dailyFrequency.start) 
+      .click('[qa-data="schedule-name"]')
+      .setValue('div[qa-data="schedule-daily-frequency-end"] input', testJob.schedules[2].dailyFrequency.end) 
+      .click('[qa-data="schedule-name"]')
+      .setValue('input[qa-data="schedule-daily-frequency-interval"]', testJob.schedules[2].dailyFrequency.occursEvery.intervalValue) 
+      //Warning removed
+      .assert.not.cssClassPresent('div[qa-data="schedule-daily-frequency-start"]', 'custom-warning-inline')     
+      .assert.not.containsText('p[qa-data="schedule-occurs-every-start-error"', 'can not be empty')      
+      .assert.not.cssClassPresent('div[qa-data="schedule-daily-frequency-end"]', 'custom-warning-inline')           
+      .assert.not.containsText('p[qa-data="schedule-occurs-every-end-error"', 'can not be empty')
+      .assert.not.cssClassPresent('input[qa-data="schedule-daily-frequency-interval"]', 'input is-danger')
+      .assert.not.containsText('p[qa-data="schedule-every-error"', 'can not be empty')     
+      .assert.cssClassPresent('button[qa-data="schedule-save"]', 'button is-link') 
+      //Save schedule
+      .click('button[qa-data="schedule-save"]')
   });   
+
+  test(`schedule. Duration limitations: startDate, endDate, recurrence starting and till`, function (browser) {
+
+  });
 
   afterEach(function(browser) {
     browser.end();
