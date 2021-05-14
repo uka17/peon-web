@@ -4,7 +4,7 @@
     <div class="columns">   
       <div class="column">
         <p class="control">
-          <router-link id="new-connection" class="button is-success" title="Create new connection" :to="'/connections/create'">
+          <router-link id="new-connection" qa-data="connection-list-create" class="button is-success" title="Create new connection" :to="'/connections/create'">
             <span class="icon is-small">
               <i class="mdi mdi-shape-square-plus"></i>
             </span>
@@ -22,8 +22,8 @@
         </p>          
       </div>
     </div>
-    <filter-bar></filter-bar>
-    <vuetable ref="connectionList"
+    <filter-bar qa-data="connection-list-filter"></filter-bar>
+    <vuetable qa-data="connection-list-table" ref="connectionList"
       :api-url="apiUrl"
       :fields="fields"
       data-path="data"
@@ -44,11 +44,11 @@
     </vuetable>
     <div class="columns">
       <div class="column is-paddingless">
-        <vuetable-pagination-info ref="connectionListPaginationInfo"
+        <vuetable-pagination-info ref="connectionListPaginationInfo" qa-data="connection-list-pagination-info"
         ></vuetable-pagination-info>
       </div>
       <div class="column">
-        <vuetable-pagination ref="connectionListPagination"
+        <vuetable-pagination ref="connectionListPagination" qa-data="connection-list-pagination" 
           @vuetable-pagination:change-page="onChangePage"
           :css="css.pagination"
         ></vuetable-pagination>

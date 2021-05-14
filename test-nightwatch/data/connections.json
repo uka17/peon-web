@@ -1,0 +1,32 @@
+[  
+  {
+    "name": "Postgres-local",
+    "host": "172.17.0.2",
+    "port": 5432,
+    "enabled": true,
+    "login": "postgresql",
+    "password": "255320",
+    "type": "postgresql",
+    "database": "test"
+  },
+  {
+    "name": "Mongo dummy",
+    "host": "test",
+    "port": 8080,
+    "enabled": true,
+    "login": "user",
+    "password": "password",
+    "type": "mongodb",
+    "database": ""
+  },
+  {
+    "name": "Postgres dummy",
+    "host": "test",
+    "port": 8080,
+    "enabled": true,
+    "login": "user",
+    "password": "password",
+    "type": "postgresql",
+    "database": ""
+  }
+]

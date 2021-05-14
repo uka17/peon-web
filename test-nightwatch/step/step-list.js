@@ -1,6 +1,6 @@
 const dayjs = require("dayjs")
 const config = require("../config.json");
-let testJobTemplate = JSON.parse(JSON.stringify(require("../test-data.json").job));
+let testJobTemplate = JSON.parse(JSON.stringify(require("../data/jobs.json").job));
 testJobTemplate.name += `f${(+new Date).toString(16)}`;
 const createTestJob = require('../helpers').createTestJob;
 

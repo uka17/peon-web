@@ -1,5 +1,5 @@
 const config = require("../config.json");
-const testJobTemplate = JSON.parse(JSON.stringify(require("../test-data.json").job));
+const testJobTemplate = JSON.parse(JSON.stringify(require("../data/jobs.json").job));
 const createTestJob = require('../helpers').createTestJob;
 
 describe('job-list', function() {

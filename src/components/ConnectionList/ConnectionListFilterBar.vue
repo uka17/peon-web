@@ -1,15 +1,15 @@
 <template>
   <div class="field has-addons">
     <div class="control">
-      <input class="input" id="connection-list-filter" type="text" v-model="filterText" @keyup.enter="doFilter" placeholder="Connection name, host or login">
+      <input class="input" id="connection-list-filter" qa-data="connection-list-filter-text" type="text" v-model="filterText" @keyup.enter="doFilter" placeholder="Connection name, host or login">
     </div>
     <div class="control">
-      <a class="button is-info" @click="doFilter">
+      <a class="button is-info" @click="doFilter" qa-data="connection-list-filter-do">
         Filter
       </a>
     </div>
     <div class="control">
-      <a class="button" @click="resetFilter">
+      <a class="button" @click="resetFilter" qa-data="connection-list-filter-reset">
         Reset
       </a>
     </div>  

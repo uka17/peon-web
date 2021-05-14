@@ -1,10 +1,4 @@
 const dayjs = require("dayjs")
-const config = require('../src/components/config.js');
-
-function formatDateTime(val) {
-  let dateTime = Date.parse(val);
-  return !isNaN(dateTime) ? dayjs(dateTime).format(config.dateTimeFormatSec) : '';
-}
 
 module.exports = {
   '@disabled': true,
@@ -13,8 +7,6 @@ module.exports = {
       //create new job for all tests where job is needed
       .waitForElementVisible('a[href="#/jobs"]')
       .click('a[href="#/jobs"]')      
-      .waitForElementVisible('a[href="#/jobs"]')
-      .click('a[href="#/jobs"]')
       .waitForElementVisible('a[href="#/jobs/create"]')
       .click('a[href="#/jobs/create"]')
       //fill in job general
@@ -37,5 +29,24 @@ module.exports = {
       .click('button[qa-data="schedule-create"]')
       //save job
       .click('button[qa-data="job-create"]')
-    }
+  },
+  createTestConnection: function createTestConnection(browser, testConnection) {
+    browser  
+      //create new connection for all tests where connection is needed
+      .waitForElementVisible('a[href="#/connections"]')
+      .click('a[href="#/connections"]')      
+      .click('a[href="#/connections/create"]')
+      //fill in connection general
+      .waitForElementVisible('#connection-modal-content')
+      .setValue('input[qa-data="connection-dialog-name"]', testConnection.name)
+      .setValue('input[qa-data="connection-dialog-host"]', testConnection.host)
+      .setValue('input[qa-data="connection-dialog-database"]', testConnection.database)
+      .setValue('input[qa-data="connection-dialog-port"]', ['\u0008', '\u0008', '\u0008'])  
+      .setValue('input[qa-data="connection-dialog-port"]', testConnection.port)
+      .setValue('input[qa-data="connection-dialog-login"]', testConnection.login)      
+      .setValue('input[qa-data="connection-dialog-password"]', testConnection.password)    
+      .click(`select[qa-data="connection-dialog-type"] option[value="${testConnection.type}"]`)               
+      //save connection
+      .click('button[qa-data="connection-dialog-create"]')
+  }  
 }
