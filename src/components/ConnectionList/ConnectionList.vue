@@ -14,7 +14,7 @@
       </div>
       <div class="column">
         <p class="control">
-          <button class="button is-danger is-pulled-right" :disabled="selectedRow === null" title="Delete selected connection" @click="modalDeleteShow()">
+          <button qa-data="connection-list-delete-modal-show" class="button is-danger is-pulled-right" :disabled="selectedRow === null" title="Delete selected connection" @click="modalDeleteShow()">
             <span class="icon is-small">
               <i class="mdi mdi-trash-can-outline"></i>
             </span>
@@ -36,10 +36,13 @@
       :append-params="moreParams"      
     >
       <template slot="connection-name" slot-scope="props">
-        <router-link :to="`/connections/${props.rowData.id}`">{{ props.rowData.name }}</router-link>
+        <div class="slot-link" :qa-data="`${props.rowData.name}-cell`" @click="onCellClicked(props.rowData)">
+          <router-link :qa-data="props.rowData.name" :to="`/connections/${props.rowData.id}`">{{ props.rowData.name }}</router-link>
+        </div>
       </template>     
       <template slot="connection-summary" slot-scope="props">
-        <span>{{ `${props.rowData.login}@${props.rowData.host}:${props.rowData.port}` }}</span>
+        <span :qa-data="`${props.rowData.login}@${props.rowData.host}:${props.rowData.port}`" 
+        :data-tooltip="`${props.rowData.login}@${props.rowData.host}:${props.rowData.port}`"><i class="mdi mdi-information-outline"></i></span>
       </template>         
     </vuetable>
     <div class="columns">
@@ -54,7 +57,7 @@
         ></vuetable-pagination>
       </div>
     </div>   
-    <div class="modal" v-bind:class="{ 'is-active': deleteDialogIsVisible }" v-on:keyup.esc="deleteDialogIsVisible = false">
+    <div class="modal" qa-data="connection-delete-modal" v-bind:class="{ 'is-active': deleteDialogIsVisible }" v-on:keyup.esc="deleteDialogIsVisible = false">
       <div class="modal-background"></div>
       <div class="modal-content" id="connection-delete-modal-content">
         <div class="card">
@@ -63,13 +66,13 @@
               <article class="message is-danger">
                 <div class="message-body">
                   Once you delete a connection, there is no going back. <br/>
-                  Please be certain. Type <span><b>{{ selectedConnectionName }}</b></span> to confirm.<br/><br/>
+                  Please be certain. Type <span qa-data="connection-delete-modal-connection-name"><b>{{ selectedConnectionName }}</b></span> to confirm.<br/><br/>
                   <div class="field has-addons">
                     <div class="control">
-                      <input class="input" v-model="connectionNameToDelete" type="text" placeholder="Connection name">
+                      <input qa-data="connection-delete-modal-text" class="input" v-model="connectionNameToDelete" type="text" placeholder="Connection name">
                     </div>
                     <div class="control">
-                      <a class="button is-danger" :disabled="deleteLocked" @click="executeConnectionDeletion">
+                      <a class="button is-danger" qa-data="connection-delete-modal-confirm" :disabled="deleteLocked" @click="executeConnectionDeletion">
                         Delete
                       </a>
                     </div>
@@ -80,7 +83,7 @@
           </div>
         </div>
       </div>
-      <button class="modal-close is-large" aria-label="close" @click="deleteDialogIsVisible = false"></button>
+      <button class="modal-close is-large" qa-data="connection-delete-modal-close" aria-label="close" @click="deleteDialogIsVisible = false"></button>
     </div>                
   </div>
 </template>
@@ -140,7 +143,7 @@ export default {
     onChangePage (page) {
       this.$refs.connectionList.changePage(page)
     },
-    async onCellClicked (data, field, event) {
+    async onCellClicked (data) {
       this.selectedRow = data.id;   
       this.selectedConnectionName = data.name;        
     },
@@ -183,5 +186,10 @@ export default {
 <style lang="scss" >
   #connection-delete-modal-content {
     width: 430px;    
+  }
+  .slot-link {
+    height: 100%;
+    padding: 0px;
+    margin: 0px;
   }
 </style>

@@ -17,7 +17,7 @@
     "login": "user",
     "password": "password",
     "type": "mongodb",
-    "database": ""
+    "database": "fbi"
   },
   {
     "name": "Postgres dummy",
@@ -27,6 +27,6 @@
     "login": "user",
     "password": "password",
     "type": "postgresql",
-    "database": ""
+    "database": "fsb"
   }
 ]

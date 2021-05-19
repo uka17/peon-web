@@ -143,7 +143,7 @@ describe('job-list', function() {
       //check if info was changed and job is not visible
       .assert.elementPresent(`a[qa-data="${testJob.name}"]`)
       .expect.element('div[qa-data="job-list-pagination-info"]').text.to.contain('Displaying 1')
-});  
+  });  
   
   afterEach(function(browser) {
     browser.end();
