@@ -4,7 +4,7 @@
     <div class="modal-card" id="connection-modal-content">
       <header class="modal-card-head">
         <p class="modal-card-title">Connection properties: {{connection.name}}</p>
-        <button class="delete" aria-label="close" @click="modalClose"></button>
+        <button qa-data="connection-modal-close" class="delete" aria-label="close" @click="modalClose"></button>
       </header>
       <section class="modal-card-body">
         <div class="field">
@@ -17,7 +17,7 @@
         <div class="field">
           <div class="control">
             <label class="checkbox">
-              <input type="checkbox" v-model="connection.enabled"> Enabled
+              <input qa-data="connection-dialog-enabled" type="checkbox" v-model="connection.enabled"> Enabled
             </label>
           </div>
         </div>     
@@ -33,7 +33,7 @@
           <div class="control">
             <input qa-data="connection-dialog-database" v-model="connection.database" class="input" type="text" v-bind:class="{ 'is-danger': fieldIsValid('database') !== '' }" placeholder="Database name">
           </div>
-          <p id="connection-dialog-host-error" qa-data="connection-dialog-host-error" class="help is-danger">{{ fieldIsValid('database') }}</p>
+          <p id="connection-dialog-host-error" qa-data="connection-dialog-database-error" class="help is-danger">{{ fieldIsValid('database') }}</p>
         </div>        
         <div class="field">
           <label class="label">Port*</label>
