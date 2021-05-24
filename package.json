@@ -22,6 +22,7 @@
     "@mdi/font": "^4.9.95",
     "axios": "^0.21.1",
     "babel-loader": "^8.2.2",
+    "buefy": "^0.9.7",
     "bulma": "^0.8.2",
     "bulma-tooltip": "^3.0.2",
     "chai": "^4.3.4",

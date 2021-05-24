@@ -23,13 +23,11 @@
         </div>
         <div class="field">
           <label class="label">Connection*</label>
-          <div class="control">
-            <div class="select">
-              <select id="step-dialog-connection">
-                <option>Connection 1</option>
-                <option>Connection 2</option>
-              </select>
-            </div>
+          <div class="control">            
+            <connection-autocomplete 
+              :connection="step.connection" 
+              v-on:connection-update="onConnectionUpdate($event)">
+            </connection-autocomplete>
           </div>
         </div>           
         <div class="field" v-bind:class="{ 'is-danger': fieldIsValid('name') !== '' }" >
@@ -106,10 +104,13 @@
 import StepResultAction from './StepResultAction.vue'
 import CodeMirror from '../../../node_modules/codemirror/lib/codemirror'
 import CodeMirrorMode from '../../../node_modules/codemirror/mode/sql/sql'
+import ConnectionAutocomplete from './ConnectionAutocomplete.vue'
+import 'buefy/dist/buefy.css'
 
 import validate from 'validate.js';
 import constraints from './step-validation.js';
 import utils from '../utils.js';
+import Connection from '../Connection/Connection.vue'
 
 
 export default {
@@ -118,7 +119,7 @@ export default {
       step: {},
       highlighter: null,
       isNew: null,
-      stepList: []
+      stepList: [],
     }
   },
   methods: {
@@ -154,6 +155,9 @@ export default {
       this.highlighter.toTextArea();
       this.highlighter = null;
     },
+    onConnectionUpdate(v) {
+      this.step.connection = v;
+    },
     onSucceedActionUpdate: function(v) {
       this.step.onSucceed = v;
     },
@@ -167,7 +171,7 @@ export default {
       else
         return '';
     },
-    isNumber: utils.isNumber   
+    isNumber: utils.isNumber
   },
   computed: {
     modalIsActive: function() {
@@ -178,10 +182,12 @@ export default {
     },
     formIsValid() {
       return (validate(this.step, constraints('en')) === undefined)
-    }
+    }  
   },
   components: {
-    'step-result-action': StepResultAction
+    'step-result-action': StepResultAction,
+    'connection-autocomplete': ConnectionAutocomplete,
+    Connection
   }
 }
 </script>
