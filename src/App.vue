@@ -50,7 +50,6 @@ import JobList from './components/JobList/JobList.vue';
 import Job from './components/Job/Job.vue';
 import ConnectionList from './components/ConnectionList/ConnectionList.vue';
 import Connection from './components/Connection/Connection.vue';
-import config from './components/config.js';
 
 import { EventBus } from './components/utils.js';
 

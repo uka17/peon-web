@@ -1,18 +1,18 @@
 <template>
   <div>
     <b-field>
-      <b-autocomplete v-bind:class="{ 'connection-warning': this.connection == null }"
+      <b-autocomplete  v-bind:class="{ 'connection-warning': this.connection == null }"
           v-model="connectionValue"
           :data="data"
           field="name"
-          placeholder="Start to type connection name and choose from the list"
+          placeholder="Connection name"
           @select="selectConnection"
           @input="filterConnectionList"
           >
           <template #empty>No results found</template>
       </b-autocomplete>
     </b-field>
-    <p id="step-dialog-connection-error" class="help is-danger" v-if="this.connection == null">Field should not be empty</p>
+    <p id="step-dialog-connection-error" class="help is-danger" v-if="this.connection == null">{{ fieldIsValid('connection', this.connection, ConnectionConstraints) }}</p>
   </div>
 </template>
 
@@ -21,6 +21,8 @@ import Vue from 'vue'
 import { Field, Autocomplete } from 'buefy'
 import axios from 'axios';
 import config from '../config.js';
+import constraints from './step-validation.js';
+import { fieldIsValid } from '../common/common-helpers.js';
 
 Vue.use(Field)
 Vue.use(Autocomplete)
@@ -28,7 +30,9 @@ Vue.use(Autocomplete)
 export default {
     data() {
         return {
+          fieldIsValid,
           data: [],
+          ConnectionConstraints: { 'connection': constraints('en')['connection'] },
           connectionValue: '',
           apiUrl: `${config.apiUrl}/connections`
         }
@@ -36,6 +40,7 @@ export default {
     props: ['connection'],
     watch: {
       connection: async function() {     
+        this.connectionValue = '';
         if(this.connection) {
           const result = await axios.get(`${this.apiUrl}/${this.connection}`);
           if(result.data)
@@ -50,7 +55,7 @@ export default {
 
       },
       async filterConnectionList(value) {
-        if(value) {
+        if(value != null && value != undefined) {
           const result = await axios.get(`${this.apiUrl}?filter=${value}&sort=name|asc&page=1&per_page=10`);
           if(result.data.data) {
             this.data = result.data.data;

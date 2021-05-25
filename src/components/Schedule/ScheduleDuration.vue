@@ -48,7 +48,7 @@
 <script>
 
 import constraints from './schedule-validation.js';
-import { fieldIsValid } from './schedule-helpers.js';
+import { fieldIsValid } from '../common/common-helpers.js';
 import DatePicker from 'vue2-datepicker';
 import config from '../config.js';
 import dayjs from 'dayjs';

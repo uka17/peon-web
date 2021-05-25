@@ -112,7 +112,7 @@ import constraints from './schedule-validation.js';
 import scheduleTemplate from './schedule-template.js';
 import utils from '../utils.js';
 import config from '../config.js';
-import { fieldIsValid } from './schedule-helpers.js';
+import { fieldIsValid } from '../common/common-helpers.js';
 
 import ScheduleOneTime from './ScheduleOneTime.vue'
 import ScheduleDuration from './ScheduleDuration.vue'

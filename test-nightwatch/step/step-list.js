@@ -62,6 +62,9 @@ describe('step-list', function() {
       .click('button[qa-data="create-new-step"')
       //Create step
       .setValue('[qa-data="step-name"]', testJobTemplate.steps[0].name)
+      .click('div[qa-data="step-dialog-connection"] input')
+      .keys(["conn"]) 
+      .click('div.dropdown-content a.dropdown-item')      
       .click('.CodeMirror-code')
       .keys([testJobTemplate.steps[0].command])
       .setValue('input[qa-data="step-retry-number"]', ['\u0008', '\u0008', '\u0008'])
@@ -80,6 +83,9 @@ describe('step-list', function() {
     //2nd
       .click('button[qa-data="create-new-step"')
       .setValue('[qa-data="step-name"]', testJobTemplate.steps[1].name)
+      .click('div[qa-data="step-dialog-connection"] input')
+      .keys(["conn"]) 
+      .click('div.dropdown-content a.dropdown-item')      
       .click('.CodeMirror-code')
       .keys([testJobTemplate.steps[1].command])
       .setValue('input[qa-data="step-retry-number"]', ['\u0008', '\u0008', '\u0008'])
@@ -92,6 +98,9 @@ describe('step-list', function() {
     //3rd
       .click('button[qa-data="create-new-step"')   
       .setValue('[qa-data="step-name"]', testJobTemplate.steps[2].name)
+      .click('div[qa-data="step-dialog-connection"] input')
+      .keys(["conn"]) 
+      .click('div.dropdown-content a.dropdown-item')      
       .click('.CodeMirror-code')
       .keys([testJobTemplate.steps[2].command])
       .setValue('input[qa-data="step-retry-number"]', ['\u0008', '\u0008', '\u0008'])

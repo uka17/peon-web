@@ -1,4 +1,5 @@
 const dayjs = require("dayjs");
+const nanoid = require("nanoid");
 const config = require("../config.json");
 const testJobTemplate = JSON.parse(JSON.stringify(require("../data/jobs.json").job));
 const createTestJob = require('../helpers').createTestJob;
@@ -104,6 +105,9 @@ describe('job', function() {
       //after creating step warning will be cleared
       .setValue('[qa-data="step-name"]', testJobTemplate.steps[0].name)
       .assert.not.valueContains('#step-dialog-name-error', "must be")
+      .click('div[qa-data="step-dialog-connection"] input')
+      .keys(["conn"]) 
+      .click('div.dropdown-content a.dropdown-item')      
       .click('.CodeMirror-code')
       .keys(["script"]) 
       .assert.not.valueContains('#step-dialog-command-error', "can not be")
@@ -142,6 +146,9 @@ describe('job', function() {
       //enter values for step tab      
       .click('button[qa-data="create-new-step"')
       .setValue('[qa-data="step-name"]', testJob.steps[0].name)
+      .click('div[qa-data="step-dialog-connection"] input')
+      .keys(["conn"]) 
+      .click('div.dropdown-content a.dropdown-item')      
       .click('.CodeMirror-code')
       .keys(["script"]) 
       .click('button[qa-data="step-create"]')
@@ -245,6 +252,9 @@ describe('job', function() {
       .click('a#steps-tab') 
       .click('button[qa-data="create-new-step"')
       .setValue('[qa-data="step-name"]', testJobTemplate.steps[0].name)
+      .click('div[qa-data="step-dialog-connection"] input')
+      .keys(["conn"]) 
+      .click('div.dropdown-content a.dropdown-item')      
       .click('.CodeMirror-code')
       .keys(["script"]) 
       .click('button[qa-data="step-create"]')      

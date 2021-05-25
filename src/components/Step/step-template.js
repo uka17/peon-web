@@ -3,7 +3,7 @@ module.exports = {
     "name": "",
     "enabled": true,
     "order": 1,
-    "connection": 0,
+    "connection": null,
     "command": "",
     "retryAttempts": {
       "number": 1,

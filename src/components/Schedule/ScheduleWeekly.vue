@@ -45,7 +45,7 @@
 <script>
 
 import constraints from './schedule-validation.js';
-import { fieldIsValid } from './schedule-helpers.js';
+import { fieldIsValid } from '../common/common-helpers.js';
 import utils from '../utils.js';
 import weekMonthReference from './week-month-reference.js';
 

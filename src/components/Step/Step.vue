@@ -25,6 +25,7 @@
           <label class="label">Connection*</label>
           <div class="control">            
             <connection-autocomplete 
+              qa-data="step-dialog-connection"
               :connection="step.connection" 
               v-on:connection-update="onConnectionUpdate($event)">
             </connection-autocomplete>

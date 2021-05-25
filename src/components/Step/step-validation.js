@@ -7,6 +7,17 @@ module.exports = (language = 'en') => {
         message: messages.step.name[language]
       }
     },
+    connection: {
+      presence: {
+        message: messages.step.connection[language],
+        allowEmpty: false
+      },
+      numericality: {
+        onlyInteger: true,
+        greaterThan: 0,
+        message: messages.step.connection[language]
+      }      
+    },    
     command: {
       presence: {
         message: messages.step.command[language],
@@ -41,6 +52,10 @@ const messages = {
       en: "^Field can not be empty",
       ru: "^Поле не может быть пустым"
     },
+    connection: {
+      en: "^Start to type and choose valid connection from the list",
+      ru: "^Начните печатать и выбирите существующее соединение из списка"
+    },    
     retryAttempts: {
       number: {
         en: "^Retry attempts number must be greater than or equal to zero and less than 11",

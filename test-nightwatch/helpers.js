@@ -1,4 +1,5 @@
 const dayjs = require("dayjs")
+const nanoid = require("nanoid");
 
 module.exports = {
   '@disabled': true,
@@ -17,6 +18,9 @@ module.exports = {
       .click('a#steps-tab') 
       .click('button[qa-data="create-new-step"')
       .setValue('[qa-data="step-name"]', testJob.steps[0].name)
+      .click('div[qa-data="step-dialog-connection"] input')
+      .keys(["conn"]) 
+      .click('div.dropdown-content a.dropdown-item')
       .click('.CodeMirror-code')
       .keys(["script"]) 
       .click('button[qa-data="step-create"]')
