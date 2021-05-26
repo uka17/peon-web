@@ -122,13 +122,15 @@ export default {
   methods: {
     onFilterReset() {
       this.moreParams = {};
-      Vue.nextTick( () => this.$refs.jobList.refresh());
+      if(this.$refs.jobList)
+        Vue.nextTick( () => this.$refs.jobList.refresh());
     },
     onFilterSet(filterText) {
       this.moreParams = {
           'filter': filterText          
       };            
-      Vue.nextTick( () => this.$refs.jobList.refresh());
+      if(this.$refs.jobList)
+        Vue.nextTick( () => this.$refs.jobList.refresh());
     },
     onPaginationData (paginationData) {
       this.$refs.jobListPagination.setPaginationData(paginationData)

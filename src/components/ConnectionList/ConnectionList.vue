@@ -128,13 +128,15 @@ export default {
   methods: {
     onFilterReset() {
       this.moreParams = {};
-      Vue.nextTick( () => this.$refs.connectionList.refresh());
+      if(this.$refs.connectionList)
+        Vue.nextTick( () => this.$refs.connectionList.refresh());
     },
     onFilterSet(filterText) {
       this.moreParams = {
           'filter': filterText
       };
-      Vue.nextTick( () => this.$refs.connectionList.refresh());
+      if(this.$refs.connectionList)
+        Vue.nextTick( () => this.$refs.connectionList.refresh());
     },
     onPaginationData (paginationData) {
       this.$refs.connectionListPagination.setPaginationData(paginationData)
