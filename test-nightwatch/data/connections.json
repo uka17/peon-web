@@ -1,16 +1,16 @@
 [  
   {
-    "name": "Postgres-local",
+    "name": "Psg-conn",
     "host": "172.17.0.2",
     "port": 5432,
     "enabled": true,
-    "login": "postgresql",
+    "login": "postgres",
     "password": "255320",
     "type": "postgresql",
     "database": "test"
   },
   {
-    "name": "Mongo dummy",
+    "name": "Mbg-dm-conn",
     "host": "test",
     "port": 8080,
     "enabled": true,
@@ -20,7 +20,7 @@
     "database": "fbi"
   },
   {
-    "name": "Postgres dummy",
+    "name": "Psg-dm-conn",
     "host": "test",
     "port": 8080,
     "enabled": true,

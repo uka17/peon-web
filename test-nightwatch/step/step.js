@@ -27,7 +27,7 @@ describe('step', function() {
 
   this.tags = ['step', 'from', 'user-interface'];
 
-  test.only(`step. 
+  test(`step. 
     Step creation modal form controls have correct state before and after putting any data 
     Cancel controls works properly and doesn't create any step 
     Step creation acts properly: closes form and creates step with proper data

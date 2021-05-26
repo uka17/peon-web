@@ -184,7 +184,7 @@ describe('connection', function() {
   });  
 
 
-  test.only('connection. Open existing connection, putting content inside and click Cancel or Close - connection was not changed', function (browser) {
+  test('connection. Open existing connection, putting content inside and click Cancel or Close - connection was not changed', function (browser) {
     browser
       .click(`a[qa-data="${testConnection.name}"]`)
       .assert.cssClassPresent('button[qa-data="connection-dialog-save"', 'button is-link')

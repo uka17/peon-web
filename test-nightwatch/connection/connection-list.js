@@ -106,13 +106,13 @@ describe('connection-list', function() {
   - After clicking Delete button in Delete modal connection is being deleted from the list properly
   `, function (browser) {
     let testConnection = JSON.parse(JSON.stringify(connections[1]));
-    testConnection.name += `f${(+new Date).toString(16)}`;
+    testConnection.name = `f${(+new Date).toString(16)}`;
     //create unique test connection
     createTestConnection(browser, testConnection);   
     //open delete modal
     browser
       .click(`div[qa-data="${testConnection.name}-cell"]`)
-      .click('button[qa-data="connection-list-delete-modal-show"]')
+      .click('button[qa-data="connection-list-delete-modal-show"]')      
       //aseert if from contains all elements and proper text
       .assert.elementPresent('span[qa-data="connection-delete-modal-connection-name"]')
       .assert.elementPresent('input[qa-data="connection-delete-modal-text"]')
@@ -140,6 +140,13 @@ describe('connection-list', function() {
   test(`connection-list. Pagination works properly, changes control style, shown records and statistics of records counter`, function (browser) {
     let testConnection = JSON.parse(JSON.stringify(connections[1]));
     testConnection.name += `f${(+new Date).toString(16)}`;
+    //create 10 unique additional connections due to show pagination
+    for (let index = 0; index < 10; index++) {
+      let testConnection = JSON.parse(JSON.stringify(connections[1]));
+      testConnection.name += `f${(+new Date).toString(16)}-${index}`;
+      createTestConnection(browser, testConnection);      
+    }
+    
     //create unique test connection
     createTestConnection(browser, testConnection);       
     browser

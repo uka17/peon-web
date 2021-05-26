@@ -24,7 +24,7 @@ describe('step-list', function() {
 
   this.tags = ['step', 'list', 'user-interface'];
 
-  test.only(`step-list. 
+  test(`step-list. 
     Step list controls have correct state before and after any step was added
     Create 3 steps
     Click 1st - Move step and delete controls has correct state and step

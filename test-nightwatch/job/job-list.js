@@ -124,6 +124,12 @@ describe('job-list', function() {
   test(`job-list. Pagination works properly, changes control style, shown records and statistics of records counter`, function (browser) {
     let testJob = JSON.parse(JSON.stringify(testJobTemplate));
     testJob.name += `f${(+new Date).toString(16)}`;
+    //create 10 unique additional jobs due to show pagination
+    for (let index = 0; index < 10; index++) {
+      let testJob = JSON.parse(JSON.stringify(testJobTemplate));
+      testJob.name += `f${(+new Date).toString(16)}-${index}`;
+      createTestJob(browser, testJob);      
+    }
     //create unique test job
     createTestJob(browser, testJob);       
     browser
