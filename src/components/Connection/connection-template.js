@@ -4,11 +4,11 @@ module.exports = {
       name: "",
       host: "",
       database: "",
-      port: 80,
+      port: 5432,
       enabled: true,      
       login: "",
       password: "",
-      type: 'mongodb'
+      type: 'postgresql'
     }
   }
 };

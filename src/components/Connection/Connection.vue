@@ -60,7 +60,7 @@
           <label class="label">Type*</label>
           <div class="control">
             <div class="select">
-              <select qa-data="connection-dialog-type" v-model="connection.type">
+              <select qa-data="connection-dialog-type" v-model="connectionType">
                 <option value="postgresql">PostgreSQL</option>
                 <option value="mongodb">MongoDB</option>
               </select>
@@ -162,7 +162,23 @@ export default {
     },
     formIsValid() {
       return (validate(this.connection, constraints('en')) === undefined)
-    }
+    },
+    connectionType: {
+      set(value) {
+        switch(value) {
+          case 'postgresql':
+            this.connection.port = 5432;
+            break;          
+          case 'mongodb': 
+            this.connection.port = 27017;
+            break;
+        }   
+        this.connection.type = value
+      },
+      get() {
+        return this.connection.type
+      }
+    } 
   },
   components: {
 
