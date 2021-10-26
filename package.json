@@ -28,7 +28,7 @@
     "bulma-tooltip": "^3.0.2",
     "chai": "^4.3.4",
     "chai-datetime": "^1.8.0",
-    "chromedriver": "^91.0.0",
+    "chromedriver": "^92.0.1",
     "codemirror": "^5.60.0",
     "css-loader": "^3.6.0",
     "dayjs": "^1.10.4",
@@ -57,5 +57,6 @@
     "webpack": "^4.46.0",
     "webpack-cli": "^3.3.12",
     "webpack-dev-server": "^3.11.2"
-  }
+  },
+  "dependencies": {}
 }
