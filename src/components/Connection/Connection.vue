@@ -167,10 +167,12 @@ export default {
       set(value) {
         switch(value) {
           case 'postgresql':
-            this.connection.port = 5432;
+            if(this.connection.port == '')
+              this.connection.port = 5432;
             break;          
           case 'mongodb': 
-            this.connection.port = 27017;
+            if(this.connection.port == '')
+              this.connection.port = 27017;
             break;
         }   
         this.connection.type = value

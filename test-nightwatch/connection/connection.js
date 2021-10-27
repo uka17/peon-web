@@ -17,7 +17,7 @@ describe('connection', function() {
       .windowMaximize()
       .waitForElementVisible('a[href="#/connections"]')
       .click('a[href="#/connections"]')
-      .waitForElementVisible('a[href="#/connections/create"]')      
+      .waitForElementVisible('a[href="#/connections/create"]');      
   });
 
   this.tags = ['connection', 'form', 'user-interface'];
@@ -81,7 +81,7 @@ describe('connection', function() {
       .assert.elementPresent("button[qa-data='connection-dialog-create']")
       .assert.elementPresent("button[qa-data='connection-dialog-close']")      
       .assert.not.cssClassPresent("button[qa-data='connection-dialog-create']", 'button is-success is-static')
-      .assert.cssClassPresent("button[qa-data='connection-dialog-close']", 'button')
+      .assert.cssClassPresent("button[qa-data='connection-dialog-close']", 'button');
   });
 
   test('connection. Created connection is being reflected in connection list', function (browser) {
@@ -101,7 +101,7 @@ describe('connection', function() {
       //create connection
       .click('button[qa-data="connection-dialog-create"]')
       //check if connection is exists connection job list
-      .waitForElementVisible(`a[qa-data="${connection.name}"]`)
+      .waitForElementVisible(`a[qa-data="${connection.name}"]`);
   });  
 
   test('connection. Closing Connection modal with Close button or Cancel button after opening New modal reloads page to proper content', function (browser) {
@@ -122,10 +122,10 @@ describe('connection', function() {
       .assert.elementPresent('div[qa-data="connection-list-filter"]')
       .assert.elementPresent('table[qa-data="connection-list-table"]')
       .assert.elementPresent('div[qa-data="connection-list-pagination"]')
-      .assert.elementPresent('div[qa-data="connection-list-pagination-info"]')   
+      .assert.elementPresent('div[qa-data="connection-list-pagination-info"]');   
   });  
 
-  test('connection. Change in connection attributes is being reflected in connection list', function (browser) {
+  test.only('connection. Change in connection attributes is being reflected in connection list', function (browser) {
     let connection = JSON.parse(JSON.stringify(testConnection));
     connection.name += `f${(+new Date).toString(16)}`;
     //create new connection as Template one should stay untouched
@@ -141,7 +141,7 @@ describe('connection', function() {
       .setValue('input[qa-data="connection-dialog-name"]', '-changed')   
       .setValue('input[qa-data="connection-dialog-host"]', '-changed')
       .setValue('input[qa-data="connection-dialog-database"]', '-changed')
-      .setValue('input[qa-data="connection-dialog-port"]', ['\u0008', '\u0008', '\u0008', '\u0008'])
+      .setValue('input[qa-data="connection-dialog-port"]', ['\u0008', '\u0008', '\u0008', '\u0008', '\u0008'])
       .setValue('input[qa-data="connection-dialog-port"]', '8080')
       .setValue('input[qa-data="connection-dialog-login"]', '-changed')
       .setValue('input[qa-data="connection-dialog-password"]', '-changed')
@@ -154,13 +154,13 @@ describe('connection', function() {
       //check if changes are reflected in modal
       .click(`a[qa-data="${connection.name}-changed"]`)
       .assert.valueContains('input[qa-data="connection-dialog-name"]', `${connection.name}-changed`)   
-      .assert.valueContains('input[qa-data="connection-dialog-host"]', `${connection.host}-changed`)
+      .assert.valueContains('input[qa-data="connection-dialog-host"]', `${connection.host}-changed`)      
       .assert.valueContains('input[qa-data="connection-dialog-database"]', `${connection.database}-changed`)
-      .assert.valueContains('input[qa-data="connection-dialog-port"]', '8080')
+      .assert.value('input[qa-data="connection-dialog-port"]', '8080')
       .assert.valueContains('input[qa-data="connection-dialog-login"]', `${connection.login}-changed`)
       .assert.valueContains('input[qa-data="connection-dialog-password"]', `${connection.password}-changed`)
       .assert.valueContains(`select[qa-data="connection-dialog-type"]`, "postgresql")          
-      .expect.element('input[qa-data="connection-dialog-enabled"]').to.not.be.selected
+      .expect.element('input[qa-data="connection-dialog-enabled"]').to.not.be.selected;
   });
 
   test('connection. Closing Сonnection modal with close button, Save or Cancel button after opening job reloads page to proper content', function (browser) {
@@ -180,7 +180,7 @@ describe('connection', function() {
       .assert.elementPresent('div[qa-data="connection-list-filter"]')
       .assert.elementPresent('table[qa-data="connection-list-table"]')
       .assert.elementPresent('div[qa-data="connection-list-pagination"]')
-      .assert.elementPresent('div[qa-data="connection-list-pagination-info"]')   
+      .assert.elementPresent('div[qa-data="connection-list-pagination-info"]');   
   });  
 
 
@@ -212,7 +212,7 @@ describe('connection', function() {
       .assert.valueContains('input[qa-data="connection-dialog-login"]', testConnection.login)
       .assert.valueContains('input[qa-data="connection-dialog-password"]', testConnection.password)
       .assert.valueContains(`select[qa-data="connection-dialog-type"]`, testConnection.type)          
-      .expect.element('input[qa-data="connection-dialog-enabled"]').to.be.selected
+      .expect.element('input[qa-data="connection-dialog-enabled"]').to.be.selected;
   });  
 
   afterEach(function(browser) {
