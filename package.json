@@ -20,7 +20,7 @@
     "@babel/core": "^7.13.10",
     "@livelybone/vue-datepicker": "^4.0.3",
     "@mdi/font": "^4.9.95",
-    "axios": "^0.21.1",
+    "axios": "^0.21.2",
     "babel-eslint": "^10.1.0",
     "babel-loader": "^8.2.2",
     "buefy": "^0.9.7",
