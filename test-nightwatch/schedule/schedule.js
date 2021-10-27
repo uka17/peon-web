@@ -1,4 +1,4 @@
-const dayjs = require("dayjs")
+const dayjs = require("dayjs");
 const config = require("../config.json");
 const testJob = JSON.parse(JSON.stringify(require("../data/jobs.json").job));
 testJob.name += `f${(+new Date).toString(16)}`;
@@ -19,7 +19,7 @@ describe('schedule', function() {
       .windowMaximize()
       .waitForElementVisible('a[href="#/jobs"]')
       .click('a[href="#/jobs"]')
-      .waitForElementVisible('a[href="#/jobs/create"]')      
+      .waitForElementVisible('a[href="#/jobs/create"]');      
   });
 
   this.tags = ['schedule', 'form', 'user-interface'];
@@ -52,7 +52,7 @@ describe('schedule', function() {
       .assert.not.cssClassPresent('div[qa-data="schedule-onetime"]', 'custom-warning')
       .assert.not.containsText('#schedule-onetime-error', 'should not be empty')   
       .assert.cssClassPresent('button[qa-data="schedule-create"]', 'button is-success')
-      .click('button[qa-data="schedule-create"]')
+      .click('button[qa-data="schedule-create"]');
   });   
   
   test(`schedule. Daily once and periodical validation. Endless and end schedule`, function (browser) {
@@ -159,7 +159,7 @@ describe('schedule', function() {
       .assert.not.containsText('p[qa-data="schedule-every-error"]', 'can not be empty')     
       .assert.cssClassPresent('button[qa-data="schedule-save"]', 'button is-link') 
       //Save schedule
-      .click('button[qa-data="schedule-save"]')
+      .click('button[qa-data="schedule-save"]');
   });   
 
   test(`schedule. Weekly validation.`, function (browser) {
@@ -235,7 +235,7 @@ describe('schedule', function() {
       .assert.not.containsText('p[qa-data="schedule-weekdays-error"]', 'at least 1 day of week')    
       .assert.not.cssClassPresent('div[qa-data="schedule-daily-frequency-once"]', 'custom-warning')
       .assert.not.containsText('p[qa-data="schedule-daily-frequency-once-error"]', 'can not be empty')          
-      .assert.not.cssClassPresent('button[qa-data="schedule-save"]', 'button is-success is-static')   
+      .assert.not.cssClassPresent('button[qa-data="schedule-save"]', 'button is-success is-static');   
   });     
 
   test(`schedule. Monthly validation.`, function (browser) {
@@ -313,66 +313,66 @@ describe('schedule', function() {
       .assert.not.containsText('p[qa-data="schedule-monthdays-error"]', 'should be a comma separated')     
       .assert.not.cssClassPresent('div[qa-data="schedule-daily-frequency-once"]', 'custom-warning')
       .assert.not.containsText('p[qa-data="schedule-daily-frequency-once-error"]', 'can not be empty')          
-      .assert.not.cssClassPresent('button[qa-data="schedule-save"]', 'button is-success is-static')             
+      .assert.not.cssClassPresent('button[qa-data="schedule-save"]', 'button is-success is-static');             
   });   
 
   test(`schedule. Duration limitations: startDate, endDate, recurrence starting and till`, function (browser) {
     browser
-    .click(`a[qa-data="${testJob.name}"]`)
-    .click('a#schedules-tab')
-    .click('button[qa-data="create-new-schedule"]')
+      .click(`a[qa-data="${testJob.name}"]`)
+      .click('a#schedules-tab')
+      .click('button[qa-data="create-new-schedule"]')
     //Choose schedule type
-    .click(`select[qa-data="schedule-dialog-type"] option[value="daily"]`)           
+      .click(`select[qa-data="schedule-dialog-type"] option[value="daily"]`)           
     //Change to schedule with end
-    .click('input[qa-data="schedule-dialog-endless"]')      
+      .click('input[qa-data="schedule-dialog-endless"]')      
     //Date of start can be any if end is not defined
-    .setValue('div[qa-data="schedule-dialog-start-date-time"] input', dayjs(testJob.schedules[1].startDateTime).format('YYYY-MM-DD HH:mm:ss')) 
-    .assert.not.cssClassPresent('table.mx-table td', 'cell disabled')
-    .click('[qa-data="schedule-name"]')    
+      .setValue('div[qa-data="schedule-dialog-start-date-time"] input', dayjs(testJob.schedules[1].startDateTime).format('YYYY-MM-DD HH:mm:ss')) 
+      .assert.not.cssClassPresent('table.mx-table td', 'cell disabled')
+      .click('[qa-data="schedule-name"]')    
     //Date of end can be only after start date
-    .setValue('div[qa-data="schedule-dialog-end-date-time"] input', dayjs(testJob.schedules[1].endDateTime).format('YYYY-MM-DD HH:mm:ss')) 
-    .click('[qa-data="schedule-name"]')    
-    .click('div[qa-data="schedule-dialog-end-date-time"] input')    
-    .assert.not.cssClassPresent(`table.mx-table td[title="${dayjs(testJob.schedules[1].startDateTime).add(1, 'day').format('YYYY-MM-DD')}"]`, 'cell disabled')
-    .assert.cssClassPresent(`table.mx-table td[title="${dayjs(testJob.schedules[1].startDateTime).add(-2, 'day').format('YYYY-MM-DD')}"]`, 'cell disabled')    
+      .setValue('div[qa-data="schedule-dialog-end-date-time"] input', dayjs(testJob.schedules[1].endDateTime).format('YYYY-MM-DD HH:mm:ss')) 
+      .click('[qa-data="schedule-name"]')    
+      .click('div[qa-data="schedule-dialog-end-date-time"] input')    
+      .assert.not.cssClassPresent(`table.mx-table td[title="${dayjs(testJob.schedules[1].startDateTime).add(1, 'day').format('YYYY-MM-DD')}"]`, 'cell disabled')
+      .assert.cssClassPresent(`table.mx-table td[title="${dayjs(testJob.schedules[1].startDateTime).add(-2, 'day').format('YYYY-MM-DD')}"]`, 'cell disabled')    
     //Date of start can be only before end date
-    .click('div[qa-data="schedule-dialog-start-date-time"] input')
-    .assert.not.cssClassPresent(`table.mx-table td[title="${dayjs(testJob.schedules[1].endDateTime).add(0, 'day').format('YYYY-MM-DD')}"]`, 'cell disabled')
-    .assert.not.cssClassPresent(`table.mx-table td[title="${dayjs(testJob.schedules[1].endDateTime).add(1, 'day').format('YYYY-MM-DD')}"]`, 'cell disabled')
-    .assert.cssClassPresent(`table.mx-table td[title="${dayjs(testJob.schedules[1].endDateTime).add(-1, 'day').format('YYYY-MM-DD')}"]`, 'cell disabled')
+      .click('div[qa-data="schedule-dialog-start-date-time"] input')
+      .assert.not.cssClassPresent(`table.mx-table td[title="${dayjs(testJob.schedules[1].endDateTime).add(0, 'day').format('YYYY-MM-DD')}"]`, 'cell disabled')
+      .assert.not.cssClassPresent(`table.mx-table td[title="${dayjs(testJob.schedules[1].endDateTime).add(1, 'day').format('YYYY-MM-DD')}"]`, 'cell disabled')
+      .assert.cssClassPresent(`table.mx-table td[title="${dayjs(testJob.schedules[1].endDateTime).add(-1, 'day').format('YYYY-MM-DD')}"]`, 'cell disabled')
     //'Starting' time can be any if 'Till' is not defined
-    .click('input[qa-data="schedule-daily-periodical"]')
-    .setValue('div[qa-data="schedule-daily-frequency-start"] input', testJob.schedules[2].dailyFrequency.start) 
-    .assert.not.cssClassPresent('div.mx-time-content li', 'mx-time-item disabled')
-    .click('[qa-data="schedule-name"]') 
+      .click('input[qa-data="schedule-daily-periodical"]')
+      .setValue('div[qa-data="schedule-daily-frequency-start"] input', testJob.schedules[2].dailyFrequency.start) 
+      .assert.not.cssClassPresent('div.mx-time-content li', 'mx-time-item disabled')
+      .click('[qa-data="schedule-name"]') 
     //'Till' can be only after 'Starting' date
-    .setValue('div[qa-data="schedule-daily-frequency-end"] input', testJob.schedules[2].dailyFrequency.end) 
-    .click('[qa-data="schedule-name"]')    
-    .click('div[qa-data="schedule-daily-frequency-end"]')    
-    .assert.cssClassPresent(`div.mx-time-content ul[data-type="hour"] li[data-index="${parseInt(testJob.schedules[2].dailyFrequency.start.split(':')[0], 10) - 1}"]`, 'mx-time-item disabled')
-    .assert.not.cssClassPresent(`div.mx-time-content ul[data-type="hour"] li[data-index="${parseInt(testJob.schedules[2].dailyFrequency.start.split(':')[0], 10)}"]`, 'mx-time-item disabled')
-    .assert.not.cssClassPresent(`div.mx-time-content ul[data-type="hour"] li[data-index="${parseInt(testJob.schedules[2].dailyFrequency.start.split(':')[0], 10 + 1)}"]`, 'mx-time-item disabled')
+      .setValue('div[qa-data="schedule-daily-frequency-end"] input', testJob.schedules[2].dailyFrequency.end) 
+      .click('[qa-data="schedule-name"]')    
+      .click('div[qa-data="schedule-daily-frequency-end"]')    
+      .assert.cssClassPresent(`div.mx-time-content ul[data-type="hour"] li[data-index="${parseInt(testJob.schedules[2].dailyFrequency.start.split(':')[0], 10) - 1}"]`, 'mx-time-item disabled')
+      .assert.not.cssClassPresent(`div.mx-time-content ul[data-type="hour"] li[data-index="${parseInt(testJob.schedules[2].dailyFrequency.start.split(':')[0], 10)}"]`, 'mx-time-item disabled')
+      .assert.not.cssClassPresent(`div.mx-time-content ul[data-type="hour"] li[data-index="${parseInt(testJob.schedules[2].dailyFrequency.start.split(':')[0], 10 + 1)}"]`, 'mx-time-item disabled');
   });
 
   test(`schedule. Month days validation`, function (browser) {
     browser
-    .click(`a[qa-data="${testJob.name}"]`)
-    .click('a#schedules-tab')
-    .click('button[qa-data="create-new-schedule"]')
+      .click(`a[qa-data="${testJob.name}"]`)
+      .click('a#schedules-tab')
+      .click('button[qa-data="create-new-schedule"]')
     //Choose schedule type
-    .click(`select[qa-data="schedule-dialog-type"] option[value="monthly"]`)   
+      .click(`select[qa-data="schedule-dialog-type"] option[value="monthly"]`)   
     //Check month day validation
-    .setValue('input[qa-data="schedule-month-days"]', 'incorrect')
-    .assert.cssClassPresent('input[qa-data="schedule-month-days"]', 'is-danger')      
-    .assert.containsText('p[qa-data="schedule-monthdays-error"]', 'should be a comma separated')        
-    .clearValue('input[qa-data="schedule-month-days"]')
-    .setValue('input[qa-data="schedule-month-days"]', '1;2')
-    .assert.cssClassPresent('input[qa-data="schedule-month-days"]', 'is-danger')      
-    .assert.containsText('p[qa-data="schedule-monthdays-error"]', 'should be a comma separated')            
-    .clearValue('input[qa-data="schedule-month-days"]')
-    .setValue('input[qa-data="schedule-month-days"]', testJob.schedules[5].day.reduce((accumulator, currentValue) => `${accumulator},${currentValue}`))
-    .assert.not.cssClassPresent('input[qa-data="schedule-month-days"]', 'is-danger')      
-    .assert.not.containsText('p[qa-data="schedule-monthdays-error"]', 'should be a comma separated')        
+      .setValue('input[qa-data="schedule-month-days"]', 'incorrect')
+      .assert.cssClassPresent('input[qa-data="schedule-month-days"]', 'is-danger')      
+      .assert.containsText('p[qa-data="schedule-monthdays-error"]', 'should be a comma separated')        
+      .clearValue('input[qa-data="schedule-month-days"]')
+      .setValue('input[qa-data="schedule-month-days"]', '1;2')
+      .assert.cssClassPresent('input[qa-data="schedule-month-days"]', 'is-danger')      
+      .assert.containsText('p[qa-data="schedule-monthdays-error"]', 'should be a comma separated')            
+      .clearValue('input[qa-data="schedule-month-days"]')
+      .setValue('input[qa-data="schedule-month-days"]', testJob.schedules[5].day.reduce((accumulator, currentValue) => `${accumulator},${currentValue}`))
+      .assert.not.cssClassPresent('input[qa-data="schedule-month-days"]', 'is-danger')      
+      .assert.not.containsText('p[qa-data="schedule-monthdays-error"]', 'should be a comma separated');        
   });  
 
   afterEach(function(browser) {

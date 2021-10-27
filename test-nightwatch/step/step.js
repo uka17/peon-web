@@ -22,12 +22,12 @@ describe('step', function() {
       .windowMaximize()
       .waitForElementVisible('a[href="#/jobs"]')
       .click('a[href="#/jobs"]')
-      .waitForElementVisible('a[href="#/jobs/create"]')      
+      .waitForElementVisible('a[href="#/jobs/create"]');      
   });
 
   this.tags = ['step', 'from', 'user-interface'];
 
-  test(`step. 
+  test.only(`step. 
     Step creation modal form controls have correct state before and after putting any data 
     Cancel controls works properly and doesn't create any step 
     Step creation acts properly: closes form and creates step with proper data
@@ -36,7 +36,7 @@ describe('step', function() {
     `, function (browser) {
     browser
       .click(`a[qa-data="${testJobTemplate.name}"]`)
-      .click('a#steps-tab') 
+      .click('a#steps-tab'); 
     //Step creation modal form controls have correct state before and after putting any data 
     browser
       .click('button[qa-data="create-new-step"')
@@ -138,7 +138,10 @@ describe('step', function() {
       .setValue('input[qa-data="step-retry-number"]', 1)    
       .clearValue('div[qa-data="step-dialog-connection"] input')
       .click('div[qa-data="step-dialog-connection"] input')
-      .keys([testConnections[2].name.substring(0, 2)]) 
+      //TODO - check reactivity in connection input
+      //as clearValue do not triggers dropdown, we need to type 1 char to start drop down suggestion
+      .keys('z') 
+      .keys([testConnections[2].name.substring(0, 3)]) 
       .click('div.dropdown-content a.dropdown-item')      
       .click(`div[qa-data="step-result-action-succeed"] select[qa-data="step-result-action"] option[value="${testJobTemplate.steps[1].onFailure}"]`)      
       .click(`div[qa-data="step-result-action-failure"] select[qa-data="step-result-action"] option[value="${testJobTemplate.steps[1].onSucceed}"]`)         
@@ -149,7 +152,7 @@ describe('step', function() {
       .assert.valueContains('input[qa-data="step-retry-interval"]', testJobTemplate.steps[1].retryAttempts.interval)      
       .assert.valueContains('div[qa-data="step-result-action-succeed"] select[qa-data="step-result-action"]', testJobTemplate.steps[1].onSucceed)      
       .assert.valueContains('div[qa-data="step-result-action-failure"] select[qa-data="step-result-action"]', testJobTemplate.steps[1].onFailure)   
-      .assert.valueContains('div[qa-data="step-dialog-connection"] input', testConnections[1].name)              
+      .assert.valueContains('div[qa-data="step-dialog-connection"] input', testConnections[1].name);              
   });   
   
   afterEach(function(browser) {
