@@ -1,152 +1,129 @@
 {
-   "job": {
-      "name": "Test job",
-      "description": "Job created for testing purposes",
-      "enabled": true,
-      "steps": [
-         {
-            "name": "Test step 1 good one",
-            "enabled": true,
-            "order": 1,
-            "connection": 203,
-            "command": "select \"fnLog_Insert\"(1, 'Potatoes!', 'test')",
-            "retryAttempts": {
-               "number": 1,
-               "interval": 5
-            },
-            "onSucceed": "gotoNextStep",
-            "onFailure": "quitWithFailure"
-         },
-         {
-            "name": "Test step 2 corrupted one",
-            "enabled": true,
-            "order": 2,
-            "connection": 203,
-            "command": "select \"fnLog_I2nsert\"(1, 'Tomatoes!', 'test')",
-            "retryAttempts": {
-               "number": 7,
-               "interval": 15
-            },
-            "onSucceed": "quitWithSuccess",
-            "onFailure": "quitWithFailure"
-         },
-         {
-            "name": "Test step 3 normal  one",
-            "enabled": false,
-            "order": 3,
-            "connection": 203,
-            "command": "select \"fnLog_Insert\"(1, 'Tomatoes!', 'test')",
-            "retryAttempts": {
-               "number": 10,
-               "interval": 30
-            },
-            "onSucceed": "quitWithSuccess",
-            "onFailure": "quitWithFailure"
-         }         
-      ],
-      "schedules": [
-         {
-           "oneTime": "2022-05-28T00:30:00.000Z",
-           "name": "One time",
-           "enabled": true
-         },
-         {
-           "eachNDay": 3,
-           "name": "Daily once",
-           "enabled": true,
-           "startDateTime": "2022-05-29T11:30:00.000Z",
-           "endDateTime": "2022-05-29T21:00:00.000Z",
-           "dailyFrequency": {
-             "occursOnceAt": "06:00:00"
-           }
-         },
-         {
-           "eachNDay": 5,
-           "name": "Daily periodical",
-           "enabled": true,
-           "startDateTime": "2022-05-19T21:00:00.000Z",
-           "dailyFrequency": {
-             "start": "06:00:00",
-             "end": "11:00:00",
-             "occursEvery": {
-               "intervalValue": 15,
-               "intervalType": "minute"
-             }
-           }
-         },
-         {
-           "eachNWeek": 2,
-           "dayOfWeek": [
-             "mon",
-             "wed",
-             "fri"
-           ],
-           "name": "Weekly periodical",
-           "enabled": true,
-           "startDateTime": "2022-05-24T21:00:00.000Z",
-           "dailyFrequency": {
-             "start": "05:00:00",
-             "end": "06:00:00",
-             "occursEvery": {
-               "intervalValue": 10,
-               "intervalType": "minute"
-             }
-           }
-         },
-         {
-           "eachNWeek": 7,
-           "dayOfWeek": [
-             "sun",
-             "tue",
-             "thu"
-           ],
-           "name": "Weekly once",
-           "enabled": true,
-           "startDateTime": "2022-05-25T21:00:00.000Z",
-           "dailyFrequency": {
-             "occursOnceAt": "06:00:00"
-           }
-         },
-         {
-           "month": [
-             "jan",
-             "dec"
-           ],
-           "day": [
-             1,
-             10,
-             20,
-             30
-           ],
-           "name": "Monthly once",
-           "enabled": true,
-           "startDateTime": "2022-05-25T21:00:00.000Z",
-           "dailyFrequency": {
-             "occursOnceAt": "06:00:00"
-           }
-         },
-         {
-           "month": [
-             "jun",
-             "jul",
-             "aug"
-           ],
-           "day": [
-             1,
-             30
-           ],
-           "name": "Monthly periodical",
-           "enabled": true,
-           "startDateTime": "2022-05-26T21:00:00.000Z",
-           "dailyFrequency": {
-             "start": "00:00:00",
-             "end": "06:00:00",
-             "occursEvery": {
-               "intervalValue": 30,
-               "intervalType": "minute"
-             }
-           }
-         }
-       ]
-   }
+  "job": {
+    "name": "Test job",
+    "description": "Job created for testing purposes",
+    "enabled": true,
+    "steps": [
+      {
+        "name": "Test step 1 good one",
+        "enabled": true,
+        "order": 1,
+        "connection": 203,
+        "command": "select \"fnLog_Insert\"(1, 'Potatoes!', 'test')",
+        "retryAttempts": {
+          "number": 1,
+          "interval": 5
+        },
+        "onSucceed": "gotoNextStep",
+        "onFailure": "quitWithFailure"
+      },
+      {
+        "name": "Test step 2 corrupted one",
+        "enabled": true,
+        "order": 2,
+        "connection": 203,
+        "command": "select \"fnLog_I2nsert\"(1, 'Tomatoes!', 'test')",
+        "retryAttempts": {
+          "number": 7,
+          "interval": 15
+        },
+        "onSucceed": "quitWithSuccess",
+        "onFailure": "quitWithFailure"
+      },
+      {
+        "name": "Test step 3 normal  one",
+        "enabled": false,
+        "order": 3,
+        "connection": 203,
+        "command": "select \"fnLog_Insert\"(1, 'Tomatoes!', 'test')",
+        "retryAttempts": {
+          "number": 10,
+          "interval": 30
+        },
+        "onSucceed": "quitWithSuccess",
+        "onFailure": "quitWithFailure"
+      }
+    ],
+    "schedules": [
+      {
+        "oneTime": "2022-05-28T00:30:00.000Z",
+        "name": "One time",
+        "enabled": true
+      },
+      {
+        "eachNDay": 3,
+        "name": "Daily once",
+        "enabled": true,
+        "startDateTime": "2022-05-29T11:30:00.000Z",
+        "endDateTime": "2022-05-29T21:00:00.000Z",
+        "dailyFrequency": {
+          "occursOnceAt": "06:00:00"
+        }
+      },
+      {
+        "eachNDay": 5,
+        "name": "Daily periodical",
+        "enabled": true,
+        "startDateTime": "2022-05-19T21:00:00.000Z",
+        "dailyFrequency": {
+          "start": "06:00:00",
+          "end": "11:00:00",
+          "occursEvery": {
+            "intervalValue": 15,
+            "intervalType": "minute"
+          }
+        }
+      },
+      {
+        "eachNWeek": 2,
+        "dayOfWeek": ["mon", "wed", "fri"],
+        "name": "Weekly periodical",
+        "enabled": true,
+        "startDateTime": "2022-05-24T21:00:00.000Z",
+        "dailyFrequency": {
+          "start": "05:00:00",
+          "end": "06:00:00",
+          "occursEvery": {
+            "intervalValue": 10,
+            "intervalType": "minute"
+          }
+        }
+      },
+      {
+        "eachNWeek": 7,
+        "dayOfWeek": ["sun", "tue", "thu"],
+        "name": "Weekly once",
+        "enabled": true,
+        "startDateTime": "2022-05-25T21:00:00.000Z",
+        "dailyFrequency": {
+          "occursOnceAt": "06:00:00"
+        }
+      },
+      {
+        "month": ["jan", "dec"],
+        "day": [1, 10, 20, 30],
+        "name": "Monthly once",
+        "enabled": true,
+        "startDateTime": "2022-05-25T21:00:00.000Z",
+        "dailyFrequency": {
+          "occursOnceAt": "06:00:00"
+        }
+      },
+      {
+        "month": ["jun", "jul", "aug"],
+        "day": [1, 30],
+        "name": "Monthly periodical",
+        "enabled": true,
+        "startDateTime": "2022-05-26T21:00:00.000Z",
+        "dailyFrequency": {
+          "start": "00:00:00",
+          "end": "06:00:00",
+          "occursEvery": {
+            "intervalValue": 30,
+            "intervalType": "minute"
+          }
+        }
+      }
+    ]
+  }
 }

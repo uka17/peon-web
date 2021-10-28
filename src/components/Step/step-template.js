@@ -7,9 +7,9 @@ module.exports = {
     "command": "",
     "retryAttempts": {
       "number": 1,
-      "interval": 1
+      "interval": 1,
     },
     "onSucceed": "gotoNextStep",
-    "onFailure": "gotoNextStep"
-  }
+    "onFailure": "gotoNextStep",
+  },
 };

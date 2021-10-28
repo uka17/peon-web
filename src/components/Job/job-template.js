@@ -3,9 +3,9 @@ module.exports = {
     "job": {
       "name": "",
       "enabled": true,
-      "description": "",    
+      "description": "",
       "steps": [],
-      "schedules": [],      
+      "schedules": [],
     },
     "modifiedOn": null,
     "modifiedBy": "testRobot",
@@ -13,6 +13,6 @@ module.exports = {
     "createdBy": "testRobot",
     "nextRun": null,
     "lastRunOn": null,
-    "lastRunResult": null    
-  }
+    "lastRunResult": null,
+  },
 };

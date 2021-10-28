@@ -5,10 +5,10 @@ module.exports = {
       host: "",
       database: "",
       port: 5432,
-      enabled: true,      
+      enabled: true,
       login: "",
       password: "",
-      type: 'postgresql'
-    }
-  }
+      type: "postgresql",
+    },
+  },
 };

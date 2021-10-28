@@ -5,7 +5,6 @@
   "main": "index.js",
   "scripts": {
     "test": "nyc --reporter=html --reporter=text mocha --recursive",
-    "htest": "hermione",
     "ntest": "nightwatch",
     "mtest": "mocha --recursive",
     "build": "webpack -w",

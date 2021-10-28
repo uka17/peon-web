@@ -6,11 +6,13 @@
           <option value="gotoNextStep">Go to next step</option>
           <option value="quitWithSuccess">Quit with success</option>
           <option value="quitWithFailure">Quit with failure</option>
-          <option v-if="stepList.length > 0" value="gotoStep">Go to step</option>
+          <option v-if="stepList.length > 0" value="gotoStep">
+            Go to step
+          </option>
         </select>
       </span>
     </p>
-    <template v-if="stepResultAction== 'gotoStep'">       
+    <template v-if="stepResultAction == 'gotoStep'">
       <p class="control">
         <span class="select">
           <select qa-data="step-result-action-goto-step" v-model="stepNumber">
@@ -25,55 +27,55 @@
 </template>
 
 <script>
-
-import utils from '../utils.js';
+import utils from "../utils.js";
 
 export default {
   data() {
     return {
       stepResultAction: undefined,
-      stepNumber: undefined
-    }
+      stepNumber: undefined,
+    };
   },
   props: {
     stepResult: {
-      required: true
+      required: true,
     },
     stepList: {
-      required: true
-    }    
+      required: true,
+    },
   },
   methods: {
-    updateStepResultAction: function() {
-      if(this.stepResultAction == 'gotoStep')
-        this.$emit('step-result-action-update', { gotoStep: parseInt(this.stepNumber) });
-      else
-        this.$emit('step-result-action-update', this.stepResultAction);
+    updateStepResultAction: function () {
+      if (this.stepResultAction == "gotoStep")
+        this.$emit("step-result-action-update", {
+          gotoStep: parseInt(this.stepNumber),
+        });
+      else this.$emit("step-result-action-update", this.stepResultAction);
     },
-    truncateString: utils.truncateString
+    truncateString: utils.truncateString,
   },
   watch: {
-    stepResult: function() {
-      if(typeof this.stepResult === 'object') {
-        this.stepResultAction = 'gotoStep';
+    stepResult: function () {
+      if (typeof this.stepResult === "object") {
+        this.stepResultAction = "gotoStep";
         this.stepNumber = this.stepResult.gotoStep;
       } else {
         this.stepResultAction = this.stepResult;
         this.stepNumber = 1;
       }
     },
-    stepResultAction: function() {
+    stepResultAction: function () {
       this.updateStepResultAction();
     },
-    stepNumber: function() {
+    stepNumber: function () {
       this.updateStepResultAction();
-    }
-  }
-}
+    },
+  },
+};
 </script>
-<style lang="scss" >
- #goto-step-number {
-    width: 50px;
-    text-align: center;
-  }
+<style lang="scss">
+#goto-step-number {
+  width: 50px;
+  text-align: center;
+}
 </style>
