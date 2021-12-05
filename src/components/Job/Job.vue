@@ -3,7 +3,7 @@
     <div class="modal-background"></div>
     <div class="modal-card" id="job-modal-content">
       <header class="modal-card-head">
-        <p v-if="jobRecord.job" class="modal-card-title">Job properties</p>
+        <p v-if="jobRecord.body" class="modal-card-title">Job properties</p>
         <button
           qa-data="job-modal-close"
           class="delete"
@@ -12,7 +12,7 @@
         ></button>
       </header>
       <section class="modal-card-body">
-        <div class="has-text-centered" v-if="!jobRecord.job">
+        <div class="has-text-centered" v-if="!jobRecord.body">
           Loading job data...
           <progress
             id="job-loading"
@@ -22,7 +22,7 @@
             10%
           </progress>
         </div>
-        <div v-if="jobRecord.job">
+        <div v-if="jobRecord.body">
           <div class="tabs is-boxed">
             <ul>
               <li v-bind:class="{ 'is-active': this.activeTab == 'general' }">
@@ -96,7 +96,7 @@
           </div>
         </div>
       </section>
-      <footer class="modal-card-foot buttons is-right" v-if="jobRecord.job">
+      <footer class="modal-card-foot buttons is-right" v-if="jobRecord.body">
         <button
           v-if="!isNew"
           id="button-job-save"
@@ -163,7 +163,7 @@ export default {
         this.modalShow(dialogRecord, true);
       } else {
         dialogRecord = await axios.get(`${this.apiUrl}/${this.id}`);
-        dialogRecord.data.job.schedules.forEach((elem) => (elem.id = nanoid()));
+        dialogRecord.data.body.schedules.forEach((elem) => (elem.id = nanoid()));
         this.modalShow(dialogRecord.data);
       }
     } catch (error) {
@@ -190,10 +190,10 @@ export default {
     },
     async save() {
       try {
-        this.jobRecord.job.schedules.forEach((elem) => delete elem.id);
+        this.jobRecord.body.schedules.forEach((elem) => delete elem.id);
         const response = await axios.patch(
           `${config.apiUrl}/jobs/${this.jobRecord.id}`,
-          this.jobRecord.job
+          this.jobRecord.body
         );
         if (response.status === 200) this.modalClose();
       } catch (error) {
@@ -202,10 +202,10 @@ export default {
     },
     async create() {
       try {
-        this.jobRecord.job.schedules.forEach((elem) => delete elem.id);
+        this.jobRecord.body.schedules.forEach((elem) => delete elem.id);
         const response = await axios.post(
           `${config.apiUrl}/jobs`,
-          this.jobRecord.job
+          this.jobRecord.body
         );
         if (response.status === 201) this.modalClose();
       } catch (error) {
@@ -215,16 +215,16 @@ export default {
   },
   computed: {
     modalIsActive: function () {
-      return this.jobRecord.job !== undefined;
+      return this.jobRecord.body !== undefined;
     },
     job: function () {
-      return this.jobRecord.job !== undefined ? this.jobRecord.job : {};
+      return this.jobRecord.body !== undefined ? this.jobRecord.body : {};
     },
     stepList: function () {
-      return this.job.steps !== undefined ? this.job.steps : [];
+      return this.jobRecord.body.steps !== undefined ? this.job.steps : [];
     },
     scheduleList: function () {
-      return this.job.schedules !== undefined ? this.job.schedules : [];
+      return this.jobRecord.body.schedules !== undefined ? this.job.schedules : [];
     },
     formIsValid() {
       return (
@@ -234,7 +234,7 @@ export default {
       );
     },
     generalTabIsValid() {
-      return validate(this.jobRecord.job, constraints("en")) === undefined;
+      return validate(this.jobRecord.body, constraints("en")) === undefined;
     },
     stepListTabIsValid() {
       return this.stepList.length > 0;

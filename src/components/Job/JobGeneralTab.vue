@@ -132,7 +132,7 @@ export default {
   },
   computed: {
     job: function () {
-      return this.jobRecord.job !== undefined ? this.jobRecord.job : {};
+      return this.jobRecord.body !== undefined ? this.jobRecord.body : {};
     },
   },
   components: {},

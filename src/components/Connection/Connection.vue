@@ -240,7 +240,7 @@ export default {
       try {
         const response = await axios.patch(
           `${config.apiUrl}/connections/${this.connectionRecord.id}`,
-          this.connectionRecord.connection
+          this.connectionRecord.body
         );
         if (response.status === 200) this.modalClose();
       } catch (error) {
@@ -251,7 +251,7 @@ export default {
       try {
         const response = await axios.post(
           `${config.apiUrl}/connections`,
-          this.connectionRecord.connection
+          this.connectionRecord.body
         );
         if (response.status === 201) this.modalClose();
       } catch (error) {
@@ -277,8 +277,8 @@ export default {
       return this.connection.name !== undefined;
     },
     connection: function () {
-      return this.connectionRecord.connection !== undefined
-        ? this.connectionRecord.connection
+      return this.connectionRecord.body !== undefined
+        ? this.connectionRecord.body
         : {};
     },
     formIsValid() {

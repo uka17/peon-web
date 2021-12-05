@@ -50,7 +50,7 @@ export default {
       this.connectionValue = "";
       if (this.connection) {
         const result = await axios.get(`${this.apiUrl}/${this.connection}`);
-        if (result.data) this.connectionValue = result.data.connection.name;
+        if (result.data) this.connectionValue = result.data.body.name;
       }
     },
   },

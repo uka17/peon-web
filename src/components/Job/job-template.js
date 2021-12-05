@@ -1,6 +1,6 @@
 module.exports = {
   newJob: {
-    "job": {
+    "body": {
       "name": "",
       "enabled": true,
       "description": "",

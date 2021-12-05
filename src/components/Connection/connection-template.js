@@ -1,6 +1,6 @@
 module.exports = {
   newConnection: {
-    connection: {
+    body: {
       name: "",
       host: "",
       database: "",

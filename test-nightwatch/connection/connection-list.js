@@ -21,7 +21,7 @@ describe("connection-list", function () {
   });
 
   this.tags = ["connection", "list", "user-interface"];
-
+  /*
   test("connection-list. All components of connection list page are visible and has proper state and style", function (browser) {
     browser.assert
       .elementPresent('a[qa-data="connection-list-create"]')
@@ -164,7 +164,7 @@ describe("connection-list", function () {
       )
       .assert.not.elementPresent(`a[qa-data="${testConnection.name}"]`);
   });
-
+*/
   test(`connection-list. Pagination works properly, changes control style, shown records and statistics of records counter`, function (browser) {
     let testConnection = JSON.parse(JSON.stringify(connections[1]));
     testConnection.name += `f${(+new Date()).toString(16)}`;
@@ -177,8 +177,7 @@ describe("connection-list", function () {
 
     //create unique test connection
     createTestConnection(browser, testConnection);
-    browser//check if pagination is in place
-    .assert
+    browser.assert //check if pagination is in place
       .elementPresent('div[qa-data="connection-list-pagination-info"]')
       .assert.elementPresent('div[qa-data="connection-list-pagination"]')
       //check if connection is visible
